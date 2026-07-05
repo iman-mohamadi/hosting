@@ -1,0 +1,38 @@
+# Project: Premium VPS & Hosting Platform
+# Stack: Next.js (App Router), TypeScript, Tailwind CSS, shadcn/ui, Drizzle ORM, PostgreSQL.
+
+## 🎨 Design & UI/UX Standards (Awwwards/Apple Level)
+- **Aesthetic:** Deep dark mode by default. Minimalist, brutalist typography with massive negative space.
+- **Components:** Avoid bloated, pre-built animated docks or complex external navigation libraries. Build custom, high-quality, minimal navigation components.
+- **Interactions:** Use Framer Motion for subtle micro-interactions. Incorporate smooth scrolling.
+- **WebGL/3D Ready:** Structure layouts to easily accommodate Three.js/WebGL canvases for product configurators without breaking the DOM flow.
+
+## 🏗️ Architecture & Coding Standards
+- **Strict Modularity:** Separate UI components, business logic, and server actions.
+- **Server Actions:** All server actions MUST be located inside the frontend project structure within the `src/actions.ts` (or `src/app/actions.ts`) file. Do not scatter action files.
+- **TypeScript:** Use strict typing. Avoid `any`. Define clear interfaces for all models.
+
+## 💾 Data & Backend Rules
+- **Database:** Assume a local PostgreSQL server environment for development.
+- **CRITICAL NAMING CONVENTION:** All data payloads sent to the backend, API responses, database schemas, and state variables representing server data MUST strictly use `snake_case` (e.g., `user_id`, `server_plan`, `is_active`). NEVER use camelCase for anything touching the backend or database.
+
+## 🤖 Cursor Agent Instructions
+- Think step-by-step. Prioritize clean code over quick hacks.
+- When generating UI with Composer, apply appropriate Tailwind classes for glassmorphism (`backdrop-blur`, `bg-opacity-x`) and precise pixel alignment.
+- Keep components small and composable.
+
+## 🌍 i18n & RTL Standards
+- Primary language: Persian (RTL). Secondary language: English (LTR).
+- Implement standard internationalization (e.g., using `next-intl` or dynamic `[locale]` routing).
+- Use Tailwind's `rtl:` and `ltr:` modifiers strictly for any directional layout changes. 
+- Fonts: Ensure a premium Persian font (like Vazirmatn or YekanBakh) for `fa` and Inter/Geist for `en`.
+
+## 🔌 API & Backend Integration
+- The backend is a separate service. Currently, we use mocked API functions.
+- All API calls and server actions MUST be centralized in `src/actions.ts` within the frontend project. 
+- MOCKED DATA RULE: All mocked responses in `src/actions.ts` must strictly return and accept `snake_case` JSON properties.
+
+## 🧱 UI Component Sourcing
+- Extensively use `shadcn/ui` as the base component library.
+- For animations and complex interactive components, adapt code from premium ecosystems like `animate-ui.com` and `magicui.design`.
+- Maintain the minimalist philosophy: prefer clean, custom-built bottom navigation or topbars over bloated animated docks.
