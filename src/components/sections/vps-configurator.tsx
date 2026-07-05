@@ -1,6 +1,11 @@
 "use client"
 
-import { motion, useMotionValueEvent, useSpring } from "framer-motion"
+import {
+  AnimatePresence,
+  motion,
+  useMotionValueEvent,
+  useSpring,
+} from "framer-motion"
 import { useEffect, useState } from "react"
 import { useShallow } from "zustand/react/shallow"
 
@@ -101,6 +106,42 @@ function AnimatedMetric({
   return <span className={cn("tabular-nums", className)}>{display}</span>
 }
 
+/* ─── slide-on-change value ────────────────────────────────────────── */
+
+function SlideValue({
+  value,
+  className,
+}: {
+  value: string
+  className?: string
+}) {
+  return (
+    <span
+      className={cn(
+        "relative inline-flex overflow-hidden leading-none",
+        className,
+      )}
+    >
+      {/* invisible sizer keeps layout stable while the animated copy is absolute */}
+      <span aria-hidden className="pointer-events-none opacity-0">
+        {value}
+      </span>
+      <AnimatePresence initial={false} mode="popLayout">
+        <motion.span
+          key={value}
+          initial={{ y: "110%", opacity: 0 }}
+          animate={{ y: "0%", opacity: 1 }}
+          exit={{ y: "-110%", opacity: 0 }}
+          transition={{ type: "spring", stiffness: 340, damping: 30 }}
+          className="absolute inset-0 tabular-nums"
+        >
+          {value}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  )
+}
+
 /* ─── custom slider block ──────────────────────────────────────────── */
 
 interface ConfiguratorSliderProps {
@@ -131,15 +172,15 @@ function ConfiguratorSlider({
   const progress = ((value - min) / (max - min)) * 100
 
   return (
-    <div className="group relative space-y-10 border-b border-border/20 pb-16 last:border-b-0 last:pb-0">
-      <div className="flex items-start justify-between gap-8">
-        <div className="space-y-3">
-          <span className="font-mono text-[0.65rem] tracking-[0.3em] text-muted-foreground/60">
+    <div className="group relative">
+      <div className="mb-10 flex items-end justify-between gap-8">
+        <div className="space-y-4">
+          <span className="font-mono text-[0.65rem] tracking-[0.3em] text-white/30">
             {index}
           </span>
           <p
             className={cn(
-              "text-xs font-semibold tracking-[0.25em] text-muted-foreground uppercase",
+              "text-xs font-medium tracking-[0.3em] text-white/40 uppercase",
               isRTL && "font-[family-name:var(--font-vazirmatn)]",
             )}
           >
@@ -147,19 +188,20 @@ function ConfiguratorSlider({
           </p>
         </div>
 
-        <div className="flex items-baseline gap-2 ltr:text-right rtl:text-left">
+        {/* massive brutalist value */}
+        <div className="flex items-baseline gap-3 ltr:text-right rtl:text-left">
           <AnimatedMetric
             value={value}
             locale={locale}
             className={cn(
-              "text-[clamp(3rem,8vw,5.5rem)] font-semibold leading-none tracking-tighter text-foreground",
+              "text-6xl font-bold tracking-tighter text-white sm:text-7xl",
               isRTL && "font-[family-name:var(--font-vazirmatn)]",
             )}
           />
           {unit && (
             <span
               className={cn(
-                "pb-2 text-sm font-medium tracking-wide text-muted-foreground",
+                "pb-2 text-sm font-medium tracking-wide text-white/40",
                 isRTL && "font-[family-name:var(--font-vazirmatn)]",
               )}
             >
@@ -174,7 +216,7 @@ function ConfiguratorSlider({
           aria-hidden
           className="pointer-events-none absolute inset-x-0 top-1/2 h-8 -translate-y-1/2 rounded-full opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100"
           style={{
-            background: `linear-gradient(90deg, transparent ${Math.max(0, progress - 8)}%, oklch(0.72 0.12 188 / 0.35) ${progress}%, transparent ${Math.min(100, progress + 8)}%)`,
+            background: `linear-gradient(90deg, transparent ${Math.max(0, progress - 8)}%, rgba(255,255,255,0.18) ${progress}%, transparent ${Math.min(100, progress + 8)}%)`,
           }}
         />
         <Slider
@@ -183,15 +225,9 @@ function ConfiguratorSlider({
           step={step}
           value={[value]}
           onValueChange={([next]) => on_change(next ?? min)}
-          className={cn(
-            "relative py-3",
-            "[&_[data-slot=slider-track]]:h-1.5 [&_[data-slot=slider-track]]:bg-white/[0.06]",
-            "[&_[data-slot=slider-range]]:bg-gradient-to-r [&_[data-slot=slider-range]]:from-cyan-400/80 [&_[data-slot=slider-range]]:to-cyan-300",
-            "[&_[data-slot=slider-thumb]]:size-4 [&_[data-slot=slider-thumb]]:border-cyan-400/50",
-            "[&_[data-slot=slider-thumb]]:bg-background [&_[data-slot=slider-thumb]]:shadow-[0_0_20px_oklch(0.72_0.12_188/0.45)]",
-          )}
+          className="relative py-3"
         />
-        <div className="mt-3 flex justify-between font-mono text-[0.65rem] tracking-wider text-muted-foreground/50">
+        <div className="mt-4 flex justify-between font-mono text-[0.65rem] tracking-wider text-white/25">
           <span>{min}</span>
           <span>{max}</span>
         </div>
@@ -226,38 +262,32 @@ function OptionCard({
       role="radio"
       aria-checked={is_selected}
       onClick={on_select}
-      animate={{
-        scale: is_selected ? 1.02 : 1,
-        borderColor: is_selected
-          ? "oklch(0.72 0.12 188 / 0.45)"
-          : "oklch(0.5 0 0 / 0.12)",
-      }}
-      whileHover={{ scale: is_selected ? 1.02 : 1.01 }}
-      whileTap={{ scale: 0.98 }}
+      animate={{ scale: is_selected ? 1.015 : 1 }}
+      whileHover={{ scale: is_selected ? 1.015 : 1.008 }}
+      whileTap={{ scale: 0.985 }}
       transition={{ type: "spring", stiffness: 400, damping: 28 }}
       className={cn(
-        "group relative w-full overflow-hidden rounded-2xl border p-6 text-start",
-        "bg-white/[0.02] backdrop-blur-md",
+        "group relative w-full overflow-hidden rounded-2xl p-6 text-start transition-colors duration-300",
         is_selected
-          ? "bg-cyan-400/[0.04] shadow-[0_0_40px_-12px_oklch(0.72_0.12_188/0.5)]"
-          : "hover:bg-white/[0.04]",
+          ? "bg-white/[0.06] shadow-[0_0_50px_-16px_rgba(255,255,255,0.4)]"
+          : "bg-white/[0.015] hover:bg-white/[0.035]",
       )}
     >
       <motion.div
         aria-hidden
         animate={{ opacity: is_selected ? 1 : 0 }}
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,oklch(0.72_0.12_188/0.12),transparent_70%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.1),transparent_70%)]"
       />
       <div
         aria-hidden
         className={cn(
-          "absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/70 to-transparent transition-opacity",
-          is_selected ? "opacity-100" : "opacity-0 group-hover:opacity-50",
+          "absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent transition-opacity",
+          is_selected ? "opacity-100" : "opacity-0 group-hover:opacity-40",
         )}
       />
       <p
         className={cn(
-          "relative text-base font-semibold text-foreground",
+          "relative text-base font-semibold text-white",
           isRTL && "font-[family-name:var(--font-vazirmatn)]",
         )}
       >
@@ -265,7 +295,7 @@ function OptionCard({
       </p>
       <p
         className={cn(
-          "relative mt-2 text-sm leading-relaxed text-muted-foreground",
+          "relative mt-2 text-sm leading-relaxed text-white/40",
           isRTL && "font-[family-name:var(--font-vazirmatn)]",
         )}
       >
@@ -312,24 +342,14 @@ function LiveSummary({
 
   const storage_label = copy.storage_options[storage_type].label
   const os_label = copy.os_options[selected_os].label
+  const price_display = format_vps_price(monthly_price, locale)
 
   return (
-    <div
-      className={cn(
-        "relative overflow-hidden rounded-3xl border border-border/40",
-        "bg-white/[0.03] p-6 backdrop-blur-2xl sm:p-8",
-        className,
-      )}
-    >
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -inset-px rounded-3xl bg-gradient-to-b from-cyan-400/20 via-transparent to-transparent opacity-60"
-      />
-
+    <div className={cn("relative", className)}>
       <div className="relative">
         <p
           className={cn(
-            "text-xs font-semibold tracking-[0.25em] text-muted-foreground uppercase",
+            "text-xs font-medium tracking-[0.3em] text-white/40 uppercase",
             isRTL && "font-[family-name:var(--font-vazirmatn)]",
           )}
         >
@@ -354,36 +374,34 @@ function LiveSummary({
             ].map((row) => (
               <li
                 key={row.label}
-                className="flex items-center justify-between gap-4 border-b border-border/15 pb-4 last:border-b-0 last:pb-0"
+                className="flex items-center justify-between gap-4"
               >
-                <span className="text-muted-foreground">{row.label}</span>
-                <span className="font-medium text-foreground">{row.value}</span>
+                <span className="text-white/40">{row.label}</span>
+                <span className="font-medium text-white">{row.value}</span>
               </li>
             ))}
           </ul>
         )}
 
-        <div className={cn(compact ? "mt-0" : "mt-10 border-t border-border/25 pt-8")}>
+        <div className={cn(compact ? "mt-0" : "mt-12")}>
           <div className="flex items-end justify-between gap-4">
-            <AnimatedMetric
-              value={monthly_price}
-              locale={locale}
-              format="price"
+            <SlideValue
+              value={price_display}
               className={cn(
                 compact
-                  ? "text-3xl font-semibold tracking-tight text-foreground"
-                  : "text-[clamp(2.5rem,5vw,3.75rem)] font-semibold leading-none tracking-tighter text-foreground",
+                  ? "text-3xl font-bold tracking-tighter text-white"
+                  : "text-[clamp(2.75rem,5vw,4rem)] font-bold tracking-tighter text-white",
                 isRTL && "font-[family-name:var(--font-vazirmatn)]",
               )}
             />
-            <span className="pb-1 text-sm text-muted-foreground">{copy.per_month}</span>
+            <span className="pb-1 text-sm text-white/40">{copy.per_month}</span>
           </div>
         </div>
 
         {!compact && (
           <Button
             size="lg"
-            className="mt-8 h-12 w-full rounded-full text-sm font-medium tracking-wide shadow-[0_0_32px_-8px_oklch(0.72_0.12_188/0.55)]"
+            className="mt-10 h-12 w-full rounded-full text-sm font-medium tracking-wide shadow-[0_0_40px_-10px_rgba(255,255,255,0.5)]"
           >
             {copy.deploy}
           </Button>
@@ -435,11 +453,7 @@ export function VpsConfigurator({ locale }: VpsConfiguratorProps) {
     <section id="configurator" className="relative min-h-screen px-6 py-32 lg:px-8">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/40 to-transparent"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-y-0 start-1/2 hidden w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-border/20 to-transparent lg:block"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"
       />
 
       <div className="mx-auto w-full max-w-7xl">
@@ -466,9 +480,9 @@ export function VpsConfigurator({ locale }: VpsConfiguratorProps) {
           </p>
         </div>
 
-        <div className="mt-24 grid gap-20 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-16 xl:gap-24">
+        <div className="mt-24 grid gap-24 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-16 xl:gap-32">
           {/* controls */}
-          <div className="space-y-20 pb-32 lg:pb-0">
+          <div className="space-y-24 pb-40 lg:pb-0">
             <ConfiguratorSlider
               index="01"
               label={copy.cpu_label}
@@ -495,14 +509,14 @@ export function VpsConfigurator({ locale }: VpsConfiguratorProps) {
               on_change={update_ram}
             />
 
-            <div className="space-y-8 border-b border-border/20 pb-16">
-              <div className="space-y-3">
-                <span className="font-mono text-[0.65rem] tracking-[0.3em] text-muted-foreground/60">
+            <div className="space-y-8">
+              <div className="space-y-4">
+                <span className="font-mono text-[0.65rem] tracking-[0.3em] text-white/30">
                   03
                 </span>
                 <p
                   className={cn(
-                    "text-xs font-semibold tracking-[0.25em] text-muted-foreground uppercase",
+                    "text-xs font-medium tracking-[0.3em] text-white/40 uppercase",
                     isRTL && "font-[family-name:var(--font-vazirmatn)]",
                   )}
                 >
@@ -531,13 +545,13 @@ export function VpsConfigurator({ locale }: VpsConfiguratorProps) {
             </div>
 
             <div className="space-y-8">
-              <div className="space-y-3">
-                <span className="font-mono text-[0.65rem] tracking-[0.3em] text-muted-foreground/60">
+              <div className="space-y-4">
+                <span className="font-mono text-[0.65rem] tracking-[0.3em] text-white/30">
                   04
                 </span>
                 <p
                   className={cn(
-                    "text-xs font-semibold tracking-[0.25em] text-muted-foreground uppercase",
+                    "text-xs font-medium tracking-[0.3em] text-white/40 uppercase",
                     isRTL && "font-[family-name:var(--font-vazirmatn)]",
                   )}
                 >
@@ -574,7 +588,11 @@ export function VpsConfigurator({ locale }: VpsConfiguratorProps) {
       </div>
 
       {/* mobile bottom bar */}
-      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-border/40 bg-background/75 p-4 backdrop-blur-2xl lg:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-50 bg-[#050505]/80 px-5 py-4 backdrop-blur-2xl lg:hidden">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent"
+        />
         <div className="mx-auto flex max-w-lg items-center gap-4">
           <div className="min-w-0 flex-1">
             <LiveSummary locale={locale} copy={copy} isRTL={isRTL} compact />

@@ -85,11 +85,11 @@
 }
 
 .dark {
-    --background: oklch(0.1 0.006 228.8);
+    --background: oklch(0.06 0.002 240);
     --foreground: oklch(0.985 0.002 197.1);
-    --card: oklch(0.14 0.008 223.9);
+    --card: oklch(0.08 0.003 240);
     --card-foreground: oklch(0.987 0.002 197.1);
-    --popover: oklch(0.14 0.008 223.9);
+    --popover: oklch(0.08 0.003 240);
     --popover-foreground: oklch(0.987 0.002 197.1);
     --primary: oklch(0.72 0.12 188.216);
     --primary-foreground: oklch(0.13 0.02 188);
@@ -122,14 +122,23 @@
   * {
     @apply border-border outline-ring/50;
     }
+  html,
   body {
-    @apply bg-background text-foreground;
+    /* Deep, true dark canvas — no lifted greys. */
+    background-color: #050505;
+    @apply text-foreground;
     }
   button:not(:disabled), [role="button"]:not(:disabled) {
     cursor: pointer;
     }
   html {
     @apply font-sans;
+    }
+  /* Extreme minimalism: no default card chrome. Rely on typography + space. */
+  [data-slot="card"] {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
     }
 }
 
