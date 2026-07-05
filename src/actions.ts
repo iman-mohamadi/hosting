@@ -104,6 +104,20 @@ export interface ContactPageCopy {
   support_email_value: string
 }
 
+export interface PrivacyPolicySection {
+  section_id: string
+  section_heading: string
+  section_content: string
+}
+
+export interface PrivacyContent {
+  page_title: string
+  page_subtitle: string
+  last_updated_date: string
+  toc_label: string
+  policy_sections: PrivacyPolicySection[]
+}
+
 const heroDataByLocale: Record<string, HeroData> = {
   fa: {
     main_title: "زیرساخت ابری\nبدون مرز",
@@ -625,6 +639,123 @@ const contactPageCopyByLocale: Record<string, ContactPageCopy> = {
   },
 }
 
+const privacyContentByLocale: Record<string, PrivacyContent> = {
+  fa: {
+    page_title: "حریم\nخصوصی",
+    page_subtitle:
+      "ما متعهد به حفاظت از اطلاعات شخصی شما هستیم. این سیاست نحوه جمع‌آوری، استفاده و محافظت از داده‌های شما را توضیح می‌دهد.",
+    last_updated_date: "تاریخ اجرا: ۱ فروردین ۱۴۰۵",
+    toc_label: "فهرست",
+    policy_sections: [
+      {
+        section_id: "overview",
+        section_heading: "۱. نمای کلی",
+        section_content:
+          "هاستینگ به حریم خصوصی کاربران خود احترام می‌گذارد. این سیاست حریم خصوصی نحوه جمع‌آوری، پردازش، ذخیره و محافظت از اطلاعات شخصی شما هنگام استفاده از وب‌سایت و خدمات ما را شرح می‌دهد.",
+      },
+      {
+        section_id: "data-collection",
+        section_heading: "۲. داده‌هایی که جمع‌آوری می‌کنیم",
+        section_content:
+          "ما ممکن است نام، آدرس ایمیل، اطلاعات پرداخت، آدرس IP، داده‌های استفاده از سرویس و اطلاعات فنی مربوط به سرورهای شما را جمع‌آوری کنیم. این اطلاعات برای ارائه، بهبود و امنیت خدمات ضروری است.",
+      },
+      {
+        section_id: "data-usage",
+        section_heading: "۳. نحوه استفاده از داده‌ها",
+        section_content:
+          "داده‌های شما برای ارائه خدمات میزبانی، پردازش پرداخت‌ها، پاسخ به درخواست‌های پشتیبانی، ارسال اطلاع‌رسانی‌های ضروری سرویس و بهبود کیفیت زیرساخت استفاده می‌شود. ما داده‌های شما را به اشخاص ثالث نمی‌فروشیم.",
+      },
+      {
+        section_id: "cookies",
+        section_heading: "۴. کوکی‌ها و فناوری‌های ردیابی",
+        section_content:
+          "از کوکی‌ها و فناوری‌های مشابه برای حفظ نشست کاربری، به خاطر سپردن ترجیحات و تحلیل استفاده از وب‌سایت بهره می‌بریم. می‌توانید کوکی‌ها را از طریق تنظیمات مرورگر خود مدیریت کنید.",
+      },
+      {
+        section_id: "data-sharing",
+        section_heading: "۵. اشتراک‌گذاری داده‌ها",
+        section_content:
+          "اطلاعات شما فقط با ارائه‌دهندگان خدمات مورد اعتماد (مانند درگاه پرداخت و زیرساخت ابری) که برای عملکرد سرویس ضروری هستند، یا در صورت الزام قانونی، به اشتراک گذاشته می‌شود.",
+      },
+      {
+        section_id: "security",
+        section_heading: "۶. امنیت داده‌ها",
+        section_content:
+          "ما از رمزنگاری، کنترل دسترسی و پایش امنیتی برای محافظت از داده‌های شما استفاده می‌کنیم. با این حال، هیچ روش انتقال یا ذخیره‌سازی الکترونیکی ۱۰۰٪ امن نیست.",
+      },
+      {
+        section_id: "your-rights",
+        section_heading: "۷. حقوق شما",
+        section_content:
+          "شما حق دسترسی، اصلاح، حذف و محدود کردن پردازش داده‌های شخصی خود را دارید. برای اعمال این حقوق، با تیم پشتیبانی ما از طریق ایمیل تماس بگیرید.",
+      },
+      {
+        section_id: "contact",
+        section_heading: "۸. تماس با ما",
+        section_content:
+          "برای هرگونه سؤال درباره این سیاست حریم خصوصی، با ما از طریق privacy@hosting.io یا صفحه تماس در ارتباط باشید.",
+      },
+    ],
+  },
+  en: {
+    page_title: "Privacy\nPolicy",
+    page_subtitle:
+      "We are committed to protecting your personal information. This policy explains how we collect, use, and safeguard your data.",
+    last_updated_date: "Effective date: March 21, 2026",
+    toc_label: "Contents",
+    policy_sections: [
+      {
+        section_id: "overview",
+        section_heading: "1. Overview",
+        section_content:
+          "Hosting respects the privacy of its users. This Privacy Policy describes how we collect, process, store, and protect your personal information when you use our website and services.",
+      },
+      {
+        section_id: "data-collection",
+        section_heading: "2. Data We Collect",
+        section_content:
+          "We may collect your name, email address, payment information, IP address, service usage data, and technical information related to your servers. This data is necessary to provide, improve, and secure our services.",
+      },
+      {
+        section_id: "data-usage",
+        section_heading: "3. How We Use Your Data",
+        section_content:
+          "Your data is used to deliver hosting services, process payments, respond to support requests, send essential service notifications, and improve infrastructure quality. We do not sell your data to third parties.",
+      },
+      {
+        section_id: "cookies",
+        section_heading: "4. Cookies & Tracking",
+        section_content:
+          "We use cookies and similar technologies to maintain user sessions, remember preferences, and analyze website usage. You can manage cookies through your browser settings.",
+      },
+      {
+        section_id: "data-sharing",
+        section_heading: "5. Data Sharing",
+        section_content:
+          "Your information is shared only with trusted service providers (such as payment gateways and cloud infrastructure) essential to service operation, or when required by law.",
+      },
+      {
+        section_id: "security",
+        section_heading: "6. Data Security",
+        section_content:
+          "We employ encryption, access controls, and security monitoring to protect your data. However, no method of electronic transmission or storage is 100% secure.",
+      },
+      {
+        section_id: "your-rights",
+        section_heading: "7. Your Rights",
+        section_content:
+          "You have the right to access, correct, delete, and restrict the processing of your personal data. To exercise these rights, contact our support team via email.",
+      },
+      {
+        section_id: "contact",
+        section_heading: "8. Contact Us",
+        section_content:
+          "For any questions about this Privacy Policy, reach us at privacy@hosting.io or through our contact page.",
+      },
+    ],
+  },
+}
+
 export async function get_hero_data(locale: string): Promise<HeroData> {
   await new Promise((resolve) => setTimeout(resolve, 80))
 
@@ -671,6 +802,14 @@ export async function get_contact_page_copy(
   await new Promise((resolve) => setTimeout(resolve, 40))
 
   return contactPageCopyByLocale[locale] ?? contactPageCopyByLocale.fa
+}
+
+export async function get_privacy_content(
+  locale: string,
+): Promise<PrivacyContent> {
+  await new Promise((resolve) => setTimeout(resolve, 80))
+
+  return privacyContentByLocale[locale] ?? privacyContentByLocale.fa
 }
 
 export async function submit_contact_form(

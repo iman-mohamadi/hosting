@@ -26,6 +26,8 @@ Single source of truth for the Vibe Coding process. This is a **frontend-only** 
 
 - [x] Build About Us, Terms of Service, and Contact Us pages.
 
+- [x] Build Privacy Policy page.
+
 - [x] Implement smooth scrolling (Lenis) and footer.
 
 
