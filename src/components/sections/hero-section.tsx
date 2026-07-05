@@ -43,14 +43,11 @@ const itemVariants = {
 
 export function HeroSection({ data, locale }: HeroSectionProps) {
   return (
-    <section className="relative flex min-h-[calc(100svh-4rem)] items-center overflow-hidden">
+    <section className="relative z-10 flex min-h-[calc(100svh-4rem)] items-center overflow-hidden">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10"
-      >
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,oklch(0.45_0.08_188/0.18),transparent)]" />
-        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-border/60 to-transparent" />
-      </div>
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-border/40 to-transparent"
+      />
 
       <motion.div
         className={cn(

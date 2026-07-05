@@ -13,12 +13,12 @@ interface NavItem {
 const navItemsByLocale: Record<Locale, NavItem[]> = {
   fa: [
     { label: "پلن‌ها", href: "/pricing" },
-    { label: "درباره ما", href: "/about" },
+    { label: "پیکربندی", href: "/#configurator" },
     { label: "تماس", href: "/contact" },
   ],
   en: [
     { label: "Plans", href: "/pricing" },
-    { label: "About", href: "/about" },
+    { label: "Configurator", href: "/#configurator" },
     { label: "Contact", href: "/contact" },
   ],
 }
@@ -72,6 +72,12 @@ export function Header({ locale }: HeaderProps) {
         </nav>
 
         <div className="flex items-center gap-3">
+          <Link
+            href={resolveNavHref("/login", locale)}
+            className="hidden text-sm text-muted-foreground transition-colors hover:text-foreground sm:inline"
+          >
+            {locale === "fa" ? "ورود" : "Sign in"}
+          </Link>
           <LanguageSwitcher locale={locale} />
         </div>
       </div>

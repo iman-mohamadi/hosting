@@ -1,7 +1,14 @@
+import { notFound } from "next/navigation"
+
 import { get_hero_data } from "@/actions"
 import { HeroSection } from "@/components/sections/hero-section"
+import {
+  CtaSection,
+  FeaturesSection,
+  PerformanceSection,
+} from "@/components/sections/landing-sections"
+import { VpsConfigurator } from "@/components/sections/vps-configurator"
 import { isValidLocale, type Locale } from "@/i18n/config"
-import { notFound } from "next/navigation"
 
 interface HomePageProps {
   params: Promise<{ locale: string }>
@@ -17,5 +24,13 @@ export default async function HomePage({ params }: HomePageProps) {
   const locale: Locale = localeParam
   const heroData = await get_hero_data(locale)
 
-  return <HeroSection data={heroData} locale={locale} />
+  return (
+    <>
+      <HeroSection data={heroData} locale={locale} />
+      <VpsConfigurator locale={locale} />
+      <FeaturesSection locale={locale} />
+      <PerformanceSection locale={locale} />
+      <CtaSection locale={locale} />
+    </>
+  )
 }

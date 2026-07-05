@@ -19,9 +19,9 @@ export function ComparisonTable({
   section_subtitle,
 }: ComparisonTableProps) {
   const planColumns = [
-    { id: "starter", name: plans[0]?.plan_name ?? "Starter" },
-    { id: "pro", name: plans[1]?.plan_name ?? "Pro" },
-    { id: "enterprise", name: plans[2]?.plan_name ?? "Enterprise" },
+    { id: "starter", name: plans[0]?.plan_name ?? "Start" },
+    { id: "pro", name: plans[1]?.plan_name ?? "Growth" },
+    { id: "enterprise", name: plans[2]?.plan_name ?? "Scale" },
   ]
 
   function getValueForPlan(

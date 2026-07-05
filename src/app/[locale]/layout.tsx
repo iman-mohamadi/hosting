@@ -1,9 +1,8 @@
 import { notFound } from "next/navigation"
 
 import { LocaleAttributes } from "@/components/locale-attributes"
-import { Footer } from "@/components/layout/footer"
-import { Header } from "@/components/layout/header"
-import { SmoothScrollProvider } from "@/components/providers/smooth-scroll-provider"
+import { AuthProvider } from "@/components/providers/auth-provider"
+import { ToastProvider } from "@/components/providers/toast-provider"
 import {
   getDirection,
   isValidLocale,
@@ -37,21 +36,21 @@ export default async function LocaleLayout({
   return (
     <>
       <LocaleAttributes locale={locale} />
-      <SmoothScrollProvider>
-        <div
-          dir={direction}
-          className={cn(
-            "flex min-h-svh flex-col",
-            locale === "fa"
-              ? "font-[family-name:var(--font-vazirmatn)]"
-              : "font-[family-name:var(--font-inter)]",
-          )}
-        >
-          <Header locale={locale} />
-          <main className="flex-1">{children}</main>
-          <Footer locale={locale} />
-        </div>
-      </SmoothScrollProvider>
+      <AuthProvider>
+        <ToastProvider>
+          <div
+            dir={direction}
+            className={cn(
+              "min-h-svh bg-background text-foreground",
+              locale === "fa"
+                ? "font-[family-name:var(--font-vazirmatn)]"
+                : "font-[family-name:var(--font-inter)]",
+            )}
+          >
+            {children}
+          </div>
+        </ToastProvider>
+      </AuthProvider>
     </>
   )
 }

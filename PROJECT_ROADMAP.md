@@ -36,17 +36,17 @@ Single source of truth for the Vibe Coding process. This is a **frontend-only** 
 
 
 
-## Phase 2: API Layer Setup & Auth Flow (✅ IN PROGRESS)
+## Phase 2: API Layer Setup & Auth Flow (✅ COMPLETED)
 
 
 
-- [ ] Setup API service layer (Axios or native fetch wrapper) to handle external backend communication.
+- [x] Setup API service layer (Axios or native fetch wrapper) to handle external backend communication.
 
-- [ ] Define all TypeScript interfaces for external API responses.
+- [x] Define all TypeScript interfaces for external API responses.
 
-- [ ] Build interactive, glassmorphic Login and Register modals/pages.
+- [x] Build interactive, glassmorphic Login and Register modals/pages.
 
-- [ ] Implement JWT/Cookie-based session management on the client side.
+- [x] Implement JWT/Cookie-based session management on the client side.
 
 
 
@@ -54,17 +54,17 @@ Single source of truth for the Vibe Coding process. This is a **frontend-only** 
 
 
 
-## Phase 3: The Showpiece (VPS Configurator)
+## Phase 3: The Showpiece (VPS Configurator) (✅ IN PROGRESS)
 
 
 
-- [ ] Setup WebGL/Three.js canvas context for the configurator.
+- [x] Build the interactive UI controls (sliders/toggles for CPU, RAM, NVMe storage, network speed).
 
-- [ ] Build the interactive UI controls (sliders/toggles for CPU, RAM, NVMe storage, network speed).
+- [x] Implement real-time pricing calculation logic based on selected resources.
 
-- [ ] Implement real-time pricing calculation logic based on selected resources.
+- [x] Integrate OS selection (Ubuntu, Windows, Arch Linux).
 
-- [ ] Integrate OS selection (Linux/Windows distributions) and add-ons (IPs, backups).
+- [ ] Add optional add-ons (IPs, backups).
 
 
 

@@ -88,7 +88,7 @@ export function ContactForm({ copy, locale }: ContactFormProps) {
                   onClick={() => set_is_success(false)}
                   className="mt-4 text-xs font-medium tracking-wide text-primary uppercase transition-opacity hover:opacity-70"
                 >
-                  {locale === "fa" ? "ارسال پیام جدید" : "Send another message"}
+                  {locale === "fa" ? "درخواست دیگری بفرستید" : "Send another request"}
                 </button>
               </div>
             </div>

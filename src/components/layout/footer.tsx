@@ -23,14 +23,14 @@ interface FooterContent {
 
 const footerContentByLocale: Record<Locale, FooterContent> = {
   fa: {
-    tagline: "زیرساخت ابری، ساده و قدرتمند.",
+    tagline: "زیرساخت ابری برای تیم‌هایی که سرعت و شفافیت می‌خواهند.",
     columns: [
       {
-        title: "محصول",
+        title: "پلتفرم",
         links: [
           { label: "پلن‌ها", href: "/pricing" },
-          { label: "ویژگی‌ها", href: "/features" },
-          { label: "پیکربندی VPS", href: "/configure" },
+          { label: "پیکربندی", href: "/#configurator" },
+          { label: "ورود", href: "/login" },
         ],
       },
       {
@@ -38,29 +38,29 @@ const footerContentByLocale: Record<Locale, FooterContent> = {
         links: [
           { label: "درباره ما", href: "/about" },
           { label: "تماس", href: "/contact" },
-          { label: "وضعیت سرویس", href: "/status" },
+          { label: "ثبت‌نام", href: "/register" },
         ],
       },
       {
         title: "قوانین",
         links: [
-          { label: "شرایط استفاده", href: "/terms" },
+          { label: "شرایط", href: "/terms" },
           { label: "حریم خصوصی", href: "/privacy" },
         ],
       },
     ],
     copyright: "© ۱۴۰۵ هاستینگ. تمامی حقوق محفوظ است.",
-    status_label: "همه سرویس‌ها فعال",
+    status_label: "شبکه پایدار و آماده",
   },
   en: {
-    tagline: "Cloud infrastructure, distilled.",
+    tagline: "Cloud infrastructure for teams that want speed and clarity.",
     columns: [
       {
-        title: "Product",
+        title: "Platform",
         links: [
           { label: "Pricing", href: "/pricing" },
-          { label: "Features", href: "/features" },
-          { label: "Configure VPS", href: "/configure" },
+          { label: "Configurator", href: "/#configurator" },
+          { label: "Sign in", href: "/login" },
         ],
       },
       {
@@ -68,19 +68,19 @@ const footerContentByLocale: Record<Locale, FooterContent> = {
         links: [
           { label: "About", href: "/about" },
           { label: "Contact", href: "/contact" },
-          { label: "Status", href: "/status" },
+          { label: "Create account", href: "/register" },
         ],
       },
       {
         title: "Legal",
         links: [
-          { label: "Terms of Service", href: "/terms" },
-          { label: "Privacy Policy", href: "/privacy" },
+          { label: "Terms", href: "/terms" },
+          { label: "Privacy", href: "/privacy" },
         ],
       },
     ],
     copyright: "© 2026 Hosting. All rights reserved.",
-    status_label: "All systems operational",
+    status_label: "Network live and healthy",
   },
 }
 
@@ -184,7 +184,7 @@ export function Footer({ locale }: FooterProps) {
         >
           <p>{content.copyright}</p>
           <p className="font-mono tracking-wider uppercase opacity-60">
-            {locale === "fa" ? "نسخه ۰.۱.۰" : "v0.1.0"}
+            {locale === "fa" ? "بتای خصوصی" : "Private beta"}
           </p>
         </div>
       </div>
