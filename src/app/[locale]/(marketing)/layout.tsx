@@ -40,7 +40,7 @@ export default async function MarketingLayout({
         )}
       >
         <Header locale={locale} />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 pt-16">{children}</main>
         <Footer locale={locale} />
       </div>
     </SmoothScrollProvider>

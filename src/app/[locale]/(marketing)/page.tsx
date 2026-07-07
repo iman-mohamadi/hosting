@@ -5,6 +5,7 @@ import { HeroSection } from "@/components/sections/hero-section"
 import {
   CtaSection,
   FeaturesSection,
+  ManifestoBand,
   PerformanceSection,
 } from "@/components/sections/landing-sections"
 import { VpsConfigurator } from "@/components/sections/vps-configurator"
@@ -27,8 +28,9 @@ export default async function HomePage({ params }: HomePageProps) {
   return (
     <>
       <HeroSection data={heroData} locale={locale} />
-      <VpsConfigurator locale={locale} />
       <FeaturesSection locale={locale} />
+      <ManifestoBand locale={locale} />
+      <VpsConfigurator locale={locale} />
       <PerformanceSection locale={locale} />
       <CtaSection locale={locale} />
     </>
