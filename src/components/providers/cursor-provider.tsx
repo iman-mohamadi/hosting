@@ -78,7 +78,7 @@ export function CursorProvider() {
             : "color-mix(in oklch, var(--foreground) 30%, transparent)",
           backgroundColor: hovering
             ? "color-mix(in oklch, var(--signal) 12%, transparent)"
-            : "transparent",
+            : "color-mix(in oklch, var(--signal) 0%, transparent)",
           scale: down ? 0.82 : 1,
         }}
         transition={{ type: "spring", stiffness: 260, damping: 22 }}
