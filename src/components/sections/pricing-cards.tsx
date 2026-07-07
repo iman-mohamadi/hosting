@@ -1,11 +1,12 @@
 "use client"
 
 import Link from "next/link"
-import { motion } from "framer-motion"
-import { useCallback, useState } from "react"
+import { Check } from "@phosphor-icons/react"
 
 import type { PricingPlan } from "@/actions"
 import { Button } from "@/components/ui/button"
+import { Reveal } from "@/components/fx/reveal"
+import { TiltCard } from "@/components/fx/tilt-card"
 import { cn } from "@/lib/utils"
 import type { Locale } from "@/i18n/config"
 import { localizePathname } from "@/i18n/routing"
@@ -18,129 +19,140 @@ interface PricingCardsProps {
   per_month: string
 }
 
-interface SpotlightCardProps {
-  plan: PricingPlan
-  locale: Locale
-  recommended_badge: string
-  per_month: string
-  index: number
+const SPEC_LABELS = {
+  en: { cpu: "vCPU", ram: "RAM", nvme: "NVMe", bw: "Transfer" },
+  fa: { cpu: "vCPU", ram: "RAM", nvme: "NVMe", bw: "ترافیک" },
 }
 
-function SpotlightCard({
+function PlanCard({
   plan,
   locale,
   recommended_badge,
   per_month,
   index,
-}: SpotlightCardProps) {
-  const [spotlight, setSpotlight] = useState({ x: 0, y: 0, opacity: 0 })
+}: {
+  plan: PricingPlan
+  locale: Locale
+  recommended_badge: string
+  per_month: string
+  index: number
+}) {
+  const isRTL = locale === "fa"
+  const specs = isRTL ? SPEC_LABELS.fa : SPEC_LABELS.en
 
-  const handleMouseMove = useCallback(
-    (event: React.MouseEvent<HTMLDivElement>) => {
-      const rect = event.currentTarget.getBoundingClientRect()
-      setSpotlight({
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top,
-        opacity: 1,
-      })
-    },
-    [],
-  )
-
-  const handleMouseLeave = useCallback(() => {
-    setSpotlight((prev) => ({ ...prev, opacity: 0 }))
-  }, [])
+  const specItems = [
+    { label: specs.cpu, value: plan.cpu_cores },
+    { label: specs.ram, value: `${plan.ram_gb} GB` },
+    { label: specs.nvme, value: `${plan.storage_nvme} GB` },
+    { label: specs.bw, value: `${plan.bandwidth_tb} TB` },
+  ]
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 32, filter: "blur(8px)" }}
-      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      transition={{
-        duration: 0.7,
-        delay: 0.15 + index * 0.1,
-        ease: [0.22, 1, 0.36, 1],
-      }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className={cn(
-        "group relative flex flex-col overflow-hidden rounded-2xl border p-8",
-        "bg-card/30 backdrop-blur-md transition-colors duration-500",
-        plan.is_recommended
-          ? "border-primary/40 shadow-[0_0_40px_-12px_oklch(0.72_0.12_188/0.45)]"
-          : "border-border/40 hover:border-border/60",
-      )}
-    >
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 transition-opacity duration-500"
-        style={{
-          opacity: spotlight.opacity,
-          background: `radial-gradient(480px circle at ${spotlight.x}px ${spotlight.y}px, oklch(0.72 0.12 188 / 0.12), transparent 45%)`,
-        }}
-      />
+    <Reveal delay={index * 0.08} y={50} className="h-full">
+      <TiltCard
+        max={5}
+        className={cn(
+          "h-full p-8 md:p-9",
+          plan.is_recommended &&
+            "border-acid/40 shadow-[0_0_60px_-20px_oklch(0.9_0.22_128/0.5)]",
+        )}
+      >
+        {plan.is_recommended && (
+          <div
+            aria-hidden
+            className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-acid to-transparent"
+          />
+        )}
 
-      {plan.is_recommended && (
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
-      )}
-
-      <div className="relative flex flex-1 flex-col">
-        <div className="mb-8 flex items-start justify-between gap-4">
-          <div className="space-y-2 ltr:text-left rtl:text-right">
-            <h3 className="text-xl font-semibold tracking-tight text-foreground">
-              {plan.plan_name}
-            </h3>
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              {plan.plan_description}
-            </p>
+        <div className="flex h-full flex-col">
+          <div className="mb-8 flex items-start justify-between gap-4">
+            <div className="space-y-2">
+              <h3
+                className={cn(
+                  "text-xl font-semibold tracking-tight text-foreground",
+                  isRTL && "font-[family-name:var(--font-vazirmatn)]",
+                )}
+              >
+                {plan.plan_name}
+              </h3>
+              <p
+                className={cn(
+                  "max-w-[16rem] text-sm leading-relaxed text-muted-foreground",
+                  isRTL && "font-[family-name:var(--font-vazirmatn)]",
+                )}
+              >
+                {plan.plan_description}
+              </p>
+            </div>
+            {plan.is_recommended && (
+              <span className="shrink-0 rounded-full bg-acid px-3 py-1 font-mono text-[0.6rem] font-semibold tracking-widest text-acid-foreground uppercase">
+                {recommended_badge}
+              </span>
+            )}
           </div>
 
-          {plan.is_recommended && (
-            <span className="shrink-0 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[0.65rem] font-medium tracking-widest text-primary uppercase">
-              {recommended_badge}
-            </span>
-          )}
-        </div>
-
-        <div className="mb-8 ltr:text-left rtl:text-right">
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-4xl font-semibold tracking-tight text-foreground">
-              {plan.price_display}
-            </span>
+          <div className="mb-8">
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-5xl font-bold tracking-tighter text-foreground">
+                {plan.price_display}
+              </span>
+              <span className="font-mono text-xs text-muted-foreground">
+                {per_month}
+              </span>
+            </div>
           </div>
-          <p className="mt-1 text-xs tracking-wide text-muted-foreground uppercase">
-            {per_month}
-          </p>
+
+          {/* spec strip */}
+          <div className="mb-8 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02]">
+            {specItems.map((s) => (
+              <div key={s.label} className="bg-white/[0.01] p-4">
+                <p className="font-mono text-[0.6rem] tracking-[0.15em] text-muted-foreground uppercase">
+                  {s.label}
+                </p>
+                <p
+                  className={cn(
+                    "mt-1 text-lg font-semibold tabular-nums text-foreground",
+                    isRTL && "font-[family-name:var(--font-vazirmatn)]",
+                  )}
+                >
+                  {s.value}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <ul className="mb-10 flex-1 space-y-3">
+            {plan.features_list.map((feature) => (
+              <li
+                key={feature}
+                className={cn(
+                  "flex items-start gap-3 text-sm text-muted-foreground",
+                  isRTL && "font-[family-name:var(--font-vazirmatn)]",
+                )}
+              >
+                <Check
+                  weight="bold"
+                  className="mt-0.5 size-4 shrink-0 text-acid"
+                  aria-hidden
+                />
+                {feature}
+              </li>
+            ))}
+          </ul>
+
+          <Button
+            asChild
+            variant={plan.is_recommended ? "acid" : "glass"}
+            size="pill"
+            className="w-full justify-center"
+          >
+            <Link href={localizePathname("/#configurator", locale)}>
+              {plan.cta_label}
+            </Link>
+          </Button>
         </div>
-
-        <ul className="mb-10 flex-1 space-y-3 ltr:text-left rtl:text-right">
-          {plan.features_list.map((feature) => (
-            <li
-              key={feature}
-              className="flex items-start gap-3 text-sm text-muted-foreground"
-            >
-              <span
-                aria-hidden
-                className="mt-2 size-1 shrink-0 rounded-full bg-primary/70"
-              />
-              {feature}
-            </li>
-          ))}
-        </ul>
-
-        <Button
-          asChild
-          variant={plan.is_recommended ? "default" : "outline"}
-          className={cn(
-            "h-11 w-full rounded-full text-sm font-medium tracking-wide",
-            plan.is_recommended && "shadow-[0_0_24px_-8px_oklch(0.72_0.12_188/0.5)]",
-          )}
-        >
-          <Link href={localizePathname("/configure", locale)}>
-            {plan.cta_label}
-          </Link>
-        </Button>
-      </div>
-    </motion.article>
+      </TiltCard>
+    </Reveal>
   )
 }
 
@@ -151,16 +163,24 @@ export function PricingCards({
   recommended_badge,
   per_month,
 }: PricingCardsProps) {
+  const isRTL = locale === "fa"
   return (
     <section id="plans" className="relative">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <h2 className="mb-16 text-xs font-medium tracking-[0.25em] text-muted-foreground uppercase ltr:text-left rtl:text-right">
-          {section_title}
-        </h2>
+        <Reveal>
+          <h2
+            className={cn(
+              "mb-14 font-mono text-xs tracking-[0.3em] text-acid uppercase",
+              isRTL && "font-[family-name:var(--font-vazirmatn)]",
+            )}
+          >
+            {section_title}
+          </h2>
+        </Reveal>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+        <div className="grid items-stretch gap-5 md:grid-cols-2 lg:grid-cols-3">
           {plans.map((plan, index) => (
-            <SpotlightCard
+            <PlanCard
               key={plan.plan_id}
               plan={plan}
               locale={locale}

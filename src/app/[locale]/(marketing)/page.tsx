@@ -3,9 +3,10 @@ import { notFound } from "next/navigation"
 import { get_hero_data } from "@/actions"
 import { HeroSection } from "@/components/sections/hero-section"
 import {
-  CtaSection,
   FeaturesSection,
-  PerformanceSection,
+  ManifestoSection,
+  NetworkSection,
+  TrustStrip,
 } from "@/components/sections/landing-sections"
 import { VpsConfigurator } from "@/components/sections/vps-configurator"
 import { isValidLocale, type Locale } from "@/i18n/config"
@@ -27,10 +28,11 @@ export default async function HomePage({ params }: HomePageProps) {
   return (
     <>
       <HeroSection data={heroData} locale={locale} />
-      <VpsConfigurator locale={locale} />
+      <TrustStrip locale={locale} />
+      <ManifestoSection locale={locale} />
       <FeaturesSection locale={locale} />
-      <PerformanceSection locale={locale} />
-      <CtaSection locale={locale} />
+      <VpsConfigurator locale={locale} />
+      <NetworkSection locale={locale} />
     </>
   )
 }

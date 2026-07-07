@@ -88,8 +88,10 @@ export function LoginForm({ copy, locale }: LoginFormProps) {
 
       <Button
         type="submit"
+        variant="acid"
+        size="pill"
         disabled={is_pending}
-        className="h-11 w-full rounded-full text-sm font-medium tracking-wide"
+        className="w-full justify-center"
       >
         {is_pending ? copy.login_submitting : copy.login_submit}
       </Button>

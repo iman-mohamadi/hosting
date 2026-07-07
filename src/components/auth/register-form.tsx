@@ -103,8 +103,10 @@ export function RegisterForm({ copy, locale }: RegisterFormProps) {
 
       <Button
         type="submit"
+        variant="acid"
+        size="pill"
         disabled={is_pending}
-        className="h-11 w-full rounded-full text-sm font-medium tracking-wide"
+        className="w-full justify-center"
       >
         {is_pending ? copy.register_submitting : copy.register_submit}
       </Button>

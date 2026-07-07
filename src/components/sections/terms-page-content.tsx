@@ -48,19 +48,22 @@ export function TermsPageContent({ content, locale }: TermsPageContentProps) {
     <div className="relative overflow-hidden">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[400px] bg-[radial-gradient(ellipse_70%_50%_at_50%_-10%,oklch(0.45_0.08_188/0.08),transparent)]"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[420px] bg-[radial-gradient(ellipse_60%_60%_at_50%_-10%,oklch(0.88_0.21_128/0.08),transparent)]"
       />
 
-      <div className="mx-auto max-w-7xl px-6 pt-24 pb-32 lg:px-8 lg:pt-32 lg:pb-40">
+      <div className="mx-auto max-w-7xl px-6 pt-40 pb-32 lg:px-8 lg:pt-52 lg:pb-40">
         <motion.header
           initial={{ opacity: 0, y: 24, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
           className={cn("mb-20 max-w-2xl space-y-4", "ltr:text-left rtl:text-right")}
         >
+          <p className="font-mono text-xs tracking-[0.3em] text-acid uppercase">
+            {locale === "fa" ? "قوانین" : "Legal"}
+          </p>
           <h1
             className={cn(
-              "text-4xl font-semibold tracking-tight text-foreground md:text-5xl",
+              "whitespace-pre-line text-5xl font-semibold tracking-tight text-foreground md:text-7xl",
               locale === "fa" && "font-[family-name:var(--font-vazirmatn)]",
             )}
           >
@@ -69,7 +72,7 @@ export function TermsPageContent({ content, locale }: TermsPageContentProps) {
           <p className="text-lg leading-relaxed text-muted-foreground">
             {content.page_subtitle}
           </p>
-          <p className="text-xs tracking-wide text-muted-foreground/70 uppercase">
+          <p className="font-mono text-xs tracking-wide text-muted-foreground/70 uppercase">
             {content.last_updated}
           </p>
         </motion.header>
@@ -99,7 +102,7 @@ export function TermsPageContent({ content, locale }: TermsPageContentProps) {
                           "block rounded-lg px-3 py-2 text-sm transition-colors duration-300",
                           "whitespace-nowrap lg:whitespace-normal",
                           isActive
-                            ? "bg-muted/40 text-foreground"
+                            ? "bg-acid/10 text-acid"
                             : "text-muted-foreground hover:text-foreground",
                         )}
                       >

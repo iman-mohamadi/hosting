@@ -9,7 +9,7 @@ import {
   type ContactPageCopy,
   type ContactPayload,
 } from "@/actions"
-import { Button } from "@/components/ui/button"
+import { MagneticButton } from "@/components/fx/magnetic-button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
@@ -101,11 +101,11 @@ export function ContactForm({ copy, locale }: ContactFormProps) {
             exit={{ opacity: 0 }}
             onSubmit={handle_submit}
             className={cn(
-              "rounded-2xl border border-border/40 bg-card/20 p-8 backdrop-blur-md md:p-10",
+              "rounded-3xl border border-white/10 glass p-8 md:p-10",
               "ltr:text-left rtl:text-right",
             )}
           >
-            <h2 className="mb-8 text-sm font-medium tracking-[0.2em] text-muted-foreground uppercase">
+            <h2 className="mb-8 font-mono text-xs tracking-[0.25em] text-acid uppercase">
               {copy.form_title}
             </h2>
 
@@ -203,13 +203,14 @@ export function ContactForm({ copy, locale }: ContactFormProps) {
                 </p>
               )}
 
-              <Button
+              <MagneticButton
                 type="submit"
                 disabled={is_pending}
-                className="h-11 w-full rounded-full text-sm font-medium tracking-wide md:w-auto md:px-10"
+                isRTL={locale === "fa"}
+                withArrow={!is_pending}
               >
                 {is_pending ? copy.submitting_label : copy.submit_label}
-              </Button>
+              </MagneticButton>
             </div>
           </motion.form>
         )}
