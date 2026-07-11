@@ -26,31 +26,35 @@ export function Preloader({ label, isRTL }: PreloaderProps) {
     if (reduced) return
     if (sessionStorage.getItem("intro_seen")) return
 
-    setActive(true)
-    document.documentElement.classList.add("lenis-stopped")
-
-    const start = performance.now()
-    const DURATION = 1900
     let raf = 0
-    const step = (now: number) => {
-      const t = Math.min(1, (now - start) / DURATION)
-      // ease-out for a decelerating counter
-      const eased = 1 - Math.pow(1 - t, 3)
-      setCount(Math.round(eased * 100))
-      if (t < 1) {
-        raf = requestAnimationFrame(step)
-      } else {
-        window.setTimeout(() => {
-          sessionStorage.setItem("intro_seen", "1")
-          document.documentElement.classList.remove("lenis-stopped")
-          setActive(false)
-        }, 420)
+    let timeout_id = 0
+    const start_id = requestAnimationFrame(() => {
+      setActive(true)
+      document.documentElement.classList.add("lenis-stopped")
+
+      const start = performance.now()
+      const DURATION = 1900
+      const step = (now: number) => {
+        const t = Math.min(1, (now - start) / DURATION)
+        const eased = 1 - Math.pow(1 - t, 3)
+        setCount(Math.round(eased * 100))
+        if (t < 1) {
+          raf = requestAnimationFrame(step)
+        } else {
+          timeout_id = window.setTimeout(() => {
+            sessionStorage.setItem("intro_seen", "1")
+            document.documentElement.classList.remove("lenis-stopped")
+            setActive(false)
+          }, 420)
+        }
       }
-    }
-    raf = requestAnimationFrame(step)
+      raf = requestAnimationFrame(step)
+    })
 
     return () => {
+      cancelAnimationFrame(start_id)
       cancelAnimationFrame(raf)
+      window.clearTimeout(timeout_id)
       document.documentElement.classList.remove("lenis-stopped")
     }
   }, [reduced])

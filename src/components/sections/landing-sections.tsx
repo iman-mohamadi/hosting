@@ -244,13 +244,19 @@ function ThroughputBars() {
           animate={
             reduced
               ? { height: "60%" }
-              : { height: ["25%", `${40 + Math.random() * 60}%`, "35%"] }
+              : {
+                  height: [
+                    "25%",
+                    `${40 + ((i * 37) % 60)}%`,
+                    "35%",
+                  ],
+                }
           }
           transition={
             reduced
               ? undefined
               : {
-                  duration: 1.6 + Math.random(),
+                  duration: 1.6 + (i % 5) * 0.12,
                   repeat: Infinity,
                   repeatType: "mirror",
                   delay: i * 0.04,

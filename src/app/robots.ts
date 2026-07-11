@@ -1,0 +1,29 @@
+import type { MetadataRoute } from "next"
+
+export default function robots(): MetadataRoute.Robots {
+  return {
+    rules: [
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: [
+          "/dashboard",
+          "/dashboard/",
+          "/admin",
+          "/admin/",
+          "/checkout",
+          "/login",
+          "/register",
+          "/en/dashboard",
+          "/en/dashboard/",
+          "/en/admin",
+          "/en/admin/",
+          "/en/checkout",
+          "/en/login",
+          "/en/register",
+        ],
+      },
+    ],
+    sitemap: "https://hosting.io/sitemap.xml",
+  }
+}

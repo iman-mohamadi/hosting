@@ -44,7 +44,9 @@ const footerContentByLocale: Record<Locale, FooterContent> = {
         links: [
           { label: "پلن‌ها", href: "/pricing" },
           { label: "پیکربندی", href: "/#configurator" },
-          { label: "شبکه جهانی", href: "/#network" },
+          { label: "مستندات", href: "/docs" },
+          { label: "سؤالات متداول", href: "/faq" },
+          { label: "وضعیت سرویس", href: "/status" },
           { label: "ورود", href: "/login" },
         ],
       },
@@ -61,6 +63,7 @@ const footerContentByLocale: Record<Locale, FooterContent> = {
         links: [
           { label: "شرایط", href: "/terms" },
           { label: "حریم خصوصی", href: "/privacy" },
+          { label: "SLA", href: "/sla" },
         ],
       },
     ],
@@ -79,7 +82,9 @@ const footerContentByLocale: Record<Locale, FooterContent> = {
         links: [
           { label: "Pricing", href: "/pricing" },
           { label: "Configurator", href: "/#configurator" },
-          { label: "Global network", href: "/#network" },
+          { label: "Documentation", href: "/docs" },
+          { label: "FAQ", href: "/faq" },
+          { label: "System status", href: "/status" },
           { label: "Sign in", href: "/login" },
         ],
       },
@@ -96,6 +101,7 @@ const footerContentByLocale: Record<Locale, FooterContent> = {
         links: [
           { label: "Terms", href: "/terms" },
           { label: "Privacy", href: "/privacy" },
+          { label: "SLA", href: "/sla" },
         ],
       },
     ],
@@ -198,13 +204,16 @@ export function Footer({ locale }: FooterProps) {
               <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
                 {content.tagline}
               </p>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Link
+                href={localizePathname("/status", locale)}
+                className="flex items-center gap-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+              >
                 <span className="relative flex size-2">
                   <span className="absolute inline-flex size-full animate-ping rounded-full bg-acid/60" />
                   <span className="relative inline-flex size-2 rounded-full bg-acid" />
                 </span>
                 {content.status_label}
-              </div>
+              </Link>
             </div>
 
             {content.columns.map((column) => (

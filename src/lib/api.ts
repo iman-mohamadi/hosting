@@ -42,7 +42,10 @@ export async function api_request<T>(
   path: string,
   options: ApiRequestOptions = {},
 ): Promise<T> {
-  const { body, auth_token, ...fetch_options } = options
+  const fetch_options = { ...options }
+  const body = fetch_options.body
+  delete fetch_options.body
+  delete fetch_options.auth_token
 
   const response = await fetch(`${get_base_url()}${path}`, {
     ...fetch_options,

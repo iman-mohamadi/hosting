@@ -7,13 +7,17 @@ export interface RegisterPayload {
   full_name: string
   email_address: string
   account_password: string
+  accepted_terms: boolean
 }
+
+export type AccountRole = "user" | "admin"
 
 export interface AuthUser {
   user_id: string
   full_name: string
   email_address: string
   account_status: string
+  role: AccountRole
   created_at: string
 }
 
@@ -51,4 +55,23 @@ export interface AuthPageCopy {
   invalid_credentials: string
   email_taken: string
   validation_error: string
+  forgot_password_link: string
+  forgot_password_title: string
+  forgot_password_subtitle: string
+  forgot_password_submit: string
+  forgot_password_submitting: string
+  forgot_password_success: string
+  forgot_password_back: string
+  forgot_password_demo_hint: string
+  reset_password_title: string
+  reset_password_subtitle: string
+  reset_password_submit: string
+  reset_password_submitting: string
+  reset_password_success: string
+  reset_password_invalid: string
+  new_password_label: string
+  confirm_password_label: string
+  password_mismatch: string
+  terms_accept_label: string
+  terms_required: string
 }

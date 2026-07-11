@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils"
 import type { Locale } from "@/i18n/config"
 import { EASE_OUT_EXPO } from "@/lib/motion"
 import { getHomePath, localizePathname } from "@/i18n/routing"
+import { use_auth_store } from "@/stores/auth-store"
 
 interface NavItem {
   label: string
@@ -23,14 +24,16 @@ const navItemsByLocale: Record<Locale, NavItem[]> = {
   fa: [
     { label: "پلن‌ها", href: "/pricing" },
     { label: "پیکربندی", href: "/#configurator" },
-    { label: "شبکه", href: "/#network" },
+    { label: "مستندات", href: "/docs" },
+    { label: "وضعیت", href: "/status" },
     { label: "درباره", href: "/about" },
     { label: "تماس", href: "/contact" },
   ],
   en: [
     { label: "Plans", href: "/pricing" },
     { label: "Configure", href: "/#configurator" },
-    { label: "Network", href: "/#network" },
+    { label: "Docs", href: "/docs" },
+    { label: "Status", href: "/status" },
     { label: "About", href: "/about" },
     { label: "Contact", href: "/contact" },
   ],
@@ -54,6 +57,24 @@ export function Header({ locale }: HeaderProps) {
   const reduced = useReducedMotion()
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
+
+  const user = use_auth_store((state) => state.user)
+  const is_hydrated = use_auth_store((state) => state.is_hydrated)
+  const is_signed_in = is_hydrated && user !== null
+  const account_href = localizePathname(
+    user?.role === "admin" ? "/admin" : "/dashboard",
+    locale,
+  )
+  const account_label = is_signed_in
+    ? locale === "fa"
+      ? "داشبورد"
+      : "Dashboard"
+    : locale === "fa"
+      ? "ورود"
+      : "Sign in"
+  const account_target = is_signed_in
+    ? account_href
+    : localizePathname("/login", locale)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -114,10 +135,10 @@ export function Header({ locale }: HeaderProps) {
 
           <div className="flex items-center gap-2">
             <Link
-              href={localizePathname("/login", locale)}
+              href={account_target}
               className="hidden px-3 text-sm text-muted-foreground transition-colors hover:text-foreground sm:inline"
             >
-              {locale === "fa" ? "ورود" : "Sign in"}
+              {account_label}
             </Link>
             <LanguageSwitcher locale={locale} />
             <div className="hidden sm:block">
@@ -193,11 +214,11 @@ export function Header({ locale }: HeaderProps) {
 
               <div className="flex items-center justify-between py-8">
                 <Link
-                  href={localizePathname("/login", locale)}
+                  href={account_target}
                   onClick={() => setOpen(false)}
                   className="text-sm text-muted-foreground"
                 >
-                  {locale === "fa" ? "ورود به حساب" : "Sign in"}
+                  {account_label}
                 </Link>
                 <MagneticButton
                   href={resolveNavHref("/#configurator", locale)}

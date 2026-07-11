@@ -7,7 +7,10 @@ import {
   useSpring,
 } from "framer-motion"
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { useShallow } from "zustand/react/shallow"
+
+import { Check, Minus, Plus } from "@phosphor-icons/react"
 
 import type { SelectedOs, StorageType } from "@/actions"
 import { validate_configuration } from "@/actions"
@@ -15,9 +18,14 @@ import { MagneticButton } from "@/components/fx/magnetic-button"
 import { Reveal, TextReveal } from "@/components/fx/reveal"
 import { Slider } from "@/components/ui/slider"
 import type { Locale } from "@/i18n/config"
-import { format_vps_price } from "@/lib/vps-pricing"
+import { localizePathname } from "@/i18n/routing"
+import { ADDON_RATES, format_vps_price, MAX_DEDICATED_IPS } from "@/lib/vps-pricing"
 import { use_configurator_store } from "@/store/use_configurator_store"
 import { cn } from "@/lib/utils"
+
+/* ─── checkout session key ─────────────────────────────────────────── */
+
+export const VPS_CHECKOUT_STORAGE_KEY = "vps_checkout_config"
 
 /* ─── copy ─────────────────────────────────────────────────────────── */
 
@@ -31,6 +39,7 @@ const COPY = {
     ram_label: "Memory",
     storage_label: "Storage",
     os_label: "Operating system",
+    addons_label: "Add-ons",
     summary_title: "Your build",
     per_month: "/ month",
     deploy: "Deploy instance",
@@ -45,6 +54,23 @@ const COPY = {
       windows: { label: "Windows", desc: "Server 2022" },
       arch_linux: { label: "Arch Linux", desc: "Rolling release" },
     },
+    addons: {
+      dedicated_ips: {
+        label: "Dedicated IPv4",
+        desc: "Static, reverse-DNS ready",
+        unit: "/ mo each",
+      },
+      automated_backups: {
+        label: "Automated backups",
+        desc: "Daily snapshots, 7-day retention",
+      },
+      ddos_protection: {
+        label: "Advanced DDoS",
+        desc: "Always-on L3–L7 mitigation",
+      },
+    },
+    addons_summary: "Add-ons",
+    included: "Included",
   },
   fa: {
     eyebrow: "پیکربندی",
@@ -55,6 +81,7 @@ const COPY = {
     ram_label: "حافظه",
     storage_label: "ذخیره‌سازی",
     os_label: "سیستم‌عامل",
+    addons_label: "افزودنی‌ها",
     summary_title: "سرور شما",
     per_month: "/ ماه",
     deploy: "استقرار سرور",
@@ -69,6 +96,23 @@ const COPY = {
       windows: { label: "Windows", desc: "Server 2022" },
       arch_linux: { label: "Arch Linux", desc: "Rolling release" },
     },
+    addons: {
+      dedicated_ips: {
+        label: "IPv4 اختصاصی",
+        desc: "ثابت و آماده Reverse-DNS",
+        unit: "/ ماه هرکدام",
+      },
+      automated_backups: {
+        label: "پشتیبان‌گیری خودکار",
+        desc: "اسنپ‌شات روزانه، نگهداری ۷ روزه",
+      },
+      ddos_protection: {
+        label: "DDoS پیشرفته",
+        desc: "محافظت همیشه‌فعال L3 تا L7",
+      },
+    },
+    addons_summary: "افزودنی‌ها",
+    included: "فعال",
   },
 } as const
 
@@ -294,6 +338,167 @@ function OptionCard({
   )
 }
 
+/* ─── addon: stepper ───────────────────────────────────────────────── */
+
+function AddonStepper({
+  label,
+  description,
+  price_hint,
+  value,
+  min,
+  max,
+  on_change,
+  isRTL,
+}: {
+  label: string
+  description: string
+  price_hint: string
+  value: number
+  min: number
+  max: number
+  on_change: (value: number) => void
+  isRTL: boolean
+}) {
+  const is_active = value > 0
+
+  return (
+    <div
+      className={cn(
+        "flex items-center justify-between gap-4 rounded-2xl border p-5 transition-colors duration-300",
+        is_active
+          ? "border-acid/40 bg-acid/[0.05]"
+          : "border-white/10 bg-white/[0.015]",
+      )}
+    >
+      <div className="min-w-0">
+        <div className="flex items-center gap-2">
+          <p
+            className={cn(
+              "truncate text-base font-semibold text-foreground",
+              isRTL && "font-[family-name:var(--font-vazirmatn)]",
+            )}
+          >
+            {label}
+          </p>
+          <span className="shrink-0 font-mono text-[0.65rem] text-acid/80">
+            {price_hint}
+          </span>
+        </div>
+        <p
+          className={cn(
+            "mt-1 truncate text-sm text-muted-foreground",
+            isRTL && "font-[family-name:var(--font-vazirmatn)]",
+          )}
+        >
+          {description}
+        </p>
+      </div>
+
+      <div className="flex shrink-0 items-center gap-3">
+        <button
+          type="button"
+          onClick={() => on_change(Math.max(min, value - 1))}
+          disabled={value <= min}
+          aria-label="decrease"
+          className="flex size-9 items-center justify-center rounded-full border border-white/10 text-foreground transition-colors hover:border-white/25 disabled:opacity-30"
+        >
+          <Minus weight="bold" className="size-3.5" />
+        </button>
+        <span className="w-6 text-center font-mono text-lg tabular-nums text-foreground">
+          {value}
+        </span>
+        <button
+          type="button"
+          onClick={() => on_change(Math.min(max, value + 1))}
+          disabled={value >= max}
+          aria-label="increase"
+          className="flex size-9 items-center justify-center rounded-full border border-white/10 text-foreground transition-colors hover:border-white/25 disabled:opacity-30"
+        >
+          <Plus weight="bold" className="size-3.5" />
+        </button>
+      </div>
+    </div>
+  )
+}
+
+/* ─── addon: toggle ────────────────────────────────────────────────── */
+
+function AddonToggle({
+  label,
+  description,
+  price_hint,
+  is_on,
+  on_toggle,
+  isRTL,
+}: {
+  label: string
+  description: string
+  price_hint: string
+  is_on: boolean
+  on_toggle: () => void
+  isRTL: boolean
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={is_on}
+      onClick={on_toggle}
+      className={cn(
+        "flex w-full items-center justify-between gap-4 rounded-2xl border p-5 text-start transition-colors duration-300",
+        is_on
+          ? "border-acid/40 bg-acid/[0.05]"
+          : "border-white/10 bg-white/[0.015] hover:border-white/20",
+      )}
+    >
+      <div className="min-w-0">
+        <div className="flex items-center gap-2">
+          <p
+            className={cn(
+              "truncate text-base font-semibold text-foreground",
+              isRTL && "font-[family-name:var(--font-vazirmatn)]",
+            )}
+          >
+            {label}
+          </p>
+          <span className="shrink-0 font-mono text-[0.65rem] text-acid/80">
+            {price_hint}
+          </span>
+        </div>
+        <p
+          className={cn(
+            "mt-1 truncate text-sm text-muted-foreground",
+            isRTL && "font-[family-name:var(--font-vazirmatn)]",
+          )}
+        >
+          {description}
+        </p>
+      </div>
+
+      <span
+        className={cn(
+          "relative flex h-6 w-11 shrink-0 items-center rounded-full border transition-colors duration-300",
+          is_on ? "border-acid bg-acid/30" : "border-white/15 bg-white/5",
+        )}
+      >
+        <motion.span
+          layout
+          transition={{ type: "spring", stiffness: 500, damping: 34 }}
+          className={cn(
+            "absolute flex size-4 items-center justify-center rounded-full",
+            is_on ? "bg-acid" : "bg-white/50",
+          )}
+          style={{ insetInlineStart: is_on ? "1.5rem" : "0.25rem" }}
+        >
+          {is_on && (
+            <Check weight="bold" className="size-2.5 text-acid-foreground" />
+          )}
+        </motion.span>
+      </span>
+    </button>
+  )
+}
+
 /* ─── live summary ─────────────────────────────────────────────────── */
 
 function LiveSummary({
@@ -301,11 +506,13 @@ function LiveSummary({
   copy,
   isRTL,
   compact = false,
+  on_deploy,
 }: {
   locale: Locale
   copy: (typeof COPY)[Locale]
   isRTL: boolean
   compact?: boolean
+  on_deploy: () => void
 }) {
   const {
     cpu_cores,
@@ -313,6 +520,7 @@ function LiveSummary({
     storage_type,
     storage_size_gb,
     selected_os,
+    addons,
     monthly_price,
   } = use_configurator_store(
     useShallow((state) => ({
@@ -321,6 +529,7 @@ function LiveSummary({
       storage_type: state.storage_type,
       storage_size_gb: state.storage_size_gb,
       selected_os: state.selected_os,
+      addons: state.addons,
       monthly_price: state.monthly_price,
     })),
   )
@@ -328,6 +537,26 @@ function LiveSummary({
   const storage_label = copy.storage_options[storage_type].label
   const os_label = copy.os_options[selected_os].label
   const price_display = format_vps_price(monthly_price, locale)
+
+  const addon_rows: { label: string; value: string }[] = []
+  if (addons.dedicated_ips > 0) {
+    addon_rows.push({
+      label: copy.addons.dedicated_ips.label,
+      value: `× ${addons.dedicated_ips}`,
+    })
+  }
+  if (addons.automated_backups) {
+    addon_rows.push({
+      label: copy.addons.automated_backups.label,
+      value: copy.included,
+    })
+  }
+  if (addons.ddos_protection) {
+    addon_rows.push({
+      label: copy.addons.ddos_protection.label,
+      value: copy.included,
+    })
+  }
 
   if (compact) {
     return (
@@ -374,6 +603,7 @@ function LiveSummary({
           { label: copy.ram_label, value: `${ram_gb} ${copy.ram_unit}` },
           { label: copy.storage_label, value: `${storage_label} · ${storage_size_gb} GB` },
           { label: copy.os_label, value: os_label },
+          ...addon_rows,
         ].map((row) => (
           <li key={row.label} className="flex items-center justify-between gap-4 border-b border-white/5 pb-4">
             <span className="text-muted-foreground">{row.label}</span>
@@ -396,7 +626,12 @@ function LiveSummary({
       </div>
 
       <div className="mt-8">
-        <MagneticButton size="pill" isRTL={isRTL} className="w-full justify-center">
+        <MagneticButton
+          size="pill"
+          isRTL={isRTL}
+          className="w-full justify-center"
+          onClick={on_deploy}
+        >
           {copy.deploy}
         </MagneticButton>
       </div>
@@ -409,15 +644,20 @@ function LiveSummary({
 export function VpsConfigurator({ locale }: { locale: Locale }) {
   const copy = locale === "fa" ? COPY.fa : COPY.en
   const isRTL = locale === "fa"
+  const router = useRouter()
 
   const cpu_cores = use_configurator_store((state) => state.cpu_cores)
   const ram_gb = use_configurator_store((state) => state.ram_gb)
   const storage_type = use_configurator_store((state) => state.storage_type)
   const selected_os = use_configurator_store((state) => state.selected_os)
+  const addons = use_configurator_store((state) => state.addons)
   const update_cpu = use_configurator_store((state) => state.update_cpu)
   const update_ram = use_configurator_store((state) => state.update_ram)
   const update_storage = use_configurator_store((state) => state.update_storage)
   const update_os = use_configurator_store((state) => state.update_os)
+  const set_dedicated_ips = use_configurator_store((state) => state.set_dedicated_ips)
+  const toggle_backups = use_configurator_store((state) => state.toggle_backups)
+  const toggle_ddos = use_configurator_store((state) => state.toggle_ddos)
 
   const validation_snapshot = use_configurator_store(
     useShallow((state) => ({
@@ -426,16 +666,25 @@ export function VpsConfigurator({ locale }: { locale: Locale }) {
       storage_type: state.storage_type,
       storage_size_gb: state.storage_size_gb,
       selected_os: state.selected_os,
+      addons: state.addons,
       monthly_price: state.monthly_price,
     })),
   )
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
-      void validate_configuration(use_configurator_store.getState().get_payload())
+      void validate_configuration(use_configurator_store.getState().get_payload(), locale)
     }, 350)
     return () => window.clearTimeout(timer)
-  }, [validation_snapshot])
+  }, [validation_snapshot, locale])
+
+  function handle_deploy() {
+    sessionStorage.setItem(
+      VPS_CHECKOUT_STORAGE_KEY,
+      JSON.stringify(use_configurator_store.getState().get_payload()),
+    )
+    router.push(localizePathname("/checkout", locale))
+  }
 
   return (
     <section id="configurator" className="relative px-6 py-28 lg:px-8 lg:py-40">
@@ -548,11 +797,58 @@ export function VpsConfigurator({ locale }: { locale: Locale }) {
                 ))}
               </div>
             </div>
+
+            <div className="space-y-6">
+              <div className="flex items-center gap-4">
+                <span className="font-mono text-[0.65rem] tracking-[0.3em] text-acid/70">05</span>
+                <p
+                  className={cn(
+                    "text-xs font-medium tracking-[0.3em] text-muted-foreground uppercase",
+                    isRTL && "font-[family-name:var(--font-vazirmatn)]",
+                  )}
+                >
+                  {copy.addons_label}
+                </p>
+              </div>
+              <div className="grid gap-4">
+                <AddonStepper
+                  label={copy.addons.dedicated_ips.label}
+                  description={copy.addons.dedicated_ips.desc}
+                  price_hint={`${format_vps_price(ADDON_RATES.dedicated_ip, locale)} ${copy.addons.dedicated_ips.unit}`}
+                  value={addons.dedicated_ips}
+                  min={0}
+                  max={MAX_DEDICATED_IPS}
+                  on_change={set_dedicated_ips}
+                  isRTL={isRTL}
+                />
+                <AddonToggle
+                  label={copy.addons.automated_backups.label}
+                  description={copy.addons.automated_backups.desc}
+                  price_hint={`+${format_vps_price(ADDON_RATES.automated_backups, locale)}`}
+                  is_on={addons.automated_backups}
+                  on_toggle={toggle_backups}
+                  isRTL={isRTL}
+                />
+                <AddonToggle
+                  label={copy.addons.ddos_protection.label}
+                  description={copy.addons.ddos_protection.desc}
+                  price_hint={`+${format_vps_price(ADDON_RATES.ddos_protection, locale)}`}
+                  is_on={addons.ddos_protection}
+                  on_toggle={toggle_ddos}
+                  isRTL={isRTL}
+                />
+              </div>
+            </div>
           </div>
 
           <div className="hidden lg:block">
             <div className="sticky top-28">
-              <LiveSummary locale={locale} copy={copy} isRTL={isRTL} />
+              <LiveSummary
+                locale={locale}
+                copy={copy}
+                isRTL={isRTL}
+                on_deploy={handle_deploy}
+              />
             </div>
           </div>
         </div>
@@ -562,9 +858,21 @@ export function VpsConfigurator({ locale }: { locale: Locale }) {
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#040605]/85 px-5 py-4 backdrop-blur-2xl lg:hidden">
         <div className="mx-auto flex max-w-lg items-center gap-4">
           <div className="min-w-0 flex-1">
-            <LiveSummary locale={locale} copy={copy} isRTL={isRTL} compact />
+            <LiveSummary
+              locale={locale}
+              copy={copy}
+              isRTL={isRTL}
+              compact
+              on_deploy={handle_deploy}
+            />
           </div>
-          <MagneticButton size="pill" isRTL={isRTL} withArrow={false} className="shrink-0">
+          <MagneticButton
+            size="pill"
+            isRTL={isRTL}
+            withArrow={false}
+            className="shrink-0"
+            onClick={handle_deploy}
+          >
             {copy.deploy}
           </MagneticButton>
         </div>

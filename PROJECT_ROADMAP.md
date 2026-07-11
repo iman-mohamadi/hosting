@@ -54,7 +54,7 @@ Single source of truth for the Vibe Coding process. This is a **frontend-only** 
 
 
 
-## Phase 3: The Showpiece (VPS Configurator) (✅ IN PROGRESS)
+## Phase 3: The Showpiece (VPS Configurator) (✅ COMPLETED)
 
 
 
@@ -64,7 +64,7 @@ Single source of truth for the Vibe Coding process. This is a **frontend-only** 
 
 - [x] Integrate OS selection (Ubuntu, Windows, Arch Linux).
 
-- [ ] Add optional add-ons (IPs, backups).
+- [x] Add optional add-ons (dedicated IPs, automated backups, advanced DDoS).
 
 
 
@@ -72,45 +72,23 @@ Single source of truth for the Vibe Coding process. This is a **frontend-only** 
 
 
 
-## Phase 4: Client Dashboard (User Portal)
+## Phase 4: Client Dashboard (User Portal) (✅ COMPLETED)
 
 
 
-- [ ] Design Dashboard layout with a minimal, custom sidebar.
+- [x] Design Dashboard layout with a minimal, custom sidebar.
 
-- [ ] **Overview page:** Active services, pending invoices, recent tickets.
+- [x] **Overview page:** Active services, pending invoices, recent tickets.
 
-- [ ] **Instance management:** Detailed view for a specific VPS.
+- [x] **Instance management:** Detailed view for a specific VPS.
 
-  - [ ] Implement server controls (Start, Stop, Restart, Rebuild OS).
+  - [x] Implement server controls (Start, Stop, Restart, Rebuild OS).
 
-  - [ ] Resource usage charts (CPU, bandwidth).
+  - [x] Resource usage charts (CPU, bandwidth).
 
-- [ ] **Billing & Invoices:** View transaction history, pay pending invoices.
+- [x] **Billing & Invoices:** View transaction history, pay pending invoices.
 
-- [ ] **Support system:** Create and reply to support tickets.
-
-
-
----
-
-
-
-## Phase 5: Backoffice (Admin Panel)
-
-
-
-- [ ] Design Admin layout (distinct from Client Dashboard).
-
-- [ ] **Admin dashboard:** Revenue metrics, active nodes, pending orders overview.
-
-- [ ] **User management:** View, edit, suspend, or terminate client accounts.
-
-- [ ] **Order management:** Approve/reject pending VPS configurations.
-
-- [ ] **Node/Server monitoring:** Visual status of main physical servers.
-
-- [ ] **Ticket management:** Interface for admins to answer user support requests.
+- [x] **Support system:** Create and reply to support tickets.
 
 
 
@@ -118,14 +96,57 @@ Single source of truth for the Vibe Coding process. This is a **frontend-only** 
 
 
 
-## Phase 6: Production Polish
+## Phase 5: Backoffice (Admin Panel) (✅ COMPLETED)
 
 
 
-- [ ] Replace all mock data in `src/actions.ts` with real external API endpoints.
+- [x] Design Admin layout (distinct from Client Dashboard).
 
-- [ ] SEO optimization, metadata, and OpenGraph images.
+- [x] **Admin dashboard:** Revenue metrics, active nodes, pending orders overview.
 
-- [ ] Performance audits, accessibility (a11y) passes, and responsive checks.
+- [x] **User management:** View, suspend, activate, or terminate client accounts.
+
+- [x] **Order management:** Approve/reject pending VPS configurations.
+
+- [x] **Node/Server monitoring:** Visual status of main physical servers.
+
+- [x] **Ticket management:** Interface for admins to answer user support requests.
+
+
+
+---
+
+
+
+## Phase 4.5: Instance & Account Depth (✅ COMPLETED)
+
+- [x] **Instance detail tabs:** Overview, Resize, Snapshots, Firewall, Network, Console.
+- [x] **Resize:** CPU/RAM/storage sliders, warm/cold apply mode, live price delta.
+- [x] **Snapshots:** Create, restore, delete.
+- [x] **Firewall:** Inbound rule CRUD.
+- [x] **Network tab:** Reverse DNS (PTR), attached floating IPs/volumes.
+- [x] **Console:** Mock browser serial console.
+- [x] **Portal pages:** `/dashboard/networking`, `/dashboard/activity`, `/dashboard/account`.
+- [x] **Account:** Profile, password, 2FA toggle, SSH keys, API tokens, sessions.
+- [x] **Networking:** Floating IPs and block volumes with attach/detach.
+- [x] **Sidebar nav:** networking, activity, account links added.
+
+---
+
+## Phase 6: Production Polish (✅ FRONTEND COMPLETE)
+
+- [ ] Replace all mock data in `src/actions.ts` with real external API endpoints. _(Blocked on external backend. All actions speak `snake_case` and live in `src/actions.ts` for a clean swap.)_
+
+- [x] SEO optimization, metadata, robots.txt, sitemap, and localized page metadata.
+
+- [x] Auth completion: password reset flow, terms acceptance on register, demo reset token.
+
+- [x] Marketing polish: docs article pages, FAQ, SLA, cookie consent.
+
+- [x] Dashboard depth: instance settings/backups, DNS zones, payment methods, notification preferences, checkout promo codes.
+
+- [x] Error/loading/not-found shells and bilingual 404 copy.
+
+- [x] Lint/typecheck/production build green; responsive layouts and reduced-motion support in place.
 
 

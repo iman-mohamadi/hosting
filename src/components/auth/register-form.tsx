@@ -8,7 +8,7 @@ import { useState, useTransition } from "react"
 import { register_user } from "@/actions"
 import { FloatingInput } from "@/components/ui/floating-input"
 import { Button } from "@/components/ui/button"
-import { use_toast } from "@/components/providers/toast-provider"
+import { useToast } from "@/components/providers/toast-provider"
 import { cn } from "@/lib/utils"
 import type { Locale } from "@/i18n/config"
 import { localizePathname } from "@/i18n/routing"
@@ -22,22 +22,32 @@ interface RegisterFormProps {
 
 export function RegisterForm({ copy, locale }: RegisterFormProps) {
   const router = useRouter()
-  const { show_toast } = use_toast()
+  const { show_toast } = useToast()
   const set_user = use_auth_store((state) => state.set_user)
 
   const [full_name, set_full_name] = useState("")
   const [email_address, set_email_address] = useState("")
   const [account_password, set_account_password] = useState("")
+  const [accepted_terms, set_accepted_terms] = useState(false)
   const [is_pending, start_transition] = useTransition()
 
   function handle_submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
+
+    if (!accepted_terms) {
+      show_toast({
+        variant: "error",
+        title: copy.terms_required,
+      })
+      return
+    }
 
     start_transition(async () => {
       const result = await register_user({
         full_name,
         email_address,
         account_password,
+        accepted_terms,
       })
 
       if (result.success && result.user) {
@@ -47,7 +57,7 @@ export function RegisterForm({ copy, locale }: RegisterFormProps) {
           title: copy.register_success,
           message: result.user.full_name,
         })
-        router.push(localizePathname("/", locale))
+        router.push(localizePathname("/dashboard", locale))
         router.refresh()
         return
       }
@@ -100,6 +110,58 @@ export function RegisterForm({ copy, locale }: RegisterFormProps) {
         disabled={is_pending}
         autoComplete="new-password"
       />
+
+      <label className="flex items-start gap-3 text-sm text-muted-foreground">
+        <input
+          type="checkbox"
+          checked={accepted_terms}
+          onChange={(event) => set_accepted_terms(event.target.checked)}
+          disabled={is_pending}
+          className="mt-1 size-4 rounded border-white/20 bg-transparent accent-[oklch(0.88_0.21_128)]"
+        />
+        <span>
+          {copy.terms_accept_label.split(" ").length > 0 && (
+            <>
+              {locale === "fa" ? (
+                <>
+                  <Link
+                    href={localizePathname("/terms", locale)}
+                    className="text-foreground underline-offset-4 hover:underline"
+                  >
+                    شرایط استفاده
+                  </Link>
+                  {" و "}
+                  <Link
+                    href={localizePathname("/privacy", locale)}
+                    className="text-foreground underline-offset-4 hover:underline"
+                  >
+                    حریم خصوصی
+                  </Link>
+                  {" را می‌پذیرم."}
+                </>
+              ) : (
+                <>
+                  I accept the{" "}
+                  <Link
+                    href={localizePathname("/terms", locale)}
+                    className="text-foreground underline-offset-4 hover:underline"
+                  >
+                    Terms of Service
+                  </Link>{" "}
+                  and{" "}
+                  <Link
+                    href={localizePathname("/privacy", locale)}
+                    className="text-foreground underline-offset-4 hover:underline"
+                  >
+                    Privacy Policy
+                  </Link>
+                  .
+                </>
+              )}
+            </>
+          )}
+        </span>
+      </label>
 
       <Button
         type="submit"

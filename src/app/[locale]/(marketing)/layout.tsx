@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 
 import { Footer } from "@/components/layout/footer"
 import { Header } from "@/components/layout/header"
+import { CookieConsent } from "@/components/layout/cookie-consent"
 import { SmoothScrollProvider } from "@/components/providers/smooth-scroll-provider"
 import { CustomCursor } from "@/components/fx/custom-cursor"
 import { Grain } from "@/components/fx/grain"
@@ -51,6 +52,7 @@ export default async function MarketingLayout({
         <Header locale={locale} />
         <main className="flex-1">{children}</main>
         <Footer locale={locale} />
+        <CookieConsent locale={locale} />
       </div>
     </SmoothScrollProvider>
   )

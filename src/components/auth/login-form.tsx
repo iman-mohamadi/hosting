@@ -8,7 +8,7 @@ import { useState, useTransition } from "react"
 import { login_user } from "@/actions"
 import { FloatingInput } from "@/components/ui/floating-input"
 import { Button } from "@/components/ui/button"
-import { use_toast } from "@/components/providers/toast-provider"
+import { useToast } from "@/components/providers/toast-provider"
 import { cn } from "@/lib/utils"
 import type { Locale } from "@/i18n/config"
 import { localizePathname } from "@/i18n/routing"
@@ -22,7 +22,7 @@ interface LoginFormProps {
 
 export function LoginForm({ copy, locale }: LoginFormProps) {
   const router = useRouter()
-  const { show_toast } = use_toast()
+  const { show_toast } = useToast()
   const set_user = use_auth_store((state) => state.set_user)
 
   const [email_address, set_email_address] = useState("")
@@ -42,7 +42,9 @@ export function LoginForm({ copy, locale }: LoginFormProps) {
           title: copy.login_success,
           message: result.user.full_name,
         })
-        router.push(localizePathname("/", locale))
+        const destination =
+          result.user.role === "admin" ? "/admin" : "/dashboard"
+        router.push(localizePathname(destination, locale))
         router.refresh()
         return
       }
@@ -85,6 +87,15 @@ export function LoginForm({ copy, locale }: LoginFormProps) {
         disabled={is_pending}
         autoComplete="current-password"
       />
+
+      <div className="flex justify-end">
+        <Link
+          href={localizePathname("/forgot-password", locale)}
+          className="text-xs text-muted-foreground transition-colors hover:text-foreground"
+        >
+          {copy.forgot_password_link}
+        </Link>
+      </div>
 
       <Button
         type="submit"
