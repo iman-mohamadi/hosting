@@ -47,7 +47,7 @@ export function ForgotPasswordForm({ copy, locale }: ForgotPasswordFormProps) {
   }
 
   if (submitted_email) {
-    const is_demo = submitted_email === "demo@hosting.io"
+    const is_demo = submitted_email === "demo@parscloud.ir"
 
     return (
       <div className={cn("space-y-6 text-center", "ltr:text-left rtl:text-right")}>
@@ -55,7 +55,7 @@ export function ForgotPasswordForm({ copy, locale }: ForgotPasswordFormProps) {
           {copy.forgot_password_success}
         </p>
         {is_demo && (
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-4 text-sm">
+          <div className="rounded-2xl border border-border bg-muted p-4 text-sm">
             <p className="text-muted-foreground">{copy.forgot_password_demo_hint}</p>
             <Link
               href={localizePathname("/reset-password?token=demo-reset-token", locale)}

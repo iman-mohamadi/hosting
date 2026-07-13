@@ -32,7 +32,7 @@ export default async function AuthLayout({
         "min-h-svh bg-background",
         locale === "fa"
           ? "font-[family-name:var(--font-vazirmatn)]"
-          : "font-[family-name:var(--font-inter)]",
+          : "font-[family-name:var(--font-geist)]",
       )}
     >
       {children}

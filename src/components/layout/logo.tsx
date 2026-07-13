@@ -31,7 +31,7 @@ export function Logo({ locale, className, markClassName }: LogoProps) {
         <circle cx="12" cy="12" r="2.6" fill="var(--acid)" />
       </svg>
       <span className={locale === "fa" ? "font-[family-name:var(--font-vazirmatn)]" : undefined}>
-        {locale === "fa" ? "هاستینگ" : "Hosting"}
+        {locale === "fa" ? "پارس‌کلود" : "ParsCloud"}
       </span>
     </span>
   )

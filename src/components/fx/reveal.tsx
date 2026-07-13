@@ -43,8 +43,7 @@ export function Reveal({
   const MotionTag = motion[as as "div"] ?? motion.div
 
   if (reduced) {
-    const Tag = as as ElementType
-    return <Tag className={className}>{children}</Tag>
+    return <div className={className}>{children}</div>
   }
 
   return (
@@ -84,8 +83,8 @@ export function TextReveal({
   const ref = useRef<HTMLSpanElement>(null)
   const inView = useInView(ref, { once, margin: "-8% 0px" })
   const reduced = useReducedMotion()
-  const Tag = as as ElementType
   const lines = text.split("\n")
+  const Tag = as as "span"
 
   if (reduced) {
     return (

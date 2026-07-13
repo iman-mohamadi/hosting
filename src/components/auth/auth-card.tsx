@@ -6,7 +6,7 @@ import { ArrowLeft, ArrowRight } from "@phosphor-icons/react"
 
 import { LanguageSwitcher } from "@/components/layout/language-switcher"
 import { Logo } from "@/components/layout/logo"
-import { WebglBackdrop } from "@/components/fx/webgl-backdrop"
+import { Aurora } from "@/components/fx/aurora"
 import { Marquee } from "@/components/fx/marquee"
 import { cn } from "@/lib/utils"
 import type { Locale } from "@/i18n/config"
@@ -26,26 +26,29 @@ export function AuthCard({ locale, title, subtitle, children }: AuthCardProps) {
 
   return (
     <div className="relative grid min-h-svh lg:grid-cols-2">
-      {/* Immersive brand panel */}
-      <div className="relative isolate hidden overflow-hidden border-white/10 lg:block ltr:border-r rtl:border-l">
-        <div className="absolute inset-0 z-0">
-          <div aria-hidden className="absolute inset-0 bg-[#050706]" />
-          <WebglBackdrop intensity={0.9} />
-          <div
-            aria-hidden
-            className="absolute inset-0 bg-[radial-gradient(ellipse_80%_70%_at_50%_30%,transparent,#040605_88%)]"
-          />
-        </div>
+      {/* Immersive brand panel — vivid glossy gradient */}
+      <div className="relative isolate hidden overflow-hidden lg:block">
+        <div aria-hidden className="bg-brand absolute inset-0 z-0" />
+        <Aurora intensity="vivid" className="z-0 mix-blend-soft-light" />
+        <div
+          aria-hidden
+          className="absolute inset-0 z-0 opacity-30 [mask-image:radial-gradient(70%_60%_at_50%_40%,black,transparent)]"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.14) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.14) 1px, transparent 1px)",
+            backgroundSize: "56px 56px",
+          }}
+        />
 
         <div className="relative z-10 flex h-full flex-col justify-between p-12">
-          <Link href={getHomePath(locale)}>
+          <Link href={getHomePath(locale)} className="w-fit brightness-0 invert">
             <Logo locale={locale} />
           </Link>
 
           <div>
             <p
               className={cn(
-                "max-w-sm text-3xl font-semibold leading-tight tracking-tight text-foreground",
+                "max-w-sm text-3xl leading-tight font-semibold tracking-tight text-white",
                 isRTL && "font-[family-name:var(--font-vazirmatn)]",
               )}
             >
@@ -58,17 +61,21 @@ export function AuthCard({ locale, title, subtitle, children }: AuthCardProps) {
           <Marquee
             items={
               isRTL
-                ? ["NVMe", "۹۹.۹۹٪ آپتایم", "۱۴ منطقه", "DDoS"]
-                : ["NVMe", "99.99% uptime", "14 regions", "DDoS"]
+                ? ["NVMe", "۹۹.۹٪ هدف آپتایم", "۳ دیتاسنتر", "پرداخت تومانی"]
+                : ["NVMe", "99.9% uptime target", "3 datacenters", "Toman billing"]
             }
-            className="text-sm text-muted-foreground"
+            className="text-sm text-white/70"
           />
         </div>
       </div>
 
       {/* Form panel */}
-      <div className="relative flex flex-col items-center justify-center px-6 py-16">
-        <div className="absolute inset-x-0 top-0 flex items-center justify-between px-6 py-6">
+      <div className="relative flex flex-col items-center justify-center overflow-hidden px-6 py-16">
+        <div
+          aria-hidden
+          className="mesh pointer-events-none absolute inset-0 opacity-30 lg:hidden"
+        />
+        <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between px-6 py-6">
           <Link
             href={getHomePath(locale)}
             className="group inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
@@ -86,12 +93,15 @@ export function AuthCard({ locale, title, subtitle, children }: AuthCardProps) {
           initial={{ opacity: 0, y: 24, filter: "blur(10px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.85, ease: EASE_OUT_EXPO }}
-          className={cn("w-full max-w-md", "ltr:text-left rtl:text-right")}
+          className={cn(
+            "relative z-10 w-full max-w-md",
+            "ltr:text-left rtl:text-right",
+          )}
         >
           <div className="mb-10 space-y-3">
             <h1
               className={cn(
-                "whitespace-pre-line text-4xl font-semibold tracking-tight text-foreground",
+                "text-4xl font-semibold tracking-tight whitespace-pre-line text-foreground",
                 isRTL && "font-[family-name:var(--font-vazirmatn)]",
               )}
             >

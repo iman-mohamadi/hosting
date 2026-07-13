@@ -58,11 +58,11 @@ export function ticket_priority_tone(priority: TicketPriority): StatusTone {
 }
 
 const TONE_CLASSES: Record<StatusTone, string> = {
-  success: "border-acid/30 bg-acid/10 text-acid",
-  warning: "border-amber-400/30 bg-amber-400/10 text-amber-300",
-  danger: "border-destructive/30 bg-destructive/10 text-destructive",
-  neutral: "border-white/15 bg-white/[0.04] text-muted-foreground",
-  info: "border-sky-400/30 bg-sky-400/10 text-sky-300",
+  success: "border-success/25 bg-success/10 text-[#0e9e68]",
+  warning: "border-amber-500/25 bg-amber-500/10 text-amber-600",
+  danger: "border-destructive/25 bg-destructive/10 text-destructive",
+  neutral: "border-border bg-secondary text-muted-foreground",
+  info: "border-primary/25 bg-primary/10 text-primary",
 }
 
 export function StatusBadge({
@@ -144,7 +144,7 @@ export function StatCard({
   isRTL?: boolean
 }) {
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-white/10 glass p-6">
+    <div className="relative overflow-hidden rounded-2xl border border-border glass p-6">
       <div
         aria-hidden
         className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-acid/40 to-transparent"
@@ -193,7 +193,7 @@ export function Panel({
   return (
     <section
       className={cn(
-        "rounded-2xl border border-white/10 bg-white/[0.015] p-6",
+        "rounded-[1.35rem] border border-border bg-card p-6 shadow-[var(--shadow-sm)]",
         className,
       )}
     >
@@ -243,7 +243,7 @@ export function EmptyState({ label, isRTL }: { label: string; isRTL: boolean }) 
   return (
     <div
       className={cn(
-        "rounded-xl border border-dashed border-white/10 px-6 py-10 text-center text-sm text-muted-foreground",
+        "rounded-xl border border-dashed border-border px-6 py-10 text-center text-sm text-muted-foreground",
         isRTL && "font-[family-name:var(--font-vazirmatn)]",
       )}
     >
@@ -271,7 +271,7 @@ export function TabBar<T extends string>({
   return (
     <div
       role="tablist"
-      className="mb-8 flex flex-wrap gap-1 rounded-2xl border border-white/10 bg-white/[0.02] p-1"
+      className="mb-8 flex flex-wrap gap-1 rounded-2xl border border-border bg-muted p-1"
     >
       {tabs.map((tab) => {
         const selected = tab.id === active
@@ -286,7 +286,7 @@ export function TabBar<T extends string>({
               "rounded-xl px-4 py-2.5 text-sm font-medium transition-colors",
               selected
                 ? "bg-acid/10 text-foreground"
-                : "text-muted-foreground hover:bg-white/[0.04] hover:text-foreground",
+                : "text-muted-foreground hover:bg-secondary hover:text-foreground",
               isRTL && "font-[family-name:var(--font-vazirmatn)]",
             )}
           >

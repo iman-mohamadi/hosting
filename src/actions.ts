@@ -1,6 +1,12 @@
 "use server"
 
 import { dashboardPageCopyByLocale } from "@/lib/dashboard-copy"
+import { BRAND, DEPLOY_REGIONS } from "@/lib/brand"
+import {
+  format_vps_price,
+  get_plan_monthly_price,
+  resolve_plan_preset_id,
+} from "@/lib/vps-pricing"
 import {
   clear_auth_session,
   establish_auth_session,
@@ -221,7 +227,7 @@ export interface DocsPageContent {
 }
 
 export interface CheckoutRegion {
-  region_id: "fra" | "sin" | "nyc" | "tehran"
+  region_id: "tehran" | "isfahan" | "fra"
   label: string
   latency_hint: string
 }
@@ -287,39 +293,38 @@ export interface SlaPageContent {
 
 const heroDataByLocale: Record<string, HeroData> = {
   fa: {
-    main_title: "زیرساخت ابری\nبرای محصول جدی",
+    main_title: "سرور مجازی ایرانی\nبرای پروژه‌های واقعی",
     sub_description:
-      "NVMe Storage، Low Latency Routing و DDoS Protection روی شبکه‌ای که برای 99.99% Uptime ساخته شده. سریع لانچ کنید. بی‌سر و صدا مقیاس شوید.",
+      "KVM روی NVMe، دیتاسنتر تهران و اصفهان، صورتحساب تومانی و پشتیبانی فارسی. استقرار در چند دقیقه پس از تأیید پرداخت.",
     call_to_action: "پیکربندی کنید",
-    call_to_action_href: "#configurator",
-    badge_text: "NVMe • 99.99% Uptime",
+    call_to_action_href: "/configure",
+    badge_text: "NVMe · پشتیبانی فارسی",
   },
   en: {
-    main_title: "Cloud infrastructure\nfor serious builds",
+    main_title: "Iranian VPS hosting\nfor real workloads",
     sub_description:
-      "NVMe storage, low-latency routing, and DDoS protection on a network designed for 99.99% uptime. Launch fast. Stay in control.",
+      "KVM on NVMe, Tehran and Isfahan datacenters, Toman billing, and Persian support. Deploy within minutes after payment confirmation.",
     call_to_action: "Configure now",
-    call_to_action_href: "#configurator",
-    badge_text: "NVMe • 99.99% Uptime",
+    call_to_action_href: "/configure",
+    badge_text: "NVMe · Persian support",
   },
 }
 
 const pricingPageCopyByLocale: Record<string, PricingPageCopy> = {
   fa: {
-    page_title: "پلن‌های\nزیرساخت",
+    page_title: "پلن‌های\nسرور مجازی",
     page_subtitle:
-      "VPSهای اختصاصی با NVMe Storage، Low Latency Routing و DDoS Protection. شفاف، سریع و آماده تولید.",
+      "VPS اختصاصی با قیمت تومانی، NVMe محلی، دیتاسنتر ایران و محافظت DDoS. شفاف، قابل پیش‌بینی و آماده تولید.",
     plans_section_title: "پلن‌ها",
     comparison_section_title: "مقایسه فنی",
-    comparison_section_subtitle:
-      "هر جزئیات مهم را بی‌ابهام ببینید.",
+    comparison_section_subtitle: "هر جزئیات مهم را بی‌ابهام ببینید.",
     recommended_badge: "پیشنهاد ما",
     per_month: "در ماه",
   },
   en: {
-    page_title: "Infrastructure\nPlans",
+    page_title: "VPS\nPlans",
     page_subtitle:
-      "Dedicated VPS plans with NVMe storage, low-latency routing, and DDoS protection. Clear pricing. Serious performance.",
+      "Dedicated VPS with Toman pricing, local NVMe, Iranian datacenters, and DDoS protection. Clear costs. Production-ready.",
     plans_section_title: "Plans",
     comparison_section_title: "Technical comparison",
     comparison_section_subtitle:
@@ -335,8 +340,8 @@ const pricingPlansByLocale: Record<string, PricingPlan[]> = {
       plan_id: "starter",
       plan_name: "شروع",
       plan_description: "برای لانچ‌های سبک، محیط توسعه، و سرویس‌های کوچک.",
-      monthly_price: 12,
-      price_display: "$12",
+      monthly_price: 28.84,
+      price_display: "$28.84",
       billing_period: "ماهانه",
       cpu_cores: 1,
       ram_gb: 2,
@@ -344,21 +349,20 @@ const pricingPlansByLocale: Record<string, PricingPlan[]> = {
       bandwidth_tb: 2,
       is_recommended: false,
       features_list: [
-        "۱ هسته CPU اختصاصی",
+        "۱ هسته vCPU اختصاصی",
         "۲ GB RAM",
-        "۴۰ GB NVMe Storage",
-        "Low Latency Routing",
-        "پشتیبان‌گیری هفتگی",
-        "پشتیبانی ایمیل",
+        "۴۰ GB NVMe",
+        "۲ TB ترافیک ماهانه",
+        "تیکت و ایمیل",
       ],
-      cta_label: "انتخاب کنید",
+      cta_label: "پیکربندی",
     },
     {
-      plan_id: "pro",
+      plan_id: "growth",
       plan_name: "رشد",
       plan_description: "تعادل ایده‌آل برای تیم‌ها و اپلیکیشن‌های پرترافیک.",
-      monthly_price: 36,
-      price_display: "$36",
+      monthly_price: 67.39,
+      price_display: "$67.39",
       billing_period: "ماهانه",
       cpu_cores: 4,
       ram_gb: 8,
@@ -366,22 +370,22 @@ const pricingPlansByLocale: Record<string, PricingPlan[]> = {
       bandwidth_tb: 5,
       is_recommended: true,
       features_list: [
-        "۴ هسته CPU اختصاصی",
+        "۴ هسته vCPU اختصاصی",
         "۸ GB RAM",
-        "۱۶۰ GB NVMe Storage",
-        "Low Latency Routing",
-        "DDoS Protection",
+        "۱۶۰ GB NVMe",
+        "۵ TB ترافیک ماهانه",
+        "محافظت DDoS",
         "پشتیبان‌گیری روزانه",
         "پشتیبانی اولویت‌دار",
       ],
-      cta_label: "انتخاب پلن",
+      cta_label: "پیکربندی",
     },
     {
-      plan_id: "enterprise",
+      plan_id: "scale",
       plan_name: "سازمانی",
       plan_description: "حداکثر توان برای بارهای کاری حساس و تیم‌های جدی.",
-      monthly_price: 96,
-      price_display: "$96",
+      monthly_price: 122.91,
+      price_display: "$122.91",
       billing_period: "ماهانه",
       cpu_cores: 8,
       ram_gb: 32,
@@ -389,14 +393,13 @@ const pricingPlansByLocale: Record<string, PricingPlan[]> = {
       bandwidth_tb: 10,
       is_recommended: false,
       features_list: [
-        "۸ هسته CPU اختصاصی",
+        "۸ هسته vCPU اختصاصی",
         "۳۲ GB RAM",
-        "۵۱۲ GB NVMe Storage",
-        "Low Latency Routing",
-        "DDoS Protection",
-        "Snapshot فوری",
+        "۵۱۲ GB NVMe",
+        "۱۰ TB ترافیک ماهانه",
+        "محافظت DDoS",
         "IPv4 اختصاصی",
-        "مدیر اختصاصی",
+        "مدیر فنی اختصاصی",
       ],
       cta_label: "تماس با فروش",
     },
@@ -406,8 +409,8 @@ const pricingPlansByLocale: Record<string, PricingPlan[]> = {
       plan_id: "starter",
       plan_name: "Start",
       plan_description: "For lightweight launches, development, and smaller services.",
-      monthly_price: 12,
-      price_display: "$12",
+      monthly_price: 28.84,
+      price_display: "$28.84",
       billing_period: "monthly",
       cpu_cores: 1,
       ram_gb: 2,
@@ -415,21 +418,20 @@ const pricingPlansByLocale: Record<string, PricingPlan[]> = {
       bandwidth_tb: 2,
       is_recommended: false,
       features_list: [
-        "1 dedicated CPU core",
+        "1 dedicated vCPU",
         "2 GB RAM",
-        "40 GB NVMe storage",
-        "Low latency routing",
-        "Weekly backups",
-        "Email support",
+        "40 GB NVMe",
+        "2 TB monthly traffic",
+        "Ticket & email support",
       ],
-      cta_label: "Choose plan",
+      cta_label: "Configure",
     },
     {
-      plan_id: "pro",
+      plan_id: "growth",
       plan_name: "Growth",
       plan_description: "The sweet spot for teams and high-traffic applications.",
-      monthly_price: 36,
-      price_display: "$36",
+      monthly_price: 67.39,
+      price_display: "$67.39",
       billing_period: "monthly",
       cpu_cores: 4,
       ram_gb: 8,
@@ -437,22 +439,22 @@ const pricingPlansByLocale: Record<string, PricingPlan[]> = {
       bandwidth_tb: 5,
       is_recommended: true,
       features_list: [
-        "4 dedicated CPU cores",
+        "4 dedicated vCPUs",
         "8 GB RAM",
-        "160 GB NVMe storage",
-        "Low latency routing",
+        "160 GB NVMe",
+        "5 TB monthly traffic",
         "Daily backups",
         "DDoS protection",
         "Priority support",
       ],
-      cta_label: "Select plan",
+      cta_label: "Configure",
     },
     {
-      plan_id: "enterprise",
+      plan_id: "scale",
       plan_name: "Scale",
       plan_description: "Maximum headroom for mission-critical workloads.",
-      monthly_price: 96,
-      price_display: "$96",
+      monthly_price: 122.91,
+      price_display: "$122.91",
       billing_period: "monthly",
       cpu_cores: 8,
       ram_gb: 32,
@@ -460,14 +462,13 @@ const pricingPlansByLocale: Record<string, PricingPlan[]> = {
       bandwidth_tb: 10,
       is_recommended: false,
       features_list: [
-        "8 dedicated CPU cores",
+        "8 dedicated vCPUs",
         "32 GB RAM",
-        "512 GB NVMe storage",
-        "Low latency routing",
+        "512 GB NVMe",
+        "10 TB monthly traffic",
         "DDoS protection",
-        "Instant snapshots",
         "Dedicated IPv4",
-        "Dedicated manager",
+        "Dedicated technical manager",
       ],
       cta_label: "Talk to sales",
     },
@@ -609,56 +610,56 @@ const comparisonFeaturesByLocale: Record<string, ComparisonFeature[]> = {
 
 const aboutContentByLocale: Record<string, AboutContent> = {
   fa: {
-    page_title: "درباره\nهاستینگ",
+    page_title: "درباره\nپارس‌کلود",
     mission_statement: "زیرساخت را بی‌صدا نگه می‌داریم تا محصول شما دیده شود.",
     mission_subtitle:
-      "هاستینگ برای تیم‌هایی ساخته شده که به سرعت، شفافیت و کنترل واقعی اهمیت می‌دهند. هر سرویس با همان دقتی طراحی شده که از یک پلتفرم جدی انتظار دارید.",
-    intro_label: "چرا هاستینگ",
+      "پارس‌کلود برای تیم‌های ایرانی ساخته شده که به سرعت، شفافیت و کنترل واقعی اهمیت می‌دهند. KVM روی NVMe، صورتحساب تومانی و پشتیبانی فارسی — بدون ابهام.",
+    intro_label: "چرا پارس‌کلود",
     pillars: [
       {
         pillar_id: "clarity",
         pillar_title: "شفافیت کامل",
         pillar_body:
-          "قیمت، منابع و محدودیت‌ها از ابتدا روشن‌اند. بدون هزینه پنهان. بدون شگفتی. هر پلن دقیق و قابل پیش‌بینی است.",
+          "قیمت به تومان، منابع و ترافیک از ابتدا روشن‌اند. بدون هزینه پنهان. هر پلن قابل پیش‌بینی است.",
       },
       {
         pillar_id: "performance",
-        pillar_title: "عملکردی که حس می‌شود",
+        pillar_title: "عملکرد محلی",
         pillar_body:
-          "NVMe Storage، Low Latency Routing و 99.99% Uptime کنار هم قرار گرفته‌اند تا بارهای کاری شما سبک‌تر حرکت کنند.",
+          "دیتاسنتر تهران و اصفهان با NVMe محلی. تأخیر پایین برای کاربران ایرانی و مسیر پشتیبان در اروپا.",
       },
       {
         pillar_id: "support",
         pillar_title: "پشتیبانی نزدیک",
         pillar_body:
-          "مهندسان واقعی، پاسخ‌های واقعی. فارسی و انگلیسی. وقتی لازم است، سریع و دقیق.",
+          "مهندسان واقعی، پاسخ‌های واقعی. فارسی و انگلیسی در ساعات کاری — از اولین استقرار تا مقیاس‌پذیری.",
       },
     ],
   },
   en: {
-    page_title: "About\nHosting",
+    page_title: "About\nParsCloud",
     mission_statement: "We keep infrastructure quiet so your product can take the spotlight.",
     mission_subtitle:
-      "Hosting is built for teams that care about speed, clarity, and real control. Every service is designed with the precision you'd expect from a serious infrastructure platform.",
-    intro_label: "Why Hosting",
+      "ParsCloud is built for Iranian teams that care about speed, clarity, and real control. KVM on NVMe, Toman billing, and Persian support — without ambiguity.",
+    intro_label: "Why ParsCloud",
     pillars: [
       {
         pillar_id: "clarity",
         pillar_title: "Clarity at every layer",
         pillar_body:
-          "No hidden fees, no ambiguous contracts. Every resource, every plan, and every invoice is fully transparent. Predictability is part of the product.",
+          "Toman pricing, resources, and traffic limits are clear upfront. No hidden fees. Every plan is predictable.",
       },
       {
         pillar_id: "performance",
-        pillar_title: "Performance without compromise",
+        pillar_title: "Local performance",
         pillar_body:
-          "NVMe storage, low-latency routing, and 99.99% uptime work together so your workloads move faster and feel lighter.",
+          "Tehran and Isfahan datacenters with local NVMe. Low latency for Iranian users plus an EU backup path.",
       },
       {
         pillar_id: "support",
         pillar_title: "Support that stays close",
         pillar_body:
-          "Behind every ticket is a real engineer — not a bot. Our team works in Persian and English, from first deployment to full-scale growth.",
+          "Real engineers behind every ticket — in Persian and English during business hours, from first deploy to scale.",
       },
     ],
   },
@@ -667,7 +668,7 @@ const aboutContentByLocale: Record<string, AboutContent> = {
 const legalContentByLocale: Record<string, LegalContent> = {
   fa: {
     page_title: "شرایط\nاستفاده",
-    page_subtitle: "برای استفاده شفاف، امن و حرفه‌ای از هاستینگ.",
+    page_subtitle: `برای استفاده شفاف، امن و حرفه‌ای از ${BRAND.name_fa}.`,
     last_updated: "آخرین به‌روزرسانی: ۱ فروردین ۱۴۰۵",
     toc_label: "بخش‌ها",
     sections: [
@@ -675,13 +676,13 @@ const legalContentByLocale: Record<string, LegalContent> = {
         section_id: "acceptance",
         section_title: "۱. پذیرش شرایط",
         section_body:
-          "با دسترسی یا استفاده از خدمات هاستینگ، شما می‌پذیرید که به این شرایط و قوانین مربوط پایبند باشید. اگر با بخشی از این شرایط موافق نیستید، از خدمات استفاده نکنید.",
+          `با دسترسی یا استفاده از خدمات ${BRAND.name_fa}، شما می‌پذیرید که به این شرایط و قوانین مربوط پایبند باشید. اگر با بخشی از این شرایط موافق نیستید، از خدمات استفاده نکنید.`,
       },
       {
         section_id: "services",
         section_title: "۲. خدمات",
         section_body:
-          "هاستینگ VPS، ذخیره‌سازی ابری و خدمات مرتبط را ارائه می‌دهد. ممکن است ویژگی‌ها، قیمت‌ها و مشخصات فنی با اطلاع‌رسانی قبلی تغییر کنند. تغییرات مهم از طریق ایمیل یا داشبورد اعلام می‌شوند.",
+          `${BRAND.legal_name_fa} خدمات VPS، DNS و خدمات مرتبط را ارائه می‌دهد. ممکن است ویژگی‌ها، قیمت‌ها و مشخصات فنی با اطلاع‌رسانی قبلی تغییر کنند. تغییرات مهم از طریق ایمیل یا داشبورد اعلام می‌شوند.`,
       },
       {
         section_id: "account",
@@ -705,13 +706,13 @@ const legalContentByLocale: Record<string, LegalContent> = {
         section_id: "sla",
         section_title: "۶. SLA و دسترس‌پذیری",
         section_body:
-          "ما برای زیرساخت اصلی خود دسترس‌پذیری ۹۹.۹۹٪ را هدف قرار می‌دهیم. جزئیات SLA برای هر پلن به‌صورت جداگانه اعلام می‌شود و تعمیرات برنامه‌ریزی‌شده از قبل اطلاع داده می‌شوند.",
+          `ما برای زیرساخت اصلی خود دسترس‌پذیری ${BRAND.uptime_target_pct.toLocaleString("fa-IR")}٪ را هدف قرار می‌دهیم. جزئیات SLA در صفحه تعهد سطح سرویس منتشر شده و تعمیرات برنامه‌ریزی‌شده از قبل اطلاع داده می‌شوند.`,
       },
       {
         section_id: "liability",
         section_title: "۷. محدودیت مسئولیت",
         section_body:
-          "هاستینگ در قبال خسارات غیرمستقیم، از دست رفتن داده یا سود از دست‌رفته مسئولیتی ندارد. حداکثر مسئولیت ما برابر با مبلغی است که در ۱۲ ماه گذشته پرداخت کرده‌اید.",
+          `${BRAND.name_fa} در قبال خسارات غیرمستقیم، از دست رفتن داده یا سود از دست‌رفته مسئولیتی ندارد. حداکثر مسئولیت ما برابر با مبلغی است که در ۱۲ ماه گذشته پرداخت کرده‌اید.`,
       },
       {
         section_id: "termination",
@@ -723,7 +724,7 @@ const legalContentByLocale: Record<string, LegalContent> = {
   },
   en: {
     page_title: "Terms of Service",
-    page_subtitle: "Clear terms for using Hosting the right way.",
+    page_subtitle: `Clear terms for using ${BRAND.name_en} the right way.`,
     last_updated: "Last updated: July 5, 2026",
     toc_label: "Sections",
     sections: [
@@ -731,13 +732,13 @@ const legalContentByLocale: Record<string, LegalContent> = {
         section_id: "acceptance",
         section_title: "1. Acceptance of Terms",
         section_body:
-          "By accessing or using Hosting services, you agree to these terms and all applicable laws. If any part of these terms is not acceptable to you, do not use the services.",
+          `By accessing or using ${BRAND.name_en} services, you agree to these terms and all applicable laws. If any part of these terms is not acceptable to you, do not use the services.`,
       },
       {
         section_id: "services",
         section_title: "2. Services",
         section_body:
-          "Hosting provides virtual private server (VPS) hosting, cloud storage, and related services. Features, pricing, and technical details may change with notice. Material updates are shared by email or in the dashboard.",
+          `${BRAND.legal_name_en} provides virtual private server (VPS) hosting, DNS, and related services. Features, pricing, and technical details may change with notice. Material updates are shared by email or in the dashboard.`,
       },
       {
         section_id: "account",
@@ -761,13 +762,13 @@ const legalContentByLocale: Record<string, LegalContent> = {
         section_id: "sla",
         section_title: "6. SLA & Availability",
         section_body:
-          "We target 99.99% uptime for our core infrastructure. Compensation details are defined in each plan's dedicated SLA. Scheduled maintenance is announced in advance.",
+          `We target ${BRAND.uptime_target_pct}% uptime for our core infrastructure. Compensation details are published in our SLA. Scheduled maintenance is announced in advance.`,
       },
       {
         section_id: "liability",
         section_title: "7. Limitation of Liability",
         section_body:
-          "Hosting is not liable for indirect damages, data loss, or lost profits. Our maximum liability is limited to the amount you paid in the preceding 12 months.",
+          `${BRAND.name_en} is not liable for indirect damages, data loss, or lost profits. Our maximum liability is limited to the amount you paid in the preceding 12 months.`,
       },
       {
         section_id: "termination",
@@ -801,7 +802,7 @@ const contactPageCopyByLocale: Record<string, ContactPageCopy> = {
     response_time_label: "زمان پاسخ",
     response_time_value: "کمتر از ۲۴ ساعت",
     support_email_label: "ایمیل مستقیم",
-    support_email_value: "support@hosting.io",
+    support_email_value: BRAND.support_email,
   },
   en: {
     page_title: "Contact\nUs",
@@ -824,7 +825,7 @@ const contactPageCopyByLocale: Record<string, ContactPageCopy> = {
     response_time_label: "Response time",
     response_time_value: "Under 24 hours",
     support_email_label: "Direct email",
-    support_email_value: "support@hosting.io",
+    support_email_value: BRAND.support_email,
   },
 }
 
@@ -840,7 +841,7 @@ const privacyContentByLocale: Record<string, PrivacyContent> = {
         section_id: "overview",
         section_heading: "۱. نمای کلی",
         section_content:
-          "هاستینگ به حریم خصوصی کاربران خود احترام می‌گذارد. این سیاست توضیح می‌دهد چه داده‌هایی هنگام استفاده از وب‌سایت و خدمات ما جمع‌آوری، پردازش، ذخیره و محافظت می‌شوند.",
+          `${BRAND.name_fa} به حریم خصوصی کاربران خود احترام می‌گذارد. این سیاست توضیح می‌دهد چه داده‌هایی هنگام استفاده از وب‌سایت و خدمات ما جمع‌آوری، پردازش، ذخیره و محافظت می‌شوند.`,
       },
       {
         section_id: "data-collection",
@@ -882,7 +883,7 @@ const privacyContentByLocale: Record<string, PrivacyContent> = {
         section_id: "contact",
         section_heading: "۸. تماس با ما",
         section_content:
-          "برای هر سؤال درباره این سیاست، از طریق privacy@hosting.io یا صفحه تماس با ما در ارتباط باشید.",
+          "برای هر سؤال درباره این سیاست، از طریق privacy@parscloud.ir یا صفحه تماس با ما در ارتباط باشید.",
       },
     ],
   },
@@ -897,7 +898,7 @@ const privacyContentByLocale: Record<string, PrivacyContent> = {
         section_id: "overview",
         section_heading: "1. Overview",
         section_content:
-          "Hosting respects the privacy of its users. This policy explains how personal information is collected, processed, stored, and protected when you use our website and services.",
+          `${BRAND.name_en} respects the privacy of its users. This policy explains how personal information is collected, processed, stored, and protected when you use our website and services.`,
       },
       {
         section_id: "data-collection",
@@ -939,7 +940,7 @@ const privacyContentByLocale: Record<string, PrivacyContent> = {
         section_id: "contact",
         section_heading: "8. Contact Us",
         section_content:
-          "For any questions about this policy, reach us at privacy@hosting.io or through our contact page.",
+          `For any questions about this policy, reach us at ${BRAND.privacy_email} or through our contact page.`,
       },
     ],
   },
@@ -948,10 +949,10 @@ const privacyContentByLocale: Record<string, PrivacyContent> = {
 const statusPageContentByLocale: Record<string, StatusPageContent> = {
   fa: {
     page_title: "وضعیت\nسرویس",
-    page_subtitle: "سلامت لحظه‌ای پلتفرم، مناطق و سرویس‌های اصلی.",
+    page_subtitle: "سلامت لحظه‌ای پلتفرم، دیتاسنترها و سرویس‌های اصلی.",
     overall_status: "همه سرویس‌ها عملیاتی",
     uptime_label: "آپتایم ۹۰ روز",
-    uptime_value: "۹۹.۹۹٪",
+    uptime_value: "۹۹.۹٪",
     last_updated_label: "آخرین به‌روزرسانی",
     components_title: "اجزای پلتفرم",
     incidents_title: "حوادث اخیر",
@@ -962,30 +963,22 @@ const statusPageContentByLocale: Record<string, StatusPageContent> = {
       outage: "قطعی",
     },
     components: [
-      { component_id: "api", component_name: "API و داشبورد", status: "operational", uptime_pct: 99.99 },
-      { component_id: "compute", component_name: "Compute (KVM)", status: "operational", uptime_pct: 99.98 },
-      { component_id: "network", component_name: "شبکه و DDoS", status: "operational", uptime_pct: 99.99 },
-      { component_id: "storage", component_name: "Block Storage (NVMe)", status: "operational", uptime_pct: 99.97 },
-      { component_id: "billing", component_name: "صورتحساب", status: "operational", uptime_pct: 99.99 },
-      { component_id: "tehran", component_name: "منطقه تهران", status: "degraded", uptime_pct: 98.2 },
+      { component_id: "api", component_name: "API و داشبورد", status: "operational", uptime_pct: 99.95 },
+      { component_id: "compute", component_name: "Compute (KVM)", status: "operational", uptime_pct: 99.92 },
+      { component_id: "network", component_name: "شبکه و DDoS", status: "operational", uptime_pct: 99.94 },
+      { component_id: "storage", component_name: "Block Storage (NVMe)", status: "operational", uptime_pct: 99.91 },
+      { component_id: "billing", component_name: "صورتحساب و درگاه", status: "operational", uptime_pct: 99.98 },
+      { component_id: "tehran", component_name: "دیتاسنتر تهران", status: "operational", uptime_pct: 99.93 },
+      { component_id: "isfahan", component_name: "دیتاسنتر اصفهان", status: "operational", uptime_pct: 99.9 },
     ],
-    incidents: [
-      {
-        incident_id: "inc_001",
-        title: "کاهش عملکرد در منطقه تهران",
-        status: "investigating",
-        region_label: "تهران",
-        started_at: new Date(Date.now() - 1000 * 60 * 60 * 6).toISOString(),
-        summary: "تیم ما در حال بررسی latency بالاتر از حد معمول در node تهران است.",
-      },
-    ],
+    incidents: [],
   },
   en: {
     page_title: "System\nstatus",
-    page_subtitle: "Real-time health for the platform, regions, and core services.",
+    page_subtitle: "Real-time health for the platform, datacenters, and core services.",
     overall_status: "All systems operational",
     uptime_label: "90-day uptime",
-    uptime_value: "99.99%",
+    uptime_value: "99.9%",
     last_updated_label: "Last updated",
     components_title: "Platform components",
     incidents_title: "Recent incidents",
@@ -996,23 +989,15 @@ const statusPageContentByLocale: Record<string, StatusPageContent> = {
       outage: "Outage",
     },
     components: [
-      { component_id: "api", component_name: "API & dashboard", status: "operational", uptime_pct: 99.99 },
-      { component_id: "compute", component_name: "Compute (KVM)", status: "operational", uptime_pct: 99.98 },
-      { component_id: "network", component_name: "Network & DDoS", status: "operational", uptime_pct: 99.99 },
-      { component_id: "storage", component_name: "Block storage (NVMe)", status: "operational", uptime_pct: 99.97 },
-      { component_id: "billing", component_name: "Billing", status: "operational", uptime_pct: 99.99 },
-      { component_id: "tehran", component_name: "Tehran region", status: "degraded", uptime_pct: 98.2 },
+      { component_id: "api", component_name: "API & dashboard", status: "operational", uptime_pct: 99.95 },
+      { component_id: "compute", component_name: "Compute (KVM)", status: "operational", uptime_pct: 99.92 },
+      { component_id: "network", component_name: "Network & DDoS", status: "operational", uptime_pct: 99.94 },
+      { component_id: "storage", component_name: "Block storage (NVMe)", status: "operational", uptime_pct: 99.91 },
+      { component_id: "billing", component_name: "Billing & payments", status: "operational", uptime_pct: 99.98 },
+      { component_id: "tehran", component_name: "Tehran datacenter", status: "operational", uptime_pct: 99.93 },
+      { component_id: "isfahan", component_name: "Isfahan datacenter", status: "operational", uptime_pct: 99.9 },
     ],
-    incidents: [
-      {
-        incident_id: "inc_001",
-        title: "Elevated latency in Tehran region",
-        status: "investigating",
-        region_label: "Tehran",
-        started_at: new Date(Date.now() - 1000 * 60 * 60 * 6).toISOString(),
-        summary: "Our team is investigating higher-than-normal latency on the Tehran node.",
-      },
-    ],
+    incidents: [],
   },
 }
 
@@ -1062,22 +1047,17 @@ const checkoutPageCopyByLocale: Record<string, CheckoutPageCopy> = {
     sign_in_link: "ورود",
     register_link: "ثبت‌نام",
     success_title: "سفارش ثبت شد",
-    success_message: "تیم ما سفارش شما را بررسی می‌کند. وضعیت را در داشبورد پیگیری کنید.",
+    success_message: "پس از تأیید پرداخت، سرور شما provision می‌شود. وضعیت را در داشبورد پیگیری کنید.",
     view_orders: "مشاهده سفارش‌ها",
-    invalid_config: "پیکربندی نامعتبر است. لطفاً دوباره از صفحه اصلی شروع کنید.",
+    invalid_config: "پیکربندی نامعتبر است. لطفاً دوباره از صفحه پیکربندی شروع کنید.",
     promo_label: "کد تخفیف",
-    promo_placeholder: "مثلاً LAUNCH20",
+    promo_placeholder: "مثلاً PARSCLOUD20",
     promo_apply: "اعمال",
     promo_applied: "کد اعمال شد",
     promo_invalid: "کد تخفیف معتبر نیست.",
     discount_label: "تخفیف",
     original_price_label: "قیمت اصلی",
-    regions: [
-      { region_id: "fra", label: "فرانکفورت", latency_hint: "~۲۸ms از اروپا" },
-      { region_id: "sin", label: "سنگاپور", latency_hint: "~۴۵ms از آسیا" },
-      { region_id: "nyc", label: "نیویورک", latency_hint: "~۳۲ms از آمریکا" },
-      { region_id: "tehran", label: "تهران", latency_hint: "~۸ms از ایران" },
-    ],
+    regions: [],
   },
   en: {
     page_title: "Checkout",
@@ -1093,22 +1073,17 @@ const checkoutPageCopyByLocale: Record<string, CheckoutPageCopy> = {
     sign_in_link: "Sign in",
     register_link: "Create account",
     success_title: "Order submitted",
-    success_message: "Our team will review your order. Track status in your dashboard.",
+    success_message: "After payment confirmation, your server will be provisioned. Track status in your dashboard.",
     view_orders: "View orders",
-    invalid_config: "Invalid configuration. Please start again from the homepage configurator.",
+    invalid_config: "Invalid configuration. Please start again from the configure page.",
     promo_label: "Promo code",
-    promo_placeholder: "e.g. LAUNCH20",
+    promo_placeholder: "e.g. PARSCLOUD20",
     promo_apply: "Apply",
     promo_applied: "Code applied",
     promo_invalid: "That promo code is not valid.",
     discount_label: "Discount",
     original_price_label: "Original price",
-    regions: [
-      { region_id: "fra", label: "Frankfurt", latency_hint: "~28ms from EU" },
-      { region_id: "sin", label: "Singapore", latency_hint: "~45ms from Asia" },
-      { region_id: "nyc", label: "New York", latency_hint: "~32ms from US" },
-      { region_id: "tehran", label: "Tehran", latency_hint: "~8ms from Iran" },
-    ],
+    regions: [],
   },
 }
 
@@ -1121,7 +1096,22 @@ export async function get_hero_data(locale: string): Promise<HeroData> {
 export async function get_pricing_plans(locale: string): Promise<PricingPlan[]> {
   await new Promise((resolve) => setTimeout(resolve, 80))
 
-  return pricingPlansByLocale[locale] ?? pricingPlansByLocale.fa
+  const plans = pricingPlansByLocale[locale] ?? pricingPlansByLocale.fa
+  const price_locale = locale === "en" ? "en" : "fa"
+
+  return plans.map((plan) => {
+    const preset_id = resolve_plan_preset_id(plan.plan_id)
+    if (!preset_id) {
+      return plan
+    }
+
+    const monthly_price = get_plan_monthly_price(preset_id)
+    return {
+      ...plan,
+      monthly_price,
+      price_display: format_vps_price(monthly_price, price_locale),
+    }
+  })
 }
 
 export async function get_comparison_features(
@@ -1185,9 +1175,9 @@ export async function get_docs_page_content(
 const docsArticleBodiesByLocale: Record<string, Record<string, string[]>> = {
   en: {
     d1: [
-      "Open the homepage configurator and choose CPU, RAM, storage type, and operating system. The live price updates as you adjust each slider.",
-      "When you are ready, continue to checkout, pick a deploy region close to your users, and submit the order. Demo accounts can place orders immediately.",
-      "After approval, the instance appears under Dashboard → Instances with an IPv4 address and reverse DNS hostname.",
+      "Open the configure page and choose CPU, RAM, storage, and operating system. The live price updates as you adjust each control.",
+      "When you are ready, continue to checkout, pick a datacenter close to your users, and submit the order.",
+      "After payment confirmation, the instance appears under Dashboard → Instances with an IPv4 address and reverse DNS hostname.",
       "Copy the IP, wait until status is Running, then connect with SSH using the key you registered in Account settings.",
       "From the instance detail page you can resize, snapshot, manage firewall rules, and open the web console if SSH is unavailable.",
     ],
@@ -1201,7 +1191,7 @@ const docsArticleBodiesByLocale: Record<string, Record<string, string[]>> = {
       "Floating IPs let you move a public address between instances without waiting for DNS TTL to expire.",
       "Create a floating IP in Networking, then attach it to a running instance in the same region. Detach before moving it to another host.",
       "Reverse DNS (PTR) should match a forward A/AAAA record that points back to the same IP — required by many mail providers.",
-      "Update PTR from the instance Network tab. Propagation is usually under an hour in this mock environment.",
+      "Update PTR from the instance Network tab. Propagation usually completes within an hour.",
     ],
     d4: [
       "Every instance starts with a default allow-all outbound policy. Inbound traffic is denied unless you add firewall rules.",
@@ -1224,7 +1214,7 @@ const docsArticleBodiesByLocale: Record<string, Record<string, string[]>> = {
   },
   fa: {
     d1: [
-      "از پیکربندی‌کننده صفحه اصلی، CPU، RAM، نوع ذخیره‌سازی و سیستم‌عامل را انتخاب کنید. قیمت به‌صورت زنده به‌روز می‌شود.",
+      "از صفحه پیکربندی، CPU، RAM، نوع ذخیره‌سازی و سیستم‌عامل را انتخاب کنید. قیمت به‌صورت زنده به‌روز می‌شود.",
       "سپس به تسویه بروید، منطقه استقرار نزدیک کاربران را انتخاب کنید و سفارش را ثبت کنید.",
       "پس از تأیید، سرور در داشبورد → سرورها با آدرس IPv4 و Reverse DNS ظاهر می‌شود.",
       "IP را کپی کنید، تا وضعیت Running صبر کنید، سپس با کلید SSH ثبت‌شده در تنظیمات حساب متصل شوید.",
@@ -1240,7 +1230,7 @@ const docsArticleBodiesByLocale: Record<string, Record<string, string[]>> = {
       "IP شناور اجازه می‌دهد آدرس عمومی را بدون انتظار برای TTL بین سرورها جابه‌جا کنید.",
       "در بخش شبکه یک Floating IP بسازید و به سرور Running در همان منطقه متصل کنید.",
       "Reverse DNS باید با رکورد A/AAAA که به همان IP اشاره می‌کند هم‌خوان باشد — برای ایمیل ضروری است.",
-      "PTR را از تب شبکه سرور به‌روز کنید. در محیط دمو معمولاً کمتر از یک ساعت طول می‌کشد.",
+      "PTR را از تب شبکه سرور به‌روز کنید. معمولاً ظرف یک ساعت اعمال می‌شود.",
     ],
     d4: [
       "هر سرور با سیاست خروجی آزاد شروع می‌شود. ترافیک ورودی بدون قانون فایروال مسدود است.",
@@ -1295,7 +1285,7 @@ const faqPageContentByLocale: Record<string, FaqPageContent> = {
         question_id: "q1",
         question: "چقدر طول می‌کشد تا VPS آماده شود؟",
         answer:
-          "پس از تأیید سفارش، معمولاً کمتر از چند دقیقه تا وضعیت Running. در دمو، سفارش‌ها بلافاصله ثبت می‌شوند و پس از تأیید ادمین سرور ظاهر می‌شود.",
+          "پس از تأیید پرداخت، بیشتر سرورها ظرف ۵ دقیقه به وضعیت Running می‌رسند. اطلاعات دسترسی در داشبورد و ایمیل ارسال می‌شود.",
       },
       {
         question_id: "q2",
@@ -1343,7 +1333,7 @@ const faqPageContentByLocale: Record<string, FaqPageContent> = {
         question_id: "q1",
         question: "How long until my VPS is ready?",
         answer:
-          "After order approval, most instances reach Running within minutes. In the demo, orders are recorded immediately and instances appear once an admin approves them.",
+          "After payment confirmation, most instances reach Running within five minutes. Credentials are shown in your dashboard and sent by email.",
       },
       {
         question_id: "q2",
@@ -1388,23 +1378,23 @@ const faqPageContentByLocale: Record<string, FaqPageContent> = {
 const slaPageContentByLocale: Record<string, SlaPageContent> = {
   fa: {
     page_title: "تعهد\nسطح سرویس",
-    page_subtitle: "اهداف دسترس‌پذیری، اعتبارات و استثناها برای زیرساخت Hosting.",
+    page_subtitle: `اهداف دسترس‌پذیری، اعتبارات و استثناها برای زیرساخت ${BRAND.name_fa}.`,
     commitment_title: "تعهد ما",
     commitment_body:
-      "ما برای شبکه و برق مناطق اصلی، دسترس‌پذیری ماهانه ۹۹.۹۹٪ را هدف قرار می‌دهیم. تعمیرات برنامه‌ریزی‌شده از قبل اعلام می‌شوند و در صورت امکان خارج از ساعات اوج انجام می‌گیرند.",
+      `ما برای شبکه و برق دیتاسنترهای اصلی، دسترس‌پذیری ماهانه ${BRAND.uptime_target_pct.toLocaleString("fa-IR")}٪ را هدف قرار می‌دهیم. تعمیرات برنامه‌ریزی‌شده از قبل اعلام می‌شوند و در صورت امکان خارج از ساعات اوج انجام می‌گیرند.`,
     metrics_title: "شاخص‌ها",
     metrics: [
       {
         metric_id: "m1",
         label: "آپتایم ماهانه",
-        value: "۹۹.۹۹٪",
-        description: "برای شبکه و برق در مناطق اصلی.",
+        value: "۹۹.۹٪",
+        description: "برای شبکه و برق در دیتاسنترهای تهران و اصفهان.",
       },
       {
         metric_id: "m2",
-        label: "زمان پاسخ شبکه",
-        value: "< ۵ms",
-        description: "میانگین داخل منطقه بین گره و gateway.",
+        label: "زمان پاسخ اولیه",
+        value: "۴ ساعت",
+        description: "در ساعات کاری برای تیکت‌های استاندارد.",
       },
       {
         metric_id: "m3",
@@ -1426,23 +1416,23 @@ const slaPageContentByLocale: Record<string, SlaPageContent> = {
   },
   en: {
     page_title: "Service\nlevel agreement",
-    page_subtitle: "Availability targets, service credits, and exclusions for Hosting infrastructure.",
+    page_subtitle: `Availability targets, service credits, and exclusions for ${BRAND.name_en} infrastructure.`,
     commitment_title: "Our commitment",
     commitment_body:
-      "We target 99.99% monthly availability for power and network in primary regions. Planned maintenance is announced in advance and scheduled outside peak hours whenever possible.",
+      `We target ${BRAND.uptime_target_pct}% monthly availability for power and network in our primary datacenters. Planned maintenance is announced in advance and scheduled outside peak hours whenever possible.`,
     metrics_title: "Metrics",
     metrics: [
       {
         metric_id: "m1",
         label: "Monthly uptime",
-        value: "99.99%",
-        description: "Power and network in primary regions.",
+        value: "99.9%",
+        description: "Power and network in Tehran and Isfahan datacenters.",
       },
       {
         metric_id: "m2",
-        label: "In-region latency",
-        value: "< 5ms",
-        description: "Average between node and gateway inside a region.",
+        label: "First response time",
+        value: "4 hours",
+        description: "During business hours for standard tickets.",
       },
       {
         metric_id: "m3",
@@ -1482,7 +1472,17 @@ export async function get_checkout_page_copy(
   locale: string,
 ): Promise<CheckoutPageCopy> {
   await new Promise((resolve) => setTimeout(resolve, 40))
-  return checkoutPageCopyByLocale[locale] ?? checkoutPageCopyByLocale.fa
+  const copy = checkoutPageCopyByLocale[locale] ?? checkoutPageCopyByLocale.fa
+  const is_fa = locale !== "en"
+
+  return {
+    ...copy,
+    regions: DEPLOY_REGIONS.map((region) => ({
+      region_id: region.region_id as CheckoutRegion["region_id"],
+      label: is_fa ? region.label_fa : region.label_en,
+      latency_hint: is_fa ? region.latency_hint_fa : region.latency_hint_en,
+    })),
+  }
 }
 
 export async function validate_promo_code(
@@ -1495,11 +1495,11 @@ export async function validate_promo_code(
 }> {
   await new Promise((resolve) => setTimeout(resolve, 200))
   const normalized = code.trim().toUpperCase()
-  if (normalized === "LAUNCH20") {
-    return { success: true, discount_percent: 20, promo_code: "LAUNCH20" }
+  if (normalized === "PARSCLOUD20") {
+    return { success: true, discount_percent: 20, promo_code: "PARSCLOUD20" }
   }
-  if (normalized === "WELCOME10") {
-    return { success: true, discount_percent: 10, promo_code: "WELCOME10" }
+  if (normalized === "NOWRUZ10") {
+    return { success: true, discount_percent: 10, promo_code: "NOWRUZ10" }
   }
   return {
     success: false,
@@ -1551,24 +1551,24 @@ function seed_mock_users(): void {
     return
   }
 
-  mock_user_registry.set("demo@hosting.io", {
+  mock_user_registry.set("demo@parscloud.ir", {
     account_password: "password123",
     user: {
       user_id: "usr_demo_001",
-      full_name: "Demo User",
-      email_address: "demo@hosting.io",
+      full_name: "سارا محمدی",
+      email_address: "demo@parscloud.ir",
       account_status: "active",
       role: "user",
       created_at: "2026-01-01T00:00:00.000Z",
     },
   })
 
-  mock_user_registry.set("admin@hosting.io", {
+  mock_user_registry.set("admin@parscloud.ir", {
     account_password: "password123",
     user: {
       user_id: "usr_admin_001",
-      full_name: "Platform Admin",
-      email_address: "admin@hosting.io",
+      full_name: "مدیر سامانه",
+      email_address: "admin@parscloud.ir",
       account_status: "active",
       role: "admin",
       created_at: "2026-01-01T00:00:00.000Z",
@@ -1678,7 +1678,7 @@ const authPageCopyByLocale: Record<string, AuthPageCopy> = {
       "If an account exists for that email, a reset link has been sent.",
     forgot_password_back: "Back to sign in",
     forgot_password_demo_hint:
-      "Demo: use the reset link below for demo@hosting.io.",
+      "Demo: use the reset link below for demo@parscloud.ir.",
     reset_password_title: "Set a new\npassword",
     reset_password_subtitle: "Choose a new password and confirm it below.",
     reset_password_submit: "Save new password",
@@ -1716,7 +1716,7 @@ export async function request_password_reset(payload: {
 
   if (mock_user_registry.has(email_address)) {
     const reset_token =
-      email_address === "demo@hosting.io"
+      email_address === "demo@parscloud.ir"
         ? "demo-reset-token"
         : `reset_${Date.now()}`
     password_reset_tokens.set(reset_token, email_address)
@@ -2107,7 +2107,7 @@ export async function calculate_vps_price(
    All payloads use snake_case, mirroring the future external API.
    ═══════════════════════════════════════════════════════════════════ */
 
-type InternalRegion = "fra" | "sin" | "nyc" | "tehran"
+type InternalRegion = "tehran" | "isfahan" | "fra"
 type InternalPlanTier = "starter" | "pro" | "enterprise" | "custom"
 
 interface InternalInstance {
@@ -2150,8 +2150,8 @@ interface UserWorkspace {
 const user_workspaces = new Map<string, UserWorkspace>()
 
 const region_labels: Record<string, Record<InternalRegion, string>> = {
-  fa: { fra: "فرانکفورت", sin: "سنگاپور", nyc: "نیویورک", tehran: "تهران" },
-  en: { fra: "Frankfurt", sin: "Singapore", nyc: "New York", tehran: "Tehran" },
+  fa: { tehran: "تهران", isfahan: "اصفهان", fra: "فرانکفورت" },
+  en: { tehran: "Tehran", isfahan: "Isfahan", fra: "Frankfurt" },
 }
 
 const os_labels_map: Record<string, Record<SelectedOs, string>> = {
@@ -2192,54 +2192,57 @@ function seeded_random(seed: number): () => number {
 function seed_user_workspace(user_id: string): UserWorkspace {
   const now = Date.now()
   const day = 1000 * 60 * 60 * 24
+  const growth_price = get_plan_monthly_price("growth")
+  const starter_price = get_plan_monthly_price("starter")
+  const scale_price = get_plan_monthly_price("scale")
 
   const instances: InternalInstance[] = [
     {
       instance_id: `vps_${user_id}_a`,
-      hostname: "aurora-edge-01",
+      hostname: "api-prod-01",
       status: "running",
-      ip_address: "185.42.108.24",
-      reverse_dns: "aurora-edge-01.hosting.io",
-      region: "fra",
+      ip_address: "185.143.232.18",
+      reverse_dns: "api-prod-01.parscloud.ir",
+      region: "tehran",
       plan_tier: "pro",
       cpu_cores: 4,
       ram_gb: 8,
       storage_gb: 160,
       storage_type: "nvme",
       selected_os: "ubuntu",
-      monthly_price: 36,
+      monthly_price: growth_price,
       created_at: new Date(now - 1000 * 60 * 60 * 24 * 96).toISOString(),
     },
     {
       instance_id: `vps_${user_id}_b`,
-      hostname: "cinder-api-02",
+      hostname: "staging-web-02",
       status: "running",
-      ip_address: "139.84.201.77",
-      reverse_dns: "cinder-api-02.hosting.io",
-      region: "sin",
+      ip_address: "5.202.192.44",
+      reverse_dns: "staging-web-02.parscloud.ir",
+      region: "isfahan",
       plan_tier: "starter",
       cpu_cores: 2,
       ram_gb: 4,
       storage_gb: 80,
       storage_type: "nvme",
-      selected_os: "arch_linux",
-      monthly_price: 21,
+      selected_os: "ubuntu",
+      monthly_price: starter_price,
       created_at: new Date(now - 1000 * 60 * 60 * 24 * 41).toISOString(),
     },
     {
       instance_id: `vps_${user_id}_c`,
-      hostname: "obsidian-db-01",
+      hostname: "db-primary-01",
       status: "stopped",
-      ip_address: "198.51.100.19",
-      reverse_dns: "obsidian-db-01.hosting.io",
-      region: "nyc",
+      ip_address: "185.143.235.91",
+      reverse_dns: "db-primary-01.parscloud.ir",
+      region: "tehran",
       plan_tier: "enterprise",
       cpu_cores: 8,
       ram_gb: 32,
       storage_gb: 512,
       storage_type: "nvme",
-      selected_os: "windows",
-      monthly_price: 110,
+      selected_os: "ubuntu",
+      monthly_price: scale_price,
       created_at: new Date(now - 1000 * 60 * 60 * 24 * 12).toISOString(),
     },
   ]
@@ -2313,8 +2316,8 @@ function seed_user_workspace(user_id: string): UserWorkspace {
     {
       session_id: `ses_${user_id}_1`,
       device: "Chrome · macOS",
-      location: "Frankfurt, DE",
-      ip_address: "185.42.108.10",
+      location: "Tehran, IR",
+      ip_address: "185.143.232.10",
       last_active: new Date(now - 1000 * 60 * 3).toISOString(),
       is_current: true,
     },
@@ -2333,14 +2336,14 @@ function seed_user_workspace(user_id: string): UserWorkspace {
       entry_id: `act_${user_id}_1`,
       category: "instance",
       action: "instance.start",
-      target: "aurora-edge-01",
+      target: "api-prod-01",
       created_at: new Date(now - 1000 * 60 * 42).toISOString(),
     },
     {
       entry_id: `act_${user_id}_2`,
       category: "billing",
       action: "invoice.paid",
-      target: "HST-2026-0301",
+      target: "PC-2026-0301",
       created_at: new Date(now - day * 4).toISOString(),
     },
     {
@@ -2354,7 +2357,7 @@ function seed_user_workspace(user_id: string): UserWorkspace {
       entry_id: `act_${user_id}_4`,
       category: "network",
       action: "reverse_dns.updated",
-      target: "185.42.108.24",
+      target: "185.143.232.18",
       created_at: new Date(now - day * 5).toISOString(),
     },
   ]
@@ -2363,13 +2366,13 @@ function seed_user_workspace(user_id: string): UserWorkspace {
     {
       floating_ip_id: `fip_${user_id}_1`,
       ip_address: "45.77.120.9",
-      region_label: "Frankfurt",
-      attached_hostname: "aurora-edge-01",
+      region_label: "Tehran",
+      attached_hostname: "api-prod-01",
     },
     {
       floating_ip_id: `fip_${user_id}_2`,
-      ip_address: "45.77.120.42",
-      region_label: "Singapore",
+      ip_address: "185.143.240.12",
+      region_label: "Isfahan",
       attached_hostname: null,
     },
   ]
@@ -2379,15 +2382,15 @@ function seed_user_workspace(user_id: string): UserWorkspace {
       volume_id: `vol_${user_id}_1`,
       name: "postgres-data",
       size_gb: 250,
-      region_label: "New York",
-      attached_hostname: "obsidian-db-01",
+      region_label: "Tehran",
+      attached_hostname: "db-primary-01",
       created_at: new Date(now - day * 20).toISOString(),
     },
     {
       volume_id: `vol_${user_id}_2`,
       name: "media-cache",
       size_gb: 100,
-      region_label: "Frankfurt",
+      region_label: "Isfahan",
       attached_hostname: null,
       created_at: new Date(now - day * 8).toISOString(),
     },
@@ -2396,27 +2399,27 @@ function seed_user_workspace(user_id: string): UserWorkspace {
   const invoices: Invoice[] = [
     {
       invoice_id: `inv_${user_id}_1`,
-      invoice_number: "HST-2026-0412",
-      description: "aurora-edge-01 · monthly renewal",
-      amount: 36,
+      invoice_number: "PC-2026-0412",
+      description: "api-prod-01 · monthly renewal",
+      amount: growth_price,
       status: "pending",
       issued_at: new Date(now - 1000 * 60 * 60 * 24 * 3).toISOString(),
       due_at: new Date(now + 1000 * 60 * 60 * 24 * 4).toISOString(),
     },
     {
       invoice_id: `inv_${user_id}_2`,
-      invoice_number: "HST-2026-0388",
-      description: "cinder-api-02 · monthly renewal",
-      amount: 21,
+      invoice_number: "PC-2026-0388",
+      description: "staging-web-02 · monthly renewal",
+      amount: starter_price,
       status: "pending",
       issued_at: new Date(now - 1000 * 60 * 60 * 24 * 1).toISOString(),
       due_at: new Date(now + 1000 * 60 * 60 * 24 * 6).toISOString(),
     },
     {
       invoice_id: `inv_${user_id}_3`,
-      invoice_number: "HST-2026-0301",
-      description: "obsidian-db-01 · setup + first month",
-      amount: 110,
+      invoice_number: "PC-2026-0301",
+      description: "db-primary-01 · setup + first month",
+      amount: scale_price,
       status: "paid",
       issued_at: new Date(now - 1000 * 60 * 60 * 24 * 33).toISOString(),
       due_at: new Date(now - 1000 * 60 * 60 * 24 * 26).toISOString(),
@@ -2424,9 +2427,9 @@ function seed_user_workspace(user_id: string): UserWorkspace {
     },
     {
       invoice_id: `inv_${user_id}_4`,
-      invoice_number: "HST-2026-0255",
-      description: "aurora-edge-01 · monthly renewal",
-      amount: 36,
+      invoice_number: "PC-2026-0255",
+      description: "api-prod-01 · monthly renewal",
+      amount: growth_price,
       status: "paid",
       issued_at: new Date(now - 1000 * 60 * 60 * 24 * 63).toISOString(),
       due_at: new Date(now - 1000 * 60 * 60 * 24 * 56).toISOString(),
@@ -2437,7 +2440,7 @@ function seed_user_workspace(user_id: string): UserWorkspace {
   const tickets: SupportTicket[] = [
     {
       ticket_id: `tkt_${user_id}_1`,
-      subject: "Reverse DNS setup for aurora-edge-01",
+      subject: "Reverse DNS setup for api-prod-01",
       status: "open",
       priority: "normal",
       created_at: new Date(now - 1000 * 60 * 60 * 26).toISOString(),
@@ -2447,13 +2450,13 @@ function seed_user_workspace(user_id: string): UserWorkspace {
           message_id: "msg_1",
           author_role: "user",
           author_name: "You",
-          body: "Could you set the PTR record for 185.42.108.24 to aurora-edge-01.hosting.io?",
+          body: "Could you set the PTR record for 185.143.232.18 to api-prod-01.parscloud.ir?",
           created_at: new Date(now - 1000 * 60 * 60 * 26).toISOString(),
         },
         {
           message_id: "msg_2",
           author_role: "support",
-          author_name: "Hosting Support",
+          author_name: "ParsCloud Support",
           body: "Happy to help. We've queued the PTR update — it should propagate within the hour. We'll confirm once it's live.",
           created_at: new Date(now - 1000 * 60 * 60 * 2).toISOString(),
         },
@@ -2461,7 +2464,7 @@ function seed_user_workspace(user_id: string): UserWorkspace {
     },
     {
       ticket_id: `tkt_${user_id}_2`,
-      subject: "Bandwidth spike on cinder-api-02",
+      subject: "Bandwidth spike on staging-web-02",
       status: "closed",
       priority: "high",
       created_at: new Date(now - 1000 * 60 * 60 * 24 * 9).toISOString(),
@@ -2477,7 +2480,7 @@ function seed_user_workspace(user_id: string): UserWorkspace {
         {
           message_id: "msg_2",
           author_role: "support",
-          author_name: "Hosting Support",
+          author_name: "ParsCloud Support",
           body: "We traced it to a legitimate backup job. No abuse detected and DDoS mitigation stayed idle. Closing this out — reopen anytime.",
           created_at: new Date(now - 1000 * 60 * 60 * 24 * 8).toISOString(),
         },
@@ -2512,35 +2515,35 @@ function seed_user_workspace(user_id: string): UserWorkspace {
     dns_zones: [
       {
         zone_id: `zone_${user_id}_1`,
-        domain_name: "example.com",
+        domain_name: "myshop.ir",
         created_at: new Date(now - day * 40).toISOString(),
         records: [
           {
             record_id: `rec_${user_id}_1`,
             record_type: "A",
             name: "@",
-            value: "185.42.108.24",
+            value: "185.143.232.18",
             ttl: 300,
           },
           {
             record_id: `rec_${user_id}_2`,
             record_type: "AAAA",
             name: "@",
-            value: "2a01:4f8:c0c:1234::1",
+            value: "2a11:5f80:1::18",
             ttl: 300,
           },
           {
             record_id: `rec_${user_id}_3`,
             record_type: "CNAME",
             name: "www",
-            value: "example.com",
+            value: "myshop.ir",
             ttl: 300,
           },
           {
             record_id: `rec_${user_id}_4`,
             record_type: "MX",
             name: "@",
-            value: "mail.example.com",
+            value: "mail.myshop.ir",
             ttl: 3600,
             priority: 10,
           },
@@ -2548,7 +2551,7 @@ function seed_user_workspace(user_id: string): UserWorkspace {
             record_id: `rec_${user_id}_5`,
             record_type: "TXT",
             name: "@",
-            value: "v=spf1 include:_spf.hosting.io ~all",
+            value: "v=spf1 include:_spf.parscloud.ir ~all",
             ttl: 3600,
           },
         ],
@@ -2557,8 +2560,8 @@ function seed_user_workspace(user_id: string): UserWorkspace {
     payment_methods: [
       {
         method_id: `pm_${user_id}_1`,
-        brand: "Visa",
-        last_four: "4242",
+        brand: "شتاب",
+        last_four: "6037",
         exp_month: 12,
         exp_year: 2028,
         is_default: true,
@@ -2652,22 +2655,22 @@ function sync_admin_reply_to_user(ticket: AdminTicket): void {
 
 function infer_region_from_label(region_label: string): InternalRegion {
   const normalized = region_label.toLowerCase()
-  if (normalized.includes("singapore") || normalized.includes("سنگاپور")) {
-    return "sin"
-  }
-  if (normalized.includes("new york") || normalized.includes("نیویورک")) {
-    return "nyc"
+  if (normalized.includes("isfahan") || normalized.includes("اصفهان")) {
+    return "isfahan"
   }
   if (normalized.includes("tehran") || normalized.includes("تهران")) {
     return "tehran"
   }
-  return "fra"
+  if (normalized.includes("frankfurt") || normalized.includes("فرانکفورت")) {
+    return "fra"
+  }
+  return "tehran"
 }
 
 function generate_mock_ip(seed: string): string {
   const hash = hash_seed(seed)
   const octet = (offset: number) => ((hash >> offset) & 255) || 1
-  return `${100 + (octet(0) % 155)}.${octet(8)}.${octet(16)}.${octet(24)}`
+  return `185.143.${octet(8)}.${octet(16) || 1}`
 }
 
 function provision_instance_from_order(order: AdminOrder): void {
@@ -2690,7 +2693,7 @@ function provision_instance_from_order(order: AdminOrder): void {
     hostname,
     status: "provisioning",
     ip_address: generate_mock_ip(order.order_id),
-    reverse_dns: `${hostname}.hosting.io`,
+    reverse_dns: `${hostname}.parscloud.ir`,
     region,
     plan_tier: "custom",
     cpu_cores: order.cpu_cores,
@@ -3203,6 +3206,7 @@ export async function submit_vps_order(payload: {
   configuration: ConfiguratorPayload
   region: InternalRegion
   locale?: string
+  promo_code?: string
 }): Promise<{ success: boolean; order_id?: string; error_message?: string }> {
   await new Promise((resolve) => setTimeout(resolve, 700))
 
@@ -3225,11 +3229,22 @@ export async function submit_vps_order(payload: {
     }
   }
 
+  let discount_percent = 0
+  if (payload.promo_code) {
+    const promo = await validate_promo_code(payload.promo_code)
+    if (promo.success) {
+      discount_percent = promo.discount_percent
+    }
+  }
+
   const config = validation.payload
   const region_label = region_labels[locale][payload.region]
   const order_id = `ord_${Date.now()}`
   const now = new Date().toISOString()
   const plan_summary = `Custom · ${region_label}`
+  const billed_amount =
+    Math.round(validation.monthly_price * (1 - discount_percent / 100) * 100) /
+    100
 
   const user_order: UserOrder = {
     order_id,
@@ -3240,7 +3255,7 @@ export async function submit_vps_order(payload: {
     storage_type: config.storage_type,
     selected_os: config.selected_os,
     region_label,
-    monthly_price: validation.monthly_price,
+    monthly_price: billed_amount,
     status: "pending",
     created_at: now,
   }
@@ -3250,9 +3265,11 @@ export async function submit_vps_order(payload: {
 
   workspace.invoices.unshift({
     invoice_id: `inv_${user.user_id}_${Date.now()}`,
-    invoice_number: `HST-${new Date().getFullYear()}-${String(Date.now()).slice(-4)}`,
-    description: `${plan_summary} · first month`,
-    amount: validation.monthly_price,
+    invoice_number: `PC-${new Date().getFullYear()}-${String(Date.now()).slice(-4)}`,
+    description: `${plan_summary} · first month${
+      discount_percent > 0 ? ` · ${discount_percent}% off` : ""
+    }`,
+    amount: billed_amount,
     status: "pending",
     issued_at: now,
     due_at: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7).toISOString(),
@@ -3271,7 +3288,7 @@ export async function submit_vps_order(payload: {
     storage_type: config.storage_type,
     selected_os: config.selected_os,
     region_label,
-    monthly_price: validation.monthly_price,
+    monthly_price: billed_amount,
     status: "pending",
     created_at: now,
   })
@@ -4235,52 +4252,55 @@ function seed_admin_state(): AdminState {
 
   const now = Date.now()
   const day = 1000 * 60 * 60 * 24
+  const growth_price = get_plan_monthly_price("growth")
+  const starter_price = get_plan_monthly_price("starter")
+  const scale_price = get_plan_monthly_price("scale")
 
   const users: AdminUser[] = [
     {
       user_id: "usr_demo_001",
-      full_name: "Demo User",
-      email_address: "demo@hosting.io",
+      full_name: "سارا محمدی",
+      email_address: "demo@parscloud.ir",
       role: "user",
       account_status: "active",
       instance_count: 3,
-      monthly_spend: 167,
+      monthly_spend: growth_price + starter_price + scale_price,
       created_at: new Date(now - day * 120).toISOString(),
     },
     {
-      user_id: "usr_nova_002",
-      full_name: "Nova Kian",
-      email_address: "nova@orbit.dev",
+      user_id: "usr_reza_002",
+      full_name: "رضا کریمی",
+      email_address: "reza.karimi@digishop.ir",
       role: "user",
       account_status: "active",
       instance_count: 5,
-      monthly_spend: 412,
+      monthly_spend: 12_450_000,
       created_at: new Date(now - day * 88).toISOString(),
     },
     {
-      user_id: "usr_atlas_003",
-      full_name: "Atlas Reza",
-      email_address: "atlas@shipfast.io",
+      user_id: "usr_niloofar_003",
+      full_name: "نیلوفر احمدی",
+      email_address: "niloofar@edutrack.ir",
       role: "user",
       account_status: "suspended",
       instance_count: 1,
-      monthly_spend: 21,
+      monthly_spend: starter_price,
       created_at: new Date(now - day * 54).toISOString(),
     },
     {
-      user_id: "usr_lumen_004",
-      full_name: "Lumen Sato",
-      email_address: "lumen@pixel.jp",
+      user_id: "usr_amir_004",
+      full_name: "امیر حسینی",
+      email_address: "amir@mediaflow.ir",
       role: "user",
       account_status: "active",
       instance_count: 2,
-      monthly_spend: 96,
+      monthly_spend: 3_280_000,
       created_at: new Date(now - day * 33).toISOString(),
     },
     {
       user_id: "usr_admin_001",
-      full_name: "Platform Admin",
-      email_address: "admin@hosting.io",
+      full_name: "مدیر سامانه",
+      email_address: "admin@parscloud.ir",
       role: "admin",
       account_status: "active",
       instance_count: 0,
@@ -4292,53 +4312,53 @@ function seed_admin_state(): AdminState {
   const orders: AdminOrder[] = [
     {
       order_id: "ord_9241",
-      user_name: "Nova Kian",
-      user_email: "nova@orbit.dev",
-      plan_summary: "Custom · Frankfurt",
+      user_name: "رضا کریمی",
+      user_email: "reza.karimi@digishop.ir",
+      plan_summary: "سفارشی · تهران",
       cpu_cores: 8,
       ram_gb: 32,
       storage_gb: 512,
-      region_label: "Frankfurt",
-      monthly_price: 132,
+      region_label: "Tehran",
+      monthly_price: scale_price,
       status: "pending",
       created_at: new Date(now - 1000 * 60 * 90).toISOString(),
     },
     {
       order_id: "ord_9238",
-      user_name: "Lumen Sato",
-      user_email: "lumen@pixel.jp",
-      plan_summary: "Custom · Singapore",
+      user_name: "امیر حسینی",
+      user_email: "amir@mediaflow.ir",
+      plan_summary: "سفارشی · اصفهان",
       cpu_cores: 4,
       ram_gb: 16,
       storage_gb: 200,
-      region_label: "Singapore",
-      monthly_price: 68,
+      region_label: "Isfahan",
+      monthly_price: 2_890_000,
       status: "pending",
       created_at: new Date(now - 1000 * 60 * 60 * 5).toISOString(),
     },
     {
       order_id: "ord_9231",
-      user_name: "Demo User",
-      user_email: "demo@hosting.io",
-      plan_summary: "Growth · Frankfurt",
+      user_name: "سارا محمدی",
+      user_email: "demo@parscloud.ir",
+      plan_summary: "رشد · تهران",
       cpu_cores: 4,
       ram_gb: 8,
       storage_gb: 160,
-      region_label: "Frankfurt",
-      monthly_price: 36,
+      region_label: "Tehran",
+      monthly_price: growth_price,
       status: "approved",
       created_at: new Date(now - day * 2).toISOString(),
     },
     {
       order_id: "ord_9225",
-      user_name: "Atlas Reza",
-      user_email: "atlas@shipfast.io",
-      plan_summary: "Start · New York",
+      user_name: "نیلوفر احمدی",
+      user_email: "niloofar@edutrack.ir",
+      plan_summary: "شروع · تهران",
       cpu_cores: 2,
       ram_gb: 4,
       storage_gb: 80,
-      region_label: "New York",
-      monthly_price: 21,
+      region_label: "Tehran",
+      monthly_price: starter_price,
       status: "rejected",
       created_at: new Date(now - day * 4).toISOString(),
     },
@@ -4346,48 +4366,37 @@ function seed_admin_state(): AdminState {
 
   const nodes: AdminNode[] = [
     {
-      node_id: "node_fra_01",
-      name: "fra-hyperion-01",
-      region_label: "Frankfurt",
+      node_id: "node_thr_01",
+      name: "thr-kvm-01",
+      region_label: "Tehran",
       status: "online",
-      cpu_load: 62,
-      ram_load: 71,
-      instance_count: 148,
-      capacity: 200,
+      cpu_load: 58,
+      ram_load: 64,
+      instance_count: 186,
+      capacity: 240,
       uptime_days: 412,
     },
     {
-      node_id: "node_sin_01",
-      name: "sin-tethys-01",
-      region_label: "Singapore",
+      node_id: "node_isf_01",
+      name: "isf-kvm-01",
+      region_label: "Isfahan",
       status: "online",
-      cpu_load: 48,
-      ram_load: 55,
-      instance_count: 96,
-      capacity: 200,
+      cpu_load: 41,
+      ram_load: 52,
+      instance_count: 94,
+      capacity: 160,
       uptime_days: 289,
     },
     {
-      node_id: "node_nyc_01",
-      name: "nyc-rhea-01",
-      region_label: "New York",
-      status: "degraded",
-      cpu_load: 88,
-      ram_load: 91,
-      instance_count: 182,
-      capacity: 200,
-      uptime_days: 134,
-    },
-    {
-      node_id: "node_thr_01",
-      name: "thr-mimas-01",
-      region_label: "Tehran",
-      status: "offline",
-      cpu_load: 0,
-      ram_load: 0,
-      instance_count: 0,
-      capacity: 160,
-      uptime_days: 0,
+      node_id: "node_fra_01",
+      name: "fra-backup-01",
+      region_label: "Frankfurt",
+      status: "online",
+      cpu_load: 22,
+      ram_load: 31,
+      instance_count: 38,
+      capacity: 120,
+      uptime_days: 214,
     },
   ]
 
@@ -4397,15 +4406,15 @@ function seed_admin_state(): AdminState {
       subject: "Upgrade path from Growth to Scale",
       status: "open",
       priority: "normal",
-      user_name: "Nova Kian",
-      user_email: "nova@orbit.dev",
+      user_name: "رضا کریمی",
+      user_email: "reza.karimi@digishop.ir",
       created_at: new Date(now - 1000 * 60 * 60 * 3).toISOString(),
       updated_at: new Date(now - 1000 * 60 * 60 * 3).toISOString(),
       messages: [
         {
           message_id: "m1",
           author_role: "user",
-          author_name: "Nova Kian",
+          author_name: "رضا کریمی",
           body: "We're outgrowing the Growth plan. Can we live-migrate to Scale without downtime?",
           created_at: new Date(now - 1000 * 60 * 60 * 3).toISOString(),
         },
@@ -4413,25 +4422,25 @@ function seed_admin_state(): AdminState {
     },
     {
       ticket_id: "atkt_4998",
-      subject: "Invoice discrepancy on HST-2026-0388",
+      subject: "Invoice discrepancy on PC-2026-0388",
       status: "pending",
       priority: "high",
-      user_name: "Lumen Sato",
-      user_email: "lumen@pixel.jp",
+      user_name: "امیر حسینی",
+      user_email: "amir@mediaflow.ir",
       created_at: new Date(now - day * 1).toISOString(),
       updated_at: new Date(now - 1000 * 60 * 60 * 6).toISOString(),
       messages: [
         {
           message_id: "m1",
           author_role: "user",
-          author_name: "Lumen Sato",
+          author_name: "امیر حسینی",
           body: "I was charged twice for the same renewal this month.",
           created_at: new Date(now - day * 1).toISOString(),
         },
         {
           message_id: "m2",
           author_role: "support",
-          author_name: "Hosting Support",
+          author_name: "ParsCloud Support",
           body: "Thanks for flagging — we're reviewing the transaction log and will refund any duplicate within 48h.",
           created_at: new Date(now - 1000 * 60 * 60 * 6).toISOString(),
         },
@@ -4439,26 +4448,26 @@ function seed_admin_state(): AdminState {
     },
     {
       ticket_id: "atkt_4990",
-      subject: "Region availability in Tehran",
+      subject: "DNS migration to ParsCloud nameservers",
       status: "closed",
       priority: "low",
-      user_name: "Atlas Reza",
-      user_email: "atlas@shipfast.io",
+      user_name: "نیلوفر احمدی",
+      user_email: "niloofar@edutrack.ir",
       created_at: new Date(now - day * 6).toISOString(),
       updated_at: new Date(now - day * 5).toISOString(),
       messages: [
         {
           message_id: "m1",
           author_role: "user",
-          author_name: "Atlas Reza",
-          body: "When will the Tehran node be back online?",
+          author_name: "نیلوفر احمدی",
+          body: "Can you help us move edutrack.ir DNS to the ParsCloud panel?",
           created_at: new Date(now - day * 6).toISOString(),
         },
         {
           message_id: "m2",
           author_role: "support",
-          author_name: "Hosting Support",
-          body: "Maintenance is scheduled to complete next week. We'll notify all affected customers.",
+          author_name: "ParsCloud Support",
+          body: "We've sent the nameserver records and a cutover checklist. Let us know once TTL is lowered.",
           created_at: new Date(now - day * 5).toISOString(),
         },
       ],
@@ -4476,8 +4485,9 @@ export async function get_admin_metrics(): Promise<AdminMetrics> {
   const state = seed_admin_state()
 
   const revenue_series = [
-    38200, 41100, 39800, 44500, 47200, 46100, 51800, 55300, 54100, 59900,
-    63400, 68200,
+    620_000_000, 658_000_000, 641_000_000, 702_000_000, 734_000_000,
+    718_000_000, 781_000_000, 812_000_000, 798_000_000, 845_000_000,
+    871_000_000, 904_000_000,
   ]
   const revenue_labels = [
     "Jan",
@@ -4634,7 +4644,7 @@ export async function reply_admin_ticket(
   ticket.messages.push({
     message_id: `m_${Date.now()}`,
     author_role: "support",
-    author_name: "Hosting Support",
+    author_name: "ParsCloud Support",
     body: trimmed,
     created_at: iso,
   })
@@ -4735,7 +4745,7 @@ const adminPageCopyByLocale: Record<string, AdminPageCopy> = {
       reply_success: "پاسخ ارسال شد",
       status_labels: { open: "باز", pending: "در انتظار", closed: "بسته" },
       priority_labels: { low: "کم", normal: "معمولی", high: "زیاد" },
-      you_support: "پشتیبانی هاستینگ",
+      you_support: "پشتیبانی پارس‌کلود",
       customer: "مشتری",
       empty: "تیکتی وجود ندارد.",
     },
@@ -4829,7 +4839,7 @@ const adminPageCopyByLocale: Record<string, AdminPageCopy> = {
       reply_success: "Reply sent",
       status_labels: { open: "Open", pending: "Pending", closed: "Closed" },
       priority_labels: { low: "Low", normal: "Normal", high: "High" },
-      you_support: "Hosting Support",
+      you_support: "ParsCloud Support",
       customer: "Customer",
       empty: "No tickets to show.",
     },

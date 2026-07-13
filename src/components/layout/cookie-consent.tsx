@@ -76,7 +76,7 @@ export function CookieConsent({ locale }: CookieConsentProps) {
     >
       <div
         className={cn(
-          "mx-auto flex max-w-3xl flex-col gap-4 rounded-2xl border border-white/10 bg-[#050706]/95 p-5 shadow-2xl backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between",
+          "mx-auto flex max-w-3xl flex-col gap-4 rounded-2xl border border-border bg-card/95 p-5 shadow-2xl backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between",
           isRTL && "font-[family-name:var(--font-vazirmatn)]",
         )}
       >

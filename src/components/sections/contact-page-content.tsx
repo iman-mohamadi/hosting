@@ -18,15 +18,18 @@ export function ContactPageContent({ copy, locale }: ContactPageContentProps) {
     <div className="relative overflow-hidden">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[560px] bg-[radial-gradient(ellipse_60%_60%_at_30%_-10%,oklch(0.88_0.21_128/0.1),transparent)]"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[560px] bg-[radial-gradient(ellipse_60%_60%_at_30%_-10%,color-mix(in_srgb,var(--primary)_12%,transparent),transparent)]"
       />
-      <div aria-hidden className="bg-grid pointer-events-none absolute inset-0 -z-10 opacity-30 mask-b" />
+      <div
+        aria-hidden
+        className="bg-grid pointer-events-none absolute inset-0 -z-10 opacity-30 mask-b"
+      />
 
       <div className="mx-auto max-w-7xl px-6 pt-40 pb-32 lg:px-8 lg:pt-52 lg:pb-40">
         <div className="grid gap-16 lg:grid-cols-2 lg:gap-24 xl:gap-32">
           <div className={cn("space-y-10", "ltr:text-left rtl:text-right")}>
             <Reveal>
-              <p className="font-mono text-xs tracking-[0.3em] text-acid uppercase">
+              <p className="font-mono text-xs tracking-[0.3em] text-primary uppercase">
                 {locale === "fa" ? "تماس" : "Contact"}
               </p>
             </Reveal>
@@ -51,12 +54,14 @@ export function ContactPageContent({ copy, locale }: ContactPageContentProps) {
             </Reveal>
 
             <Reveal delay={0.15}>
-              <dl className="space-y-6 border-t border-white/10 pt-10">
+              <dl className="space-y-6 border-t border-border pt-10">
                 <div className="space-y-1">
                   <dt className="font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
                     {copy.response_time_label}
                   </dt>
-                  <dd className="text-sm text-foreground">{copy.response_time_value}</dd>
+                  <dd className="text-sm text-foreground">
+                    {copy.response_time_value}
+                  </dd>
                 </div>
                 <div className="space-y-1">
                   <dt className="font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
@@ -69,7 +74,7 @@ export function ContactPageContent({ copy, locale }: ContactPageContentProps) {
                       dir="ltr"
                     >
                       {copy.support_email_value}
-                      <span className="absolute -bottom-0.5 left-0 h-px w-full origin-left scale-x-0 bg-acid/60 transition-transform duration-300 group-hover:scale-x-100" />
+                      <span className="absolute -bottom-0.5 left-0 h-px w-full origin-left scale-x-0 bg-primary/60 transition-transform duration-300 group-hover:scale-x-100" />
                     </a>
                   </dd>
                 </div>

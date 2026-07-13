@@ -22,7 +22,7 @@ export function Marquee({
       {items.map((item, i) => (
         <span key={i} className="flex items-center gap-10 pe-10">
           <span className="whitespace-nowrap">{item}</span>
-          <span aria-hidden className="text-acid/60">
+          <span aria-hidden className="text-primary/50">
             {separator}
           </span>
         </span>

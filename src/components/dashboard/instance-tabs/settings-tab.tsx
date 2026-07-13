@@ -94,7 +94,7 @@ export function SettingsTab({ instance, copy, locale }: SettingsTabProps) {
 
   return (
     <div className="space-y-8">
-      <section className="rounded-2xl border border-white/10 p-6">
+      <section className="rounded-2xl border border-border p-6">
         <h3
           className={cn(
             "text-sm font-medium text-foreground",
@@ -125,7 +125,7 @@ export function SettingsTab({ instance, copy, locale }: SettingsTabProps) {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-white/10 p-6">
+      <section className="rounded-2xl border border-border p-6">
         <h3
           className={cn(
             "text-sm font-medium text-foreground",
@@ -152,7 +152,7 @@ export function SettingsTab({ instance, copy, locale }: SettingsTabProps) {
         )}
       </section>
 
-      <section className="rounded-2xl border border-white/10 p-6">
+      <section className="rounded-2xl border border-border p-6">
         <h3
           className={cn(
             "text-sm font-medium text-foreground",
@@ -170,7 +170,7 @@ export function SettingsTab({ instance, copy, locale }: SettingsTabProps) {
               set_selected_os(event.target.value as SelectedOs)
             }
             disabled={is_pending}
-            className="mt-2 w-full max-w-md rounded-xl border border-white/10 bg-transparent px-4 py-3 text-sm text-foreground"
+            className="mt-2 w-full max-w-md rounded-xl border border-border bg-transparent px-4 py-3 text-sm text-foreground"
           >
             {OS_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>

@@ -1,45 +1,37 @@
 "use client"
 
 import { usePathname } from "next/navigation"
-import { ReactLenis, useLenis } from "lenis/react"
 import { useEffect } from "react"
-
-import "lenis/dist/lenis.css"
 
 interface SmoothScrollProviderProps {
   children: React.ReactNode
 }
 
-function LenisRouteSync() {
+/**
+ * Native scrolling — no JS scroll hijacking. Apple-style pages scroll natively;
+ * it's crisper, avoids momentum/anchor bugs, and keeps the main thread free.
+ * We only (a) reset to the top on route change and (b) keep GSAP ScrollTrigger
+ * in sync after navigation, loaded lazily so it never blocks first paint.
+ */
+export function SmoothScrollProvider({ children }: SmoothScrollProviderProps) {
   const pathname = usePathname()
-  const lenis = useLenis()
 
   useEffect(() => {
-    if (!lenis) {
-      return
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" })
+
+    let cancelled = false
+    void import("gsap/ScrollTrigger")
+      .then(({ ScrollTrigger }) => {
+        if (!cancelled) ScrollTrigger.refresh()
+      })
+      .catch(() => {
+        /* gsap optional */
+      })
+
+    return () => {
+      cancelled = true
     }
+  }, [pathname])
 
-    lenis.scrollTo(0, { immediate: true, force: true })
-  }, [pathname, lenis])
-
-  return null
-}
-
-export function SmoothScrollProvider({ children }: SmoothScrollProviderProps) {
-  return (
-    <ReactLenis
-      root
-      options={{
-        lerp: 0.085,
-        duration: 1.25,
-        smoothWheel: true,
-        anchors: {
-          offset: 80,
-        },
-      }}
-    >
-      <LenisRouteSync />
-      {children}
-    </ReactLenis>
-  )
+  return <>{children}</>
 }

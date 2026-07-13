@@ -132,7 +132,7 @@ export function ResizeTab({
       </div>
 
       <div className="mt-10 grid gap-4 sm:grid-cols-2">
-        <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
+        <div className="rounded-xl border border-border bg-muted p-5">
           <p
             className={cn(
               "text-xs text-muted-foreground",
@@ -145,7 +145,7 @@ export function ResizeTab({
             {format_money(quote.monthly_price, locale)}
           </p>
         </div>
-        <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
+        <div className="rounded-xl border border-border bg-muted p-5">
           <p
             className={cn(
               "text-xs text-muted-foreground",
@@ -190,7 +190,7 @@ export function ResizeTab({
                 "rounded-xl border p-4 text-start transition-colors",
                 mode === option.id
                   ? "border-acid/40 bg-acid/10"
-                  : "border-white/10 hover:border-white/20",
+                  : "border-border hover:border-primary/20",
                 isRTL && "font-[family-name:var(--font-vazirmatn)]",
               )}
             >

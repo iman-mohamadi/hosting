@@ -72,12 +72,12 @@ export function ActivityLog({ entries, copy, locale }: ActivityLogProps) {
       {filtered.length === 0 ? (
         <EmptyState label={copy.empty} isRTL={isRTL} />
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-white/10">
+        <div className="overflow-hidden rounded-2xl border border-border">
           <ul>
             {filtered.map((entry) => (
               <li
                 key={entry.entry_id}
-                className="flex flex-wrap items-center justify-between gap-4 border-b border-white/5 px-5 py-4 last:border-0"
+                className="flex flex-wrap items-center justify-between gap-4 border-b border-border px-5 py-4 last:border-0"
               >
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">

@@ -23,11 +23,11 @@ export function FaqPageContentView({ content, locale }: FaqPageContentProps) {
         locale={locale}
       />
 
-      <section className="border-t border-white/10 px-6 py-16 lg:px-8 lg:py-24">
+      <section className="border-t border-border px-6 py-16 lg:px-8 lg:py-24">
         <div className="mx-auto max-w-3xl space-y-4">
           {content.items.map((item, index) => (
             <Reveal key={item.question_id} delay={index * 0.03}>
-              <details className="group rounded-2xl border border-white/10 bg-white/[0.015] p-6 open:border-white/20">
+              <details className="group rounded-2xl border border-border bg-card p-6 open:border-primary/20">
                 <summary
                   className={cn(
                     "cursor-pointer list-none text-lg font-semibold tracking-tight text-foreground marker:content-none",

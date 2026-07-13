@@ -31,7 +31,7 @@ export default function LocaleError({ error, reset }: LocaleErrorProps) {
         "flex min-h-[70vh] flex-col items-center justify-center px-6 text-center",
         isRTL
           ? "font-[family-name:var(--font-vazirmatn)]"
-          : "font-[family-name:var(--font-inter)]",
+          : "font-[family-name:var(--font-geist)]",
       )}
     >
       <p className="font-mono text-xs tracking-[0.3em] text-acid uppercase">
@@ -52,7 +52,7 @@ export default function LocaleError({ error, reset }: LocaleErrorProps) {
         <button
           type="button"
           onClick={() => router.push(localizePathname("/", locale))}
-          className="rounded-full border border-white/10 px-5 py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          className="rounded-full border border-border px-5 py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           {isRTL ? "بازگشت به خانه" : "Back home"}
         </button>

@@ -47,14 +47,14 @@ export function FloatingInput({
         dir={dir}
         animate={{
           boxShadow: is_focused
-            ? "0 0 0 3px oklch(0.9 0.22 128 / 0.18)"
+            ? "0 0 0 4px color-mix(in srgb, var(--brand) 16%, transparent)"
             : "0 0 0 0px transparent",
         }}
         transition={{ duration: 0.25 }}
         className={cn(
-          "peer h-14 w-full rounded-xl border bg-white/[0.03] px-4 pt-5 pb-2 text-sm",
-          "border-white/10 backdrop-blur-sm transition-colors duration-300 outline-none",
-          "focus:border-acid/50 disabled:pointer-events-none disabled:opacity-50",
+          "peer h-14 w-full rounded-xl border bg-white px-4 pt-5 pb-2 text-sm text-foreground shadow-[var(--shadow-sm)]",
+          "border-border transition-colors duration-300 outline-none",
+          "focus:border-primary/60 disabled:pointer-events-none disabled:opacity-50",
           dir === "ltr" && "text-left",
         )}
       />
@@ -66,7 +66,7 @@ export function FloatingInput({
           is_floating
             ? "top-2 text-[0.65rem] tracking-widest uppercase"
             : "top-1/2 -translate-y-1/2 text-sm",
-          is_focused && "text-acid",
+          is_focused && "text-primary",
         )}
       >
         {label}

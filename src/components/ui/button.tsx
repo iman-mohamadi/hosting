@@ -9,12 +9,15 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/80",
-        acid: "relative overflow-hidden bg-acid text-acid-foreground font-semibold shadow-[0_0_0_1px_oklch(0.9_0.22_128/0.4),0_10px_40px_-12px_oklch(0.9_0.22_128/0.6)] hover:shadow-[0_0_0_1px_oklch(0.9_0.22_128/0.6),0_14px_50px_-10px_oklch(0.9_0.22_128/0.75)] transition-shadow",
+        default:
+          "bg-primary text-primary-foreground shadow-[var(--shadow-md)] hover:brightness-110 hover:-translate-y-px active:translate-y-0",
+        brand:
+          "relative overflow-hidden bg-brand text-white font-semibold shadow-[var(--shadow-glow)] hover:brightness-105 hover:-translate-y-px active:translate-y-0",
+        acid: "relative overflow-hidden bg-brand text-white font-semibold shadow-[var(--shadow-glow)] hover:brightness-105 hover:-translate-y-px active:translate-y-0",
         outline:
-          "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
+          "border-border bg-background shadow-[var(--shadow-sm)] hover:border-primary/30 hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground",
         glass:
-          "border border-white/10 bg-white/[0.03] text-foreground backdrop-blur-md hover:border-white/20 hover:bg-white/[0.06]",
+          "glass text-foreground hover:brightness-[1.03] hover:border-primary/20",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
         ghost:

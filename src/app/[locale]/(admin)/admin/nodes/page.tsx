@@ -82,7 +82,7 @@ export default async function AdminNodesPage({ params }: AdminNodesPageProps) {
             <div
               key={node.node_id}
               className={cn(
-                "rounded-2xl border border-white/10 bg-white/[0.015] p-6",
+                "rounded-2xl border border-border bg-card p-6",
                 is_offline && "opacity-70",
               )}
             >
@@ -111,7 +111,7 @@ export default async function AdminNodesPage({ params }: AdminNodesPageProps) {
                 <LoadBar label={c.ram_load} value={node.ram_load} isRTL={isRTL} />
               </div>
 
-              <div className="mt-6 flex items-center justify-between border-t border-white/5 pt-4 text-xs">
+              <div className="mt-6 flex items-center justify-between border-t border-border pt-4 text-xs">
                 <span
                   className={cn(
                     "text-muted-foreground",

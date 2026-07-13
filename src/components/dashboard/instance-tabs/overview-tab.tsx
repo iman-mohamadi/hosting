@@ -58,9 +58,9 @@ export function OverviewTab({
 
   return (
     <div>
-      <dl className="mb-10 grid gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/5 sm:grid-cols-2 lg:grid-cols-3">
+      <dl className="mb-10 grid gap-px overflow-hidden rounded-2xl border border-border bg-white/5 sm:grid-cols-2 lg:grid-cols-3">
         {specs.map((spec) => (
-          <div key={spec.label} className="bg-[#050706] p-5">
+          <div key={spec.label} className="bg-card p-5">
             <dt
               className={cn(
                 "text-xs text-muted-foreground",

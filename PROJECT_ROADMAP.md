@@ -1,18 +1,10 @@
 # Premium VPS Hosting Platform — Frontend Blueprint
 
-
-
 Single source of truth for the Vibe Coding process. This is a **frontend-only** application that consumes an external REST API — no local database or backend implementation lives in this repo. Check off items as they ship.
-
-
 
 ---
 
-
-
 ## Phase 1: Foundation & Marketing (✅ COMPLETED)
-
-
 
 - [x] Initialize Next.js, Tailwind, shadcn/ui.
 
@@ -30,15 +22,11 @@ Single source of truth for the Vibe Coding process. This is a **frontend-only** 
 
 - [x] Implement smooth scrolling (Lenis) and footer.
 
-
-
 ---
 
 
 
 ## Phase 2: API Layer Setup & Auth Flow (✅ COMPLETED)
-
-
 
 - [x] Setup API service layer (Axios or native fetch wrapper) to handle external backend communication.
 
@@ -48,15 +36,11 @@ Single source of truth for the Vibe Coding process. This is a **frontend-only** 
 
 - [x] Implement JWT/Cookie-based session management on the client side.
 
-
-
 ---
 
 
 
 ## Phase 3: The Showpiece (VPS Configurator) (✅ COMPLETED)
-
-
 
 - [x] Build the interactive UI controls (sliders/toggles for CPU, RAM, NVMe storage, network speed).
 
@@ -66,39 +50,28 @@ Single source of truth for the Vibe Coding process. This is a **frontend-only** 
 
 - [x] Add optional add-ons (dedicated IPs, automated backups, advanced DDoS).
 
-
-
 ---
 
 
 
 ## Phase 4: Client Dashboard (User Portal) (✅ COMPLETED)
 
-
-
 - [x] Design Dashboard layout with a minimal, custom sidebar.
 
 - [x] **Overview page:** Active services, pending invoices, recent tickets.
 
 - [x] **Instance management:** Detailed view for a specific VPS.
-
   - [x] Implement server controls (Start, Stop, Restart, Rebuild OS).
-
-  - [x] Resource usage charts (CPU, bandwidth).
 
 - [x] **Billing & Invoices:** View transaction history, pay pending invoices.
 
 - [x] **Support system:** Create and reply to support tickets.
-
-
 
 ---
 
 
 
 ## Phase 5: Backoffice (Admin Panel) (✅ COMPLETED)
-
-
 
 - [x] Design Admin layout (distinct from Client Dashboard).
 
@@ -111,8 +84,6 @@ Single source of truth for the Vibe Coding process. This is a **frontend-only** 
 - [x] **Node/Server monitoring:** Visual status of main physical servers.
 
 - [x] **Ticket management:** Interface for admins to answer user support requests.
-
-
 
 ---
 
@@ -133,9 +104,11 @@ Single source of truth for the Vibe Coding process. This is a **frontend-only** 
 
 ---
 
+
+
 ## Phase 6: Production Polish (✅ FRONTEND COMPLETE)
 
-- [ ] Replace all mock data in `src/actions.ts` with real external API endpoints. _(Blocked on external backend. All actions speak `snake_case` and live in `src/actions.ts` for a clean swap.)_
+- [ ] Replace all mock data in `src/actions.ts` with real external API endpoints. *(Blocked on external backend. All actions speak* `snake_case` *and live in* `src/actions.ts` *for a clean swap.)*
 
 - [x] SEO optimization, metadata, robots.txt, sitemap, and localized page metadata.
 
@@ -148,5 +121,3 @@ Single source of truth for the Vibe Coding process. This is a **frontend-only** 
 - [x] Error/loading/not-found shells and bilingual 404 copy.
 
 - [x] Lint/typecheck/production build green; responsive layouts and reduced-motion support in place.
-
-

@@ -16,7 +16,7 @@ export class ApiError extends Error {
 }
 
 function get_base_url(): string {
-  return process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://api.hosting.io"
+  return process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://api.parscloud.ir"
 }
 
 function build_headers(

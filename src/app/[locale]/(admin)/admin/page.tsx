@@ -145,7 +145,7 @@ export default async function AdminDashboardPage({
             {nodes.map((node) => (
               <li
                 key={node.node_id}
-                className="flex items-center justify-between gap-4 rounded-xl border border-white/5 px-4 py-3"
+                className="flex items-center justify-between gap-4 rounded-xl border border-border px-4 py-3"
               >
                 <div className="min-w-0">
                   <p className="truncate font-mono text-sm text-foreground">
@@ -175,7 +175,7 @@ export default async function AdminDashboardPage({
             {recent_orders.map((order) => (
               <li
                 key={order.order_id}
-                className="flex items-center justify-between gap-4 rounded-xl border border-white/5 px-4 py-3"
+                className="flex items-center justify-between gap-4 rounded-xl border border-border px-4 py-3"
               >
                 <div className="min-w-0">
                   <p

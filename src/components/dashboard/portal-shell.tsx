@@ -109,7 +109,7 @@ function PortalNavList({
               "group relative flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-colors",
               active
                 ? "bg-acid/[0.08] text-foreground"
-                : "text-muted-foreground hover:bg-white/[0.03] hover:text-foreground",
+                : "text-muted-foreground hover:bg-muted hover:text-foreground",
               isRTL && "font-[family-name:var(--font-vazirmatn)]",
             )}
           >
@@ -146,7 +146,7 @@ function PortalUserBlock({
   on_sign_out: () => void
 }) {
   return (
-    <div className="flex items-center gap-3 border-t border-white/5 pt-5">
+    <div className="flex items-center gap-3 border-t border-border pt-5">
       <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-acid/15 font-mono text-sm font-semibold text-acid">
         {get_initials(user.full_name)}
       </span>
@@ -168,7 +168,7 @@ function PortalUserBlock({
         onClick={on_sign_out}
         disabled={signing_out}
         aria-label={sign_out_label}
-        className="flex size-9 shrink-0 items-center justify-center rounded-full border border-white/10 text-muted-foreground transition-colors hover:border-white/25 hover:text-foreground disabled:opacity-50"
+        className="flex size-9 shrink-0 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-primary/25 hover:text-foreground disabled:opacity-50"
       >
         <SignOut className="size-4" />
       </button>
@@ -214,10 +214,10 @@ export function PortalShell({
         "min-h-svh bg-background text-foreground lg:grid lg:grid-cols-[280px_minmax(0,1fr)]",
         isRTL
           ? "font-[family-name:var(--font-vazirmatn)]"
-          : "font-[family-name:var(--font-inter)]",
+          : "font-[family-name:var(--font-geist)]",
       )}
     >
-      <aside className="sticky top-0 hidden h-svh flex-col border-white/5 p-6 lg:flex ltr:border-r rtl:border-l">
+      <aside className="sticky top-0 hidden h-svh flex-col border-border bg-card p-6 lg:flex ltr:border-r rtl:border-l">
         <div className="mb-8 flex items-center justify-between">
           <Link href={getHomePath(locale)}>
             <Logo locale={locale} />
@@ -257,12 +257,12 @@ export function PortalShell({
       </aside>
 
       <div className="flex min-h-svh flex-col">
-        <header className="sticky top-0 z-30 flex items-center justify-between gap-4 border-b border-white/5 bg-background/80 px-5 py-4 backdrop-blur-xl lg:px-10">
+        <header className="sticky top-0 z-30 flex items-center justify-between gap-4 border-b border-border bg-background/80 px-5 py-4 backdrop-blur-xl lg:px-10">
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => set_mobile_open(true)}
-              className="flex size-9 items-center justify-center rounded-full border border-white/10 text-foreground lg:hidden"
+              className="flex size-9 items-center justify-center rounded-full border border-border text-foreground lg:hidden"
               aria-label="Open menu"
             >
               <List className="size-4" />
@@ -301,14 +301,14 @@ export function PortalShell({
               animate={{ x: 0 }}
               exit={{ x: isRTL ? "100%" : "-100%" }}
               transition={{ ease: EASE_OUT_EXPO, duration: 0.5 }}
-              className="absolute inset-y-0 flex w-[82%] max-w-xs flex-col border-white/10 bg-[#050706] p-6 ltr:left-0 ltr:border-r rtl:right-0 rtl:border-l"
+              className="absolute inset-y-0 flex w-[82%] max-w-xs flex-col border-border bg-card p-6 ltr:left-0 ltr:border-r rtl:right-0 rtl:border-l"
             >
               <div className="mb-8 flex items-center justify-between">
                 <Logo locale={locale} />
                 <button
                   type="button"
                   onClick={() => set_mobile_open(false)}
-                  className="flex size-9 items-center justify-center rounded-full border border-white/10 text-foreground"
+                  className="flex size-9 items-center justify-center rounded-full border border-border text-foreground"
                   aria-label="Close menu"
                 >
                   <X className="size-4" />

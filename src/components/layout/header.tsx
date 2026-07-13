@@ -23,7 +23,7 @@ interface NavItem {
 const navItemsByLocale: Record<Locale, NavItem[]> = {
   fa: [
     { label: "پلن‌ها", href: "/pricing" },
-    { label: "پیکربندی", href: "/#configurator" },
+    { label: "پیکربندی", href: "/configure" },
     { label: "مستندات", href: "/docs" },
     { label: "وضعیت", href: "/status" },
     { label: "درباره", href: "/about" },
@@ -31,20 +31,12 @@ const navItemsByLocale: Record<Locale, NavItem[]> = {
   ],
   en: [
     { label: "Plans", href: "/pricing" },
-    { label: "Configure", href: "/#configurator" },
+    { label: "Configure", href: "/configure" },
     { label: "Docs", href: "/docs" },
     { label: "Status", href: "/status" },
     { label: "About", href: "/about" },
     { label: "Contact", href: "/contact" },
   ],
-}
-
-function resolveNavHref(href: string, locale: Locale): string {
-  if (href.startsWith("#")) return href
-  if (href.startsWith("/#")) {
-    return locale === "fa" ? href : `/${locale}${href}`
-  }
-  return localizePathname(href, locale)
 }
 
 interface HeaderProps {
@@ -94,13 +86,12 @@ export function Header({ locale }: HeaderProps) {
         <motion.div
           initial={reduced ? false : { y: -80, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.9, ease: EASE_OUT_EXPO, delay: 0.2 }}
+          transition={{ duration: 0.9, ease: EASE_OUT_EXPO, delay: 0.1 }}
           className={cn(
-            "flex w-full max-w-6xl items-center justify-between rounded-full px-3 py-2 transition-all duration-500",
-            "ps-5",
+            "flex w-full max-w-6xl items-center justify-between rounded-full px-3 py-2 ps-5 transition-all duration-500",
             scrolled
-              ? "border border-white/10 bg-background/70 shadow-[0_8px_40px_-16px_rgba(0,0,0,0.8)] backdrop-blur-xl"
-              : "border border-transparent bg-transparent",
+              ? "glass"
+              : "border border-transparent bg-transparent shadow-none",
           )}
         >
           <Magnetic strength={0.25}>
@@ -120,13 +111,13 @@ export function Header({ locale }: HeaderProps) {
             {navItems.map((item) => (
               <Magnetic key={item.href} strength={0.2}>
                 <Link
-                  href={resolveNavHref(item.href, locale)}
+                  href={localizePathname(item.href, locale)}
                   className="group relative rounded-full px-4 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {item.label}
                   <span
                     aria-hidden
-                    className="absolute inset-x-4 -bottom-0.5 h-px origin-center scale-x-0 bg-acid/70 transition-transform duration-300 group-hover:scale-x-100"
+                    className="absolute inset-x-3 -bottom-px h-px origin-center scale-x-0 rounded-full bg-brand transition-transform duration-300 group-hover:scale-x-100"
                   />
                 </Link>
               </Magnetic>
@@ -143,9 +134,9 @@ export function Header({ locale }: HeaderProps) {
             <LanguageSwitcher locale={locale} />
             <div className="hidden sm:block">
               <MagneticButton
-                href={resolveNavHref("/#configurator", locale)}
+                href={localizePathname("/configure", locale)}
                 size="pill"
-                variant="acid"
+                variant="brand"
                 isRTL={isRTL}
                 className="h-10 px-5 text-sm"
                 withArrow={false}
@@ -156,7 +147,7 @@ export function Header({ locale }: HeaderProps) {
             <button
               type="button"
               onClick={() => setOpen(true)}
-              className="flex size-10 items-center justify-center rounded-full border border-white/10 text-foreground lg:hidden"
+              className="flex size-10 items-center justify-center rounded-full border border-border bg-white/70 text-foreground backdrop-blur lg:hidden"
               aria-label={locale === "fa" ? "باز کردن منو" : "Open menu"}
             >
               <List weight="bold" className="size-5" />
@@ -172,15 +163,20 @@ export function Header({ locale }: HeaderProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="fixed inset-0 z-[70] bg-[#040605]/95 backdrop-blur-2xl lg:hidden"
+            className="fixed inset-0 z-[70] overflow-hidden lg:hidden"
           >
-            <div className="flex h-full flex-col px-6 pt-6">
+            <div className="absolute inset-0 bg-white/90 backdrop-blur-2xl" />
+            <div
+              aria-hidden
+              className="mesh pointer-events-none absolute inset-0 opacity-60"
+            />
+            <div className="relative flex h-full flex-col px-6 pt-6">
               <div className="flex items-center justify-between">
                 <Logo locale={locale} />
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="flex size-10 items-center justify-center rounded-full border border-white/10 text-foreground"
+                  className="flex size-10 items-center justify-center rounded-full border border-border bg-white/70 text-foreground"
                   aria-label={locale === "fa" ? "بستن منو" : "Close menu"}
                 >
                   <X weight="bold" className="size-5" />
@@ -199,10 +195,10 @@ export function Header({ locale }: HeaderProps) {
                     transition={{ delay: 0.08 + i * 0.06, ease: EASE_OUT_EXPO, duration: 0.6 }}
                   >
                     <Link
-                      href={resolveNavHref(item.href, locale)}
+                      href={localizePathname(item.href, locale)}
                       onClick={() => setOpen(false)}
                       className={cn(
-                        "block border-b border-white/5 py-4 text-4xl font-semibold tracking-tight text-foreground",
+                        "block border-b border-border/70 py-4 text-4xl font-semibold tracking-tight text-foreground",
                         isRTL && "font-[family-name:var(--font-vazirmatn)]",
                       )}
                     >
@@ -221,7 +217,8 @@ export function Header({ locale }: HeaderProps) {
                   {account_label}
                 </Link>
                 <MagneticButton
-                  href={resolveNavHref("/#configurator", locale)}
+                  href={localizePathname("/configure", locale)}
+                  variant="brand"
                   isRTL={isRTL}
                   onClick={() => setOpen(false)}
                 >

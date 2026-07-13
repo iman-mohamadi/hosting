@@ -63,7 +63,7 @@ export function AdminOrdersList({ orders, copy, locale }: AdminOrdersListProps) 
         return (
           <div
             key={order.order_id}
-            className="rounded-2xl border border-white/10 bg-white/[0.015] p-6"
+            className="rounded-2xl border border-border bg-card p-6"
           >
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0">
@@ -88,7 +88,7 @@ export function AdminOrdersList({ orders, copy, locale }: AdminOrdersListProps) 
               />
             </div>
 
-            <div className="mt-5 rounded-xl border border-white/5 bg-white/[0.01] p-4">
+            <div className="mt-5 rounded-xl border border-border bg-card p-4">
               <p
                 className={cn(
                   "text-xs text-muted-foreground",

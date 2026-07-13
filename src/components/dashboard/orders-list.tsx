@@ -37,7 +37,7 @@ export function OrdersList({ orders, copy, locale }: OrdersListProps) {
       {orders.map((order) => (
         <div
           key={order.order_id}
-          className="rounded-2xl border border-white/10 bg-white/[0.015] p-6"
+          className="rounded-2xl border border-border bg-card p-6"
         >
           <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div className="min-w-0">
@@ -75,7 +75,7 @@ export function OrdersList({ orders, copy, locale }: OrdersListProps) {
           </div>
 
           {order.status === "approved" && order.instance_id && (
-            <div className="mt-4 border-t border-white/5 pt-4">
+            <div className="mt-4 border-t border-border pt-4">
               <p className="text-sm text-muted-foreground">{copy.provisioning_note}</p>
               <Link
                 href={localizePathname(

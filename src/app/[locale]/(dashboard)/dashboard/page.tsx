@@ -115,7 +115,7 @@ export default async function DashboardOverviewPage({
                       `/dashboard/instances/${instance.instance_id}`,
                       locale,
                     )}
-                    className="group flex items-center justify-between gap-4 rounded-xl border border-white/5 px-4 py-3 transition-colors hover:border-white/15 hover:bg-white/[0.02]"
+                    className="group flex items-center justify-between gap-4 rounded-xl border border-border px-4 py-3 transition-colors hover:border-border hover:bg-muted"
                   >
                     <div className="min-w-0">
                       <p className="truncate font-mono text-sm text-foreground">
@@ -156,7 +156,7 @@ export default async function DashboardOverviewPage({
               {overview.pending_invoices.map((invoice) => (
                 <li
                   key={invoice.invoice_id}
-                  className="flex items-center justify-between gap-4 rounded-xl border border-white/5 px-4 py-3"
+                  className="flex items-center justify-between gap-4 rounded-xl border border-border px-4 py-3"
                 >
                   <div className="min-w-0">
                     <p className="truncate font-mono text-sm text-foreground">
@@ -204,7 +204,7 @@ export default async function DashboardOverviewPage({
                       `/dashboard/support/${ticket.ticket_id}`,
                       locale,
                     )}
-                    className="group flex items-center justify-between gap-4 rounded-xl border border-white/5 px-4 py-3 transition-colors hover:border-white/15 hover:bg-white/[0.02]"
+                    className="group flex items-center justify-between gap-4 rounded-xl border border-border px-4 py-3 transition-colors hover:border-border hover:bg-muted"
                   >
                     <div className="flex min-w-0 items-center gap-3">
                       <StatusBadge

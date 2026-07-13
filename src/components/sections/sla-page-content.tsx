@@ -23,7 +23,7 @@ export function SlaPageContentView({ content, locale }: SlaPageContentProps) {
         locale={locale}
       />
 
-      <section className="border-t border-white/10 px-6 py-16 lg:px-8 lg:py-24">
+      <section className="border-t border-border px-6 py-16 lg:px-8 lg:py-24">
         <div className="mx-auto max-w-4xl space-y-16">
           <Reveal>
             <div>
@@ -60,7 +60,7 @@ export function SlaPageContentView({ content, locale }: SlaPageContentProps) {
             <div className="grid gap-4 md:grid-cols-3">
               {content.metrics.map((metric, index) => (
                 <Reveal key={metric.metric_id} delay={index * 0.05}>
-                  <div className="rounded-2xl border border-white/10 bg-white/[0.015] p-6">
+                  <div className="rounded-2xl border border-border bg-card p-6">
                     <p className="font-mono text-3xl font-semibold text-acid">
                       {metric.value}
                     </p>
@@ -117,7 +117,7 @@ export function SlaPageContentView({ content, locale }: SlaPageContentProps) {
                   <li
                     key={item}
                     className={cn(
-                      "border-b border-white/5 pb-3 text-sm text-muted-foreground",
+                      "border-b border-border pb-3 text-sm text-muted-foreground",
                       isRTL && "font-[family-name:var(--font-vazirmatn)]",
                     )}
                   >

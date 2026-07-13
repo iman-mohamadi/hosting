@@ -45,10 +45,10 @@ export function BillingTable({ invoices, copy, locale }: BillingTableProps) {
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.015]">
+    <div className="overflow-hidden rounded-2xl border border-border bg-card">
       <div
         className={cn(
-          "hidden grid-cols-[1.4fr_1fr_0.8fr_0.9fr_auto] gap-4 border-b border-white/5 px-6 py-4 text-xs tracking-wide text-muted-foreground uppercase lg:grid",
+          "hidden grid-cols-[1.4fr_1fr_0.8fr_0.9fr_auto] gap-4 border-b border-border px-6 py-4 text-xs tracking-wide text-muted-foreground uppercase lg:grid",
           isRTL && "font-[family-name:var(--font-vazirmatn)]",
         )}
       >
@@ -66,7 +66,7 @@ export function BillingTable({ invoices, copy, locale }: BillingTableProps) {
           return (
             <li
               key={invoice.invoice_id}
-              className="grid grid-cols-1 gap-3 border-b border-white/5 px-6 py-5 last:border-b-0 lg:grid-cols-[1.4fr_1fr_0.8fr_0.9fr_auto] lg:items-center lg:gap-4"
+              className="grid grid-cols-1 gap-3 border-b border-border px-6 py-5 last:border-b-0 lg:grid-cols-[1.4fr_1fr_0.8fr_0.9fr_auto] lg:items-center lg:gap-4"
             >
               <div className="min-w-0">
                 <p className="truncate font-mono text-sm text-foreground">

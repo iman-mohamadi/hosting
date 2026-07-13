@@ -40,7 +40,7 @@ export function TiltCard({ children, className, max = 8, glare = true }: TiltCar
   const glareBg = useTransform(
     [px, py],
     ([x, y]: number[]) =>
-      `radial-gradient(420px circle at ${x * 100}% ${y * 100}%, oklch(0.9 0.22 128 / 0.12), transparent 60%)`,
+      `radial-gradient(420px circle at ${x * 100}% ${y * 100}%, color-mix(in srgb, #635bff 14%, transparent), transparent 60%)`,
   )
 
   function onMove(e: React.PointerEvent<HTMLDivElement>) {
@@ -61,8 +61,8 @@ export function TiltCard({ children, className, max = 8, glare = true }: TiltCar
       onPointerLeave={onLeave}
       style={reduced ? undefined : { rotateX: rx, rotateY: ry, transformPerspective: 1000 }}
       className={cn(
-        "group/tilt relative overflow-hidden rounded-3xl border border-white/10 glass",
-        "transition-colors duration-500 hover:border-white/20",
+        "group/tilt relative overflow-hidden rounded-3xl border border-border glass",
+        "transition-colors duration-500 hover:border-primary/20",
         className,
       )}
     >

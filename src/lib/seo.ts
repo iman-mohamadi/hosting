@@ -1,10 +1,12 @@
 import type { Metadata } from "next"
 
+import { BRAND } from "@/lib/brand"
 import { defaultLocale, type Locale } from "@/i18n/config"
 import { localizePathname } from "@/i18n/routing"
 
 type PageKey =
   | "pricing"
+  | "configure"
   | "about"
   | "contact"
   | "terms"
@@ -25,70 +27,80 @@ const PAGE_META: Record<PageKey, Record<Locale, PageMeta>> = {
     en: {
       title: "Pricing",
       description:
-        "Transparent VPS plans with NVMe storage, low-latency routing, and DDoS protection. Compare tiers and pick the right fit.",
+        "Transparent VPS plans in Toman with NVMe storage, Iranian datacenters, and included DDoS protection.",
     },
     fa: {
       title: "پلن‌ها و قیمت‌ها",
       description:
-        "پلن‌های شفاف VPS با NVMe Storage، Low Latency Routing و DDoS Protection. مقایسه کنید و بهترین را انتخاب کنید.",
+        "پلن‌های شفاف VPS با قیمت تومانی، ذخیره‌سازی NVMe، دیتاسنتر ایران و محافظت DDoS.",
+    },
+  },
+  configure: {
+    en: {
+      title: "Configure",
+      description:
+        "Design your VPS — CPU, RAM, NVMe storage, OS, and add-ons with live Toman pricing.",
+    },
+    fa: {
+      title: "پیکربندی",
+      description:
+        "سرور خود را طراحی کنید — CPU، RAM، NVMe، سیستم‌عامل و افزودنی‌ها با قیمت زنده به تومان.",
     },
   },
   about: {
     en: {
       title: "About",
       description:
-        "Hosting is built for teams that care about speed, clarity, and real control over their infrastructure.",
+        "ParsCloud provides Iranian VPS hosting with Persian support, transparent billing, and KVM on NVMe.",
     },
     fa: {
       title: "درباره ما",
       description:
-        "هاستینگ برای تیم‌هایی ساخته شده که به سرعت، شفافیت و کنترل واقعی زیرساخت اهمیت می‌دهند.",
+        "پارس‌کلود سرور مجازی ایرانی با پشتیبانی فارسی، صورتحساب شفاف و KVM روی NVMe ارائه می‌دهد.",
     },
   },
   contact: {
     en: {
       title: "Contact",
       description:
-        "Talk to us about infrastructure, migration, or plan selection. We usually reply within 24 hours.",
+        "Talk to our team about infrastructure, migration, or plan selection. We reply within one business day.",
     },
     fa: {
       title: "تماس با ما",
       description:
-        "برای مشاوره زیرساخت، مهاجرت یا انتخاب پلن با ما در تماس باشید. معمولاً در کمتر از ۲۴ ساعت پاسخ می‌دهیم.",
+        "برای مشاوره زیرساخت، مهاجرت یا انتخاب پلن با تیم ما در تماس باشید. معمولاً در یک روز کاری پاسخ می‌دهیم.",
     },
   },
   terms: {
     en: {
       title: "Terms of Service",
-      description: "The terms that govern your use of Hosting services.",
+      description: `The terms that govern your use of ${BRAND.name_en} services.`,
     },
     fa: {
       title: "شرایط استفاده",
-      description: "شرایطی که استفاده شما از خدمات هاستینگ را تنظیم می‌کند.",
+      description: `شرایطی که استفاده شما از خدمات ${BRAND.name_fa} را تنظیم می‌کند.`,
     },
   },
   privacy: {
     en: {
       title: "Privacy Policy",
-      description:
-        "How Hosting collects, uses, and protects your personal data.",
+      description: `How ${BRAND.name_en} collects, uses, and protects your personal data.`,
     },
     fa: {
       title: "حریم خصوصی",
-      description:
-        "هاستینگ چگونه داده‌های شخصی شما را جمع‌آوری، استفاده و محافظت می‌کند.",
+      description: `${BRAND.name_fa} چگونه داده‌های شخصی شما را جمع‌آوری، استفاده و محافظت می‌کند.`,
     },
   },
   status: {
     en: {
       title: "System Status",
       description:
-        "Real-time platform health, uptime history, and incident reports for all Hosting regions.",
+        "Real-time platform health, uptime history, and incident reports for ParsCloud datacenters.",
     },
     fa: {
       title: "وضعیت سرویس",
       description:
-        "سلامت لحظه‌ای پلتفرم، تاریخچه آپتایم و گزارش حوادث برای تمام مناطق هاستینگ.",
+        "سلامت لحظه‌ای پلتفرم، تاریخچه آپتایم و گزارش حوادث دیتاسنترهای پارس‌کلود.",
     },
   },
   docs: {
@@ -107,36 +119,34 @@ const PAGE_META: Record<PageKey, Record<Locale, PageMeta>> = {
     en: {
       title: "Checkout",
       description:
-        "Review your VPS configuration, choose a region, and submit your deployment order.",
+        "Review your VPS configuration, choose a datacenter, and submit your order.",
     },
     fa: {
       title: "تسویه و ثبت سفارش",
       description:
-        "پیکربندی VPS خود را بررسی کنید، منطقه را انتخاب کنید و سفارش استقرار را ثبت کنید.",
+        "پیکربندی VPS خود را بررسی کنید، دیتاسنتر را انتخاب کنید و سفارش را ثبت کنید.",
     },
   },
   faq: {
     en: {
       title: "FAQ",
       description:
-        "Answers about VPS deploy times, resizing, backups, DNS, billing, and support.",
+        "Answers about VPS provisioning, resizing, backups, DNS, billing in Toman, and support hours.",
     },
     fa: {
       title: "سؤالات متداول",
       description:
-        "پاسخ درباره زمان استقرار، تغییر پلن، پشتیبان‌گیری، DNS، صورتحساب و پشتیبانی.",
+        "پاسخ درباره استقرار، تغییر پلن، پشتیبان‌گیری، DNS، صورتحساب تومانی و ساعات پشتیبانی.",
     },
   },
   sla: {
     en: {
       title: "Service Level Agreement",
-      description:
-        "99.99% availability targets, service credits, and exclusions for Hosting infrastructure.",
+      description: `${BRAND.uptime_target_pct}% availability target, service credits, and exclusions for ParsCloud infrastructure.`,
     },
     fa: {
       title: "تعهد سطح سرویس",
-      description:
-        "اهداف دسترس‌پذیری ۹۹.۹۹٪، اعتبار سرویس و استثناهای زیرساخت هاستینگ.",
+      description: `هدف دسترس‌پذیری ${BRAND.uptime_target_pct.toLocaleString("fa-IR")}٪، اعتبار سرویس و استثناهای زیرساخت پارس‌کلود.`,
     },
   },
 }
@@ -160,7 +170,7 @@ export function build_page_metadata(
       },
     },
     openGraph: {
-      title: `${meta.title} · Hosting`,
+      title: `${meta.title} · ${locale === "fa" ? BRAND.name_fa : BRAND.name_en}`,
       description: meta.description,
       url: canonical,
     },

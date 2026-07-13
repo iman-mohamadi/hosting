@@ -87,8 +87,8 @@ export function ConsoleTab({
         </p>
       )}
 
-      <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/60">
-        <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
+      <div className="overflow-hidden rounded-2xl border border-border bg-black/60">
+        <div className="flex items-center justify-between border-b border-border px-4 py-3">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <TerminalWindow className="size-4 text-acid" />
             <span className="font-mono">{hostname}</span>

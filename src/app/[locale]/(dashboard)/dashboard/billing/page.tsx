@@ -47,7 +47,7 @@ export default async function BillingPage({ params }: BillingPageProps) {
         isRTL={isRTL}
         action={
           total_due > 0 ? (
-            <div className="rounded-2xl border border-white/10 glass px-6 py-4 text-end">
+            <div className="rounded-2xl border border-border glass px-6 py-4 text-end">
               <p
                 className={cn(
                   "text-xs text-muted-foreground",

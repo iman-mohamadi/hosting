@@ -34,10 +34,10 @@ export function StatusPageContent({ content, locale }: StatusPageContentProps) {
         locale={locale}
       />
 
-      <section className="border-t border-white/10 px-6 py-16 lg:px-8">
+      <section className="border-t border-border px-6 py-16 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <Reveal>
-            <div className="flex flex-col gap-6 rounded-3xl border border-white/10 bg-white/[0.015] p-8 md:flex-row md:items-center md:justify-between">
+            <div className="flex flex-col gap-6 rounded-3xl border border-border bg-card p-8 md:flex-row md:items-center md:justify-between">
               <div className="flex items-center gap-3">
                 <span className="relative flex size-3">
                   <span
@@ -86,7 +86,7 @@ export function StatusPageContent({ content, locale }: StatusPageContentProps) {
                   {content.components.map((component) => (
                     <li
                       key={component.component_id}
-                      className="flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.01] px-5 py-4"
+                      className="flex items-center justify-between gap-4 rounded-2xl border border-border bg-card px-5 py-4"
                     >
                       <div>
                         <p className="font-medium text-foreground">
@@ -118,7 +118,7 @@ export function StatusPageContent({ content, locale }: StatusPageContentProps) {
                     {content.incidents.map((incident) => (
                       <li
                         key={incident.incident_id}
-                        className="rounded-2xl border border-white/10 bg-white/[0.01] p-6"
+                        className="rounded-2xl border border-border bg-card p-6"
                       >
                         <div className="flex items-start justify-between gap-4">
                           <p

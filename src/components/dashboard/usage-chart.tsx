@@ -17,7 +17,7 @@ interface UsageChartProps {
 }
 
 const TONES = {
-  acid: "oklch(0.9 0.22 128)",
+  acid: "#635bff",
   cyan: "oklch(0.82 0.16 200)",
   violet: "oklch(0.72 0.16 300)",
 } as const
@@ -60,7 +60,7 @@ export function UsageChart({
   const has_data = data.some((value) => value > 0)
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.015] p-5">
+    <div className="rounded-2xl border border-border bg-card p-5">
       <div className="mb-4 flex items-baseline justify-between gap-4">
         <p
           className={cn(

@@ -296,7 +296,7 @@ export function AccountSettings({
             {ssh_keys.map((key) => (
               <li
                 key={key.key_id}
-                className="flex items-center justify-between gap-4 rounded-xl border border-white/10 px-4 py-3"
+                className="flex items-center justify-between gap-4 rounded-xl border border-border px-4 py-3"
               >
                 <div>
                   <p className="text-sm font-medium text-foreground">{key.name}</p>
@@ -309,7 +309,7 @@ export function AccountSettings({
                   disabled={is_pending}
                   onClick={() => handle_delete_ssh(key.key_id)}
                   aria-label={copy.delete}
-                  className="flex size-9 items-center justify-center rounded-full border border-white/10 text-muted-foreground hover:text-destructive disabled:opacity-50"
+                  className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground hover:text-destructive disabled:opacity-50"
                 >
                   <Trash className="size-4" />
                 </button>
@@ -346,7 +346,7 @@ export function AccountSettings({
               <button
                 type="button"
                 onClick={() => navigator.clipboard.writeText(revealed_secret)}
-                className="flex size-9 items-center justify-center rounded-full border border-white/10 text-muted-foreground hover:text-foreground"
+                className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground hover:text-foreground"
                 aria-label="Copy"
               >
                 <Copy className="size-4" />
@@ -393,7 +393,7 @@ export function AccountSettings({
             {api_tokens.map((token) => (
               <li
                 key={token.token_id}
-                className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/10 px-4 py-3"
+                className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border px-4 py-3"
               >
                 <div>
                   <p className="text-sm font-medium text-foreground">
@@ -439,7 +439,7 @@ export function AccountSettings({
           {sessions.map((session) => (
             <li
               key={session.session_id}
-              className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/10 px-4 py-3"
+              className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border px-4 py-3"
             >
               <div>
                 <p className="text-sm font-medium text-foreground">
@@ -492,7 +492,7 @@ export function AccountSettings({
           ).map(([key, label]) => (
             <li
               key={key}
-              className="flex items-center justify-between gap-4 rounded-xl border border-white/10 px-4 py-3"
+              className="flex items-center justify-between gap-4 rounded-xl border border-border px-4 py-3"
             >
               <span
                 className={cn(

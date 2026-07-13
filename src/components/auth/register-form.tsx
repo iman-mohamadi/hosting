@@ -117,7 +117,7 @@ export function RegisterForm({ copy, locale }: RegisterFormProps) {
           checked={accepted_terms}
           onChange={(event) => set_accepted_terms(event.target.checked)}
           disabled={is_pending}
-          className="mt-1 size-4 rounded border-white/20 bg-transparent accent-[oklch(0.88_0.21_128)]"
+          className="mt-1 size-4 rounded border-primary/20 bg-transparent accent-[oklch(0.88_0.21_128)]"
         />
         <span>
           {copy.terms_accept_label.split(" ").length > 0 && (

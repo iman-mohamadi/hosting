@@ -42,7 +42,7 @@ export default async function InstancesPage({ params }: InstancesPageProps) {
           <EmptyState label={copy.overview.empty_instances} isRTL={isRTL} />
           <div className="text-center">
             <Link
-              href={isRTL ? "/#configurator" : "/en/#configurator"}
+              href={localizePathname("/configure", locale)}
               className={cn(
                 "inline-flex text-sm text-acid underline-offset-4 hover:underline",
                 isRTL && "font-[family-name:var(--font-vazirmatn)]",
@@ -61,7 +61,7 @@ export default async function InstancesPage({ params }: InstancesPageProps) {
                 `/dashboard/instances/${instance.instance_id}`,
                 locale,
               )}
-              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.015] p-6 transition-colors hover:border-white/20 hover:bg-white/[0.03]"
+              className="group relative overflow-hidden rounded-2xl border border-border bg-card p-6 transition-colors hover:border-primary/20 hover:bg-muted"
             >
               <div
                 aria-hidden
@@ -116,7 +116,7 @@ export default async function InstancesPage({ params }: InstancesPageProps) {
                 </div>
               </dl>
 
-              <div className="mt-6 flex items-center justify-between border-t border-white/5 pt-4">
+              <div className="mt-6 flex items-center justify-between border-t border-border pt-4">
                 <span
                   className={cn(
                     "text-xs text-muted-foreground",

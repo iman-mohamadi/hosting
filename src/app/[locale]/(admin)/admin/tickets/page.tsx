@@ -51,7 +51,7 @@ export default async function AdminTicketsPage({
                   `/admin/tickets/${ticket.ticket_id}`,
                   locale,
                 )}
-                className="group flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.015] p-5 transition-colors hover:border-white/20 hover:bg-white/[0.03]"
+                className="group flex items-center justify-between gap-4 rounded-2xl border border-border bg-card p-5 transition-colors hover:border-primary/20 hover:bg-muted"
               >
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">

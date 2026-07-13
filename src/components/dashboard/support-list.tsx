@@ -92,7 +92,7 @@ export function SupportList({ tickets, copy, locale }: SupportListProps) {
             onSubmit={handle_submit}
             className="mb-8 overflow-hidden"
           >
-            <div className="space-y-5 rounded-2xl border border-white/10 bg-white/[0.015] p-6">
+            <div className="space-y-5 rounded-2xl border border-border bg-card p-6">
               <FloatingInput
                 id="ticket_subject"
                 label={copy.subject}
@@ -120,7 +120,7 @@ export function SupportList({ tickets, copy, locale }: SupportListProps) {
                         "rounded-full border px-4 py-1.5 text-sm transition-colors",
                         priority === item
                           ? "border-acid/50 bg-acid/10 text-acid"
-                          : "border-white/10 text-muted-foreground hover:text-foreground",
+                          : "border-border text-muted-foreground hover:text-foreground",
                         isRTL && "font-[family-name:var(--font-vazirmatn)]",
                       )}
                     >
@@ -163,7 +163,7 @@ export function SupportList({ tickets, copy, locale }: SupportListProps) {
                   `/dashboard/support/${ticket.ticket_id}`,
                   locale,
                 )}
-                className="group flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.015] p-5 transition-colors hover:border-white/20 hover:bg-white/[0.03]"
+                className="group flex items-center justify-between gap-4 rounded-2xl border border-border bg-card p-5 transition-colors hover:border-primary/20 hover:bg-muted"
               >
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">

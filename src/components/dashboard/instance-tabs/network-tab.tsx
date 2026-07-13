@@ -115,7 +115,7 @@ export function NetworkTab({
             {attached_ips.map((item) => (
               <li
                 key={item.floating_ip_id}
-                className="flex items-center justify-between rounded-xl border border-white/10 px-4 py-3"
+                className="flex items-center justify-between rounded-xl border border-border px-4 py-3"
               >
                 <span className="font-mono text-sm text-foreground">
                   {item.ip_address}
@@ -144,7 +144,7 @@ export function NetworkTab({
             {attached_volumes.map((item) => (
               <li
                 key={item.volume_id}
-                className="flex items-center justify-between rounded-xl border border-white/10 px-4 py-3"
+                className="flex items-center justify-between rounded-xl border border-border px-4 py-3"
               >
                 <span className="text-sm text-foreground">{item.name}</span>
                 <span className="font-mono text-xs text-muted-foreground">

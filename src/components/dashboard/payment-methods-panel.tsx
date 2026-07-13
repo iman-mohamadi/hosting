@@ -86,7 +86,7 @@ export function PaymentMethodsPanel({
           {methods.map((method) => (
             <li
               key={method.method_id}
-              className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 px-4 py-4"
+              className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border px-4 py-4"
             >
               <div>
                 <p className="font-mono text-sm text-foreground">
@@ -107,7 +107,7 @@ export function PaymentMethodsPanel({
                     disabled={is_pending}
                     onClick={() => set_default(method.method_id)}
                     className={cn(
-                      "rounded-full border border-white/10 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground",
+                      "rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground",
                       isRTL && "font-[family-name:var(--font-vazirmatn)]",
                     )}
                   >
@@ -118,7 +118,7 @@ export function PaymentMethodsPanel({
                   type="button"
                   disabled={is_pending}
                   onClick={() => remove(method.method_id)}
-                  className="rounded-full border border-white/10 px-3 py-1.5 text-xs text-destructive hover:bg-destructive/10"
+                  className="rounded-full border border-border px-3 py-1.5 text-xs text-destructive hover:bg-destructive/10"
                 >
                   {copy.delete_method}
                 </button>

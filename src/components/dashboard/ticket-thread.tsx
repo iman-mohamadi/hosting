@@ -96,7 +96,7 @@ export function TicketThread({ ticket, copy, locale }: TicketThreadProps) {
                 "flex flex-col gap-2 rounded-2xl border p-5",
                 is_support
                   ? "border-acid/20 bg-acid/[0.04]"
-                  : "border-white/10 bg-white/[0.015]",
+                  : "border-border bg-card",
               )}
             >
               <div className="flex items-center justify-between gap-4">

@@ -135,7 +135,7 @@ export function DnsPanel({ zones, copy, locale }: DnsPanelProps) {
                   "flex items-center justify-between gap-3 rounded-xl border px-4 py-3",
                   active_zone?.zone_id === zone.zone_id
                     ? "border-acid/40 bg-acid/[0.06]"
-                    : "border-white/10",
+                    : "border-border",
                 )}
               >
                 <button
@@ -173,7 +173,7 @@ export function DnsPanel({ zones, copy, locale }: DnsPanelProps) {
                 onChange={(event) =>
                   set_record_type(event.target.value as DnsRecordType)
                 }
-                className="mt-1 w-full rounded-xl border border-white/10 bg-transparent px-3 py-3 text-sm text-foreground"
+                className="mt-1 w-full rounded-xl border border-border bg-transparent px-3 py-3 text-sm text-foreground"
               >
                 {RECORD_TYPES.map((type) => (
                   <option key={type} value={type}>

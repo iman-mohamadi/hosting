@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next"
 
+import { BRAND } from "@/lib/brand"
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
@@ -24,6 +26,6 @@ export default function robots(): MetadataRoute.Robots {
         ],
       },
     ],
-    sitemap: "https://hosting.io/sitemap.xml",
+    sitemap: `${BRAND.site_url}/sitemap.xml`,
   }
 }

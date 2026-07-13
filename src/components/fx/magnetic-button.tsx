@@ -32,7 +32,7 @@ export function MagneticButton({
   children,
   href,
   onClick,
-  variant = "acid",
+  variant = "default",
   size = "pill",
   className,
   isRTL = false,
@@ -51,22 +51,16 @@ export function MagneticButton({
           className={cn(
             "relative z-10 transition-transform duration-300",
             isRTL
-              ? "group-hover/button:-translate-x-1"
-              : "group-hover/button:translate-x-1",
+              ? "group-hover/button:-translate-x-0.5"
+              : "group-hover/button:translate-x-0.5",
           )}
-        />
-      )}
-      {variant === "acid" && (
-        <span
-          aria-hidden
-          className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-700 group-hover/button:translate-x-full"
         />
       )}
     </>
   )
 
   return (
-    <Magnetic strength={0.4} className="inline-flex">
+    <Magnetic className="inline-flex">
       {href ? (
         <Button asChild variant={variant} size={size} className={className}>
           <Link href={href} onClick={onClick}>

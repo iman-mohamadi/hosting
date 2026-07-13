@@ -4,7 +4,6 @@ import Link from "next/link"
 import { ArrowUpRight } from "@phosphor-icons/react"
 
 import { Logo } from "@/components/layout/logo"
-import { Marquee } from "@/components/fx/marquee"
 import { Reveal } from "@/components/fx/reveal"
 import { MagneticButton } from "@/components/fx/magnetic-button"
 import { cn } from "@/lib/utils"
@@ -29,7 +28,6 @@ interface FooterContent {
   columns: FooterColumn[]
   copyright: string
   status_label: string
-  marquee: string[]
 }
 
 const footerContentByLocale: Record<Locale, FooterContent> = {
@@ -37,13 +35,13 @@ const footerContentByLocale: Record<Locale, FooterContent> = {
     cta_eyebrow: "آماده‌اید؟",
     cta_title: "زیرساخت\nبعدی شما.",
     cta_button: "سرور خود را بسازید",
-    tagline: "زیرساخت ابری برای تیم‌هایی که سرعت و شفافیت می‌خواهند.",
+    tagline: "سرور مجازی ایرانی با پشتیبانی فارسی، قیمت شفاف و دیتاسنتر در تهران.",
     columns: [
       {
         title: "پلتفرم",
         links: [
           { label: "پلن‌ها", href: "/pricing" },
-          { label: "پیکربندی", href: "/#configurator" },
+          { label: "پیکربندی", href: "/configure" },
           { label: "مستندات", href: "/docs" },
           { label: "سؤالات متداول", href: "/faq" },
           { label: "وضعیت سرویس", href: "/status" },
@@ -67,21 +65,20 @@ const footerContentByLocale: Record<Locale, FooterContent> = {
         ],
       },
     ],
-    copyright: "© ۱۴۰۵ هاستینگ. تمامی حقوق محفوظ است.",
-    status_label: "شبکه پایدار و آماده",
-    marquee: ["NVMe", "۹۹.۹۹٪ آپتایم", "DDoS Protection", "۱۴ منطقه", "۱۰ Gbps", "استقرار ۶۰ ثانیه‌ای"],
+    copyright: "© ۱۴۰۵ پارس‌کلود. تمامی حقوق محفوظ است.",
+    status_label: "همه سرویس‌ها عملیاتی",
   },
   en: {
     cta_eyebrow: "Ready?",
     cta_title: "Your next\ninfrastructure.",
     cta_button: "Build your server",
-    tagline: "Cloud infrastructure for teams that want speed and clarity.",
+    tagline: "Iranian VPS hosting with Persian support, transparent Toman pricing, and datacenters in Tehran.",
     columns: [
       {
         title: "Platform",
         links: [
           { label: "Pricing", href: "/pricing" },
-          { label: "Configurator", href: "/#configurator" },
+          { label: "Configure", href: "/configure" },
           { label: "Documentation", href: "/docs" },
           { label: "FAQ", href: "/faq" },
           { label: "System status", href: "/status" },
@@ -105,9 +102,8 @@ const footerContentByLocale: Record<Locale, FooterContent> = {
         ],
       },
     ],
-    copyright: "© 2026 Hosting. All rights reserved.",
-    status_label: "Network live and healthy",
-    marquee: ["NVMe", "99.99% uptime", "DDoS protection", "14 regions", "10 Gbps", "60s deploy"],
+    copyright: "© 2026 ParsCloud. All rights reserved.",
+    status_label: "All systems operational",
   },
 }
 
@@ -120,21 +116,15 @@ function FooterLink({
   locale: Locale
   children: React.ReactNode
 }) {
-  const resolvedHref = href.startsWith("/#")
-    ? locale === "fa"
-      ? href
-      : `/${locale}${href}`
-    : localizePathname(href, locale)
-
   return (
     <Link
-      href={resolvedHref}
+      href={localizePathname(href, locale)}
       className="group relative inline-flex w-fit items-center gap-1 text-sm text-muted-foreground transition-colors duration-300 hover:text-foreground"
     >
       {children}
       <span
         aria-hidden
-        className="absolute -bottom-0.5 h-px w-0 bg-acid/60 transition-all duration-300 ease-out group-hover:w-full ltr:left-0 rtl:right-0"
+        className="absolute -bottom-0.5 h-px w-0 bg-primary/60 transition-all duration-300 ease-out group-hover:w-full ltr:left-0 rtl:right-0"
       />
     </Link>
   )
@@ -147,32 +137,32 @@ interface FooterProps {
 export function Footer({ locale }: FooterProps) {
   const content = footerContentByLocale[locale]
   const isRTL = locale === "fa"
-  const configuratorHref = isRTL ? "/#configurator" : "/en/#configurator"
 
   return (
     <footer
-      id="contact"
-      className="relative mt-auto overflow-hidden border-t border-white/10"
+      className="relative mt-auto overflow-hidden border-t border-border"
       aria-label={locale === "fa" ? "پاورقی" : "Footer"}
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[420px] bg-[radial-gradient(ellipse_60%_100%_at_50%_0%,oklch(0.88_0.21_128/0.1),transparent)]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[60%] opacity-60 [mask-image:linear-gradient(to_bottom,black,transparent)]"
+        style={{
+          background:
+            "radial-gradient(60% 80% at 15% 0%, color-mix(in srgb, var(--brand-indigo) 16%, transparent), transparent 60%), radial-gradient(50% 70% at 85% 0%, color-mix(in srgb, var(--brand-pink) 12%, transparent), transparent 60%)",
+        }}
       />
-
-      {/* CTA band */}
-      <div className="mx-auto max-w-7xl px-6 pt-28 pb-16 lg:px-8 lg:pt-40">
+      <div className="relative mx-auto max-w-7xl px-6 pt-28 pb-16 lg:px-8 lg:pt-36">
         <div className="flex flex-col gap-12 md:flex-row md:items-end md:justify-between">
           <div>
             <Reveal>
-              <p className="mb-6 font-mono text-xs tracking-[0.3em] text-acid uppercase">
+              <p className="mb-6 font-mono text-xs tracking-[0.3em] text-primary uppercase">
                 {content.cta_eyebrow}
               </p>
             </Reveal>
             <Reveal delay={0.05}>
               <h2
                 className={cn(
-                  "whitespace-pre-line text-6xl font-semibold tracking-tight text-foreground sm:text-7xl md:text-8xl md:leading-[0.9]",
+                  "whitespace-pre-line text-5xl font-semibold tracking-tight text-foreground sm:text-6xl md:text-7xl md:leading-[0.95]",
                   isRTL && "font-[family-name:var(--font-vazirmatn)]",
                 )}
               >
@@ -181,23 +171,20 @@ export function Footer({ locale }: FooterProps) {
             </Reveal>
           </div>
           <Reveal delay={0.1}>
-            <MagneticButton href={configuratorHref} size="xl" isRTL={isRTL}>
+            <MagneticButton
+              href={localizePathname("/configure", locale)}
+              size="xl"
+              variant="brand"
+              isRTL={isRTL}
+            >
               {content.cta_button}
             </MagneticButton>
           </Reveal>
         </div>
       </div>
 
-      {/* marquee divider */}
-      <div className="border-y border-white/10 py-6">
-        <Marquee
-          items={content.marquee}
-          className="text-sm font-medium tracking-wide text-muted-foreground"
-        />
-      </div>
-
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="flex flex-col gap-16 py-20 lg:py-28">
+        <div className="flex flex-col gap-16 border-t border-border py-20 lg:py-24">
           <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
             <div className="space-y-5">
               <Logo locale={locale} />
@@ -209,8 +196,8 @@ export function Footer({ locale }: FooterProps) {
                 className="flex items-center gap-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
               >
                 <span className="relative flex size-2">
-                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-acid/60" />
-                  <span className="relative inline-flex size-2 rounded-full bg-acid" />
+                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary/40" />
+                  <span className="relative inline-flex size-2 rounded-full bg-primary" />
                 </span>
                 {content.status_label}
               </Link>
@@ -218,7 +205,7 @@ export function Footer({ locale }: FooterProps) {
 
             {content.columns.map((column) => (
               <div key={column.title} className="space-y-6 ltr:text-left rtl:text-right">
-                <h3 className="font-mono text-xs tracking-[0.2em] text-foreground/50 uppercase">
+                <h3 className="font-mono text-xs tracking-[0.2em] text-foreground/40 uppercase">
                   {column.title}
                 </h3>
                 <ul className="space-y-4">
@@ -235,21 +222,9 @@ export function Footer({ locale }: FooterProps) {
           </div>
         </div>
 
-        {/* giant wordmark */}
-        <div aria-hidden className="mask-b select-none pb-4">
-          <span
-            className={cn(
-              "block bg-gradient-to-b from-white/[0.08] to-transparent bg-clip-text text-center text-[22vw] font-bold leading-none tracking-tighter text-transparent",
-              isRTL && "font-[family-name:var(--font-vazirmatn)]",
-            )}
-          >
-            {locale === "fa" ? "هاستینگ" : "Hosting"}
-          </span>
-        </div>
-
         <div
           className={cn(
-            "flex flex-col gap-4 border-t border-white/10 py-8 text-xs text-muted-foreground/70 md:flex-row md:items-center md:justify-between",
+            "flex flex-col gap-4 border-t border-border py-8 text-xs text-muted-foreground md:flex-row md:items-center md:justify-between",
           )}
         >
           <p>{content.copyright}</p>

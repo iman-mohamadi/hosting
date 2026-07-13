@@ -17,7 +17,7 @@ export function LanguageSwitcher({ locale }: LanguageSwitcherProps) {
 
   return (
     <div
-      className="relative flex items-center rounded-full border border-white/10 bg-white/[0.03] p-0.5 backdrop-blur-sm"
+      className="relative flex items-center rounded-full border border-border bg-muted/40 p-0.5 backdrop-blur-sm"
       role="group"
       aria-label="Language switcher"
     >
@@ -29,14 +29,16 @@ export function LanguageSwitcher({ locale }: LanguageSwitcherProps) {
             href={localizePathname(pathname, item)}
             className={cn(
               "relative rounded-full px-2.5 py-1 text-xs font-medium tracking-wide transition-colors",
-              isActive ? "text-acid-foreground" : "text-muted-foreground hover:text-foreground",
+              isActive
+                ? "text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground",
             )}
             aria-current={isActive ? "true" : undefined}
           >
             {isActive && (
               <motion.span
                 layoutId="lang-active"
-                className="absolute inset-0 rounded-full bg-acid"
+                className="absolute inset-0 rounded-full bg-primary"
                 transition={{ type: "spring", stiffness: 400, damping: 32 }}
               />
             )}

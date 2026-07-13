@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useSpring } from "framer-motion"
 
-/** A hairline acid progress bar pinned to the top edge, tracking page scroll. */
+/** Hairline progress bar pinned to the top edge. */
 export function ScrollProgress() {
   const { scrollYProgress } = useScroll()
   const scaleX = useSpring(scrollYProgress, {
@@ -15,7 +15,7 @@ export function ScrollProgress() {
     <motion.div
       aria-hidden
       style={{ scaleX }}
-      className="fixed inset-x-0 top-0 z-[80] h-0.5 origin-left bg-gradient-to-r from-acid via-aurora-2 to-aurora-3"
+      className="fixed inset-x-0 top-0 z-[80] h-0.5 origin-left bg-primary"
     />
   )
 }

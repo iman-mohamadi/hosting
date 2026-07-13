@@ -42,7 +42,7 @@ export function DocsPageContentView({ content, locale }: DocsPageContentProps) {
         locale={locale}
       />
 
-      <section className="border-t border-white/10 px-6 py-16 lg:px-8 lg:py-24">
+      <section className="border-t border-border px-6 py-16 lg:px-8 lg:py-24">
         <div className="mx-auto max-w-7xl">
           <Reveal>
             <div className="max-w-xl">
@@ -64,7 +64,7 @@ export function DocsPageContentView({ content, locale }: DocsPageContentProps) {
                   "rounded-full border px-4 py-2 text-sm transition-colors",
                   active_category === null
                     ? "border-acid/50 bg-acid/10 text-foreground"
-                    : "border-white/10 text-muted-foreground hover:text-foreground",
+                    : "border-border text-muted-foreground hover:text-foreground",
                 )}
               >
                 {locale === "fa" ? "همه" : "All"}
@@ -78,7 +78,7 @@ export function DocsPageContentView({ content, locale }: DocsPageContentProps) {
                     "rounded-full border px-4 py-2 text-sm transition-colors",
                     active_category === category
                       ? "border-acid/50 bg-acid/10 text-foreground"
-                      : "border-white/10 text-muted-foreground hover:text-foreground",
+                      : "border-border text-muted-foreground hover:text-foreground",
                     isRTL && "font-[family-name:var(--font-vazirmatn)]",
                   )}
                 >
@@ -93,7 +93,7 @@ export function DocsPageContentView({ content, locale }: DocsPageContentProps) {
               <Reveal key={article.article_id} delay={index * 0.03}>
                 <Link
                   href={localizePathname(`/docs/${article.article_id}`, locale)}
-                  className="group block h-full rounded-2xl border border-white/10 bg-white/[0.015] p-6 transition-colors hover:border-white/20"
+                  className="group block h-full rounded-2xl border border-border bg-card p-6 transition-colors hover:border-primary/20"
                 >
                   <p className="font-mono text-xs tracking-wider text-acid/80 uppercase">
                     {article.category}

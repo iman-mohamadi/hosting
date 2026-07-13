@@ -53,10 +53,10 @@ export function AdminUsersTable({ users, copy, locale }: AdminUsersTableProps) {
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.015]">
+    <div className="overflow-hidden rounded-2xl border border-border bg-card">
       <div
         className={cn(
-          "hidden grid-cols-[1.6fr_0.7fr_0.8fr_0.6fr_0.8fr_auto] gap-4 border-b border-white/5 px-6 py-4 text-xs tracking-wide text-muted-foreground uppercase lg:grid",
+          "hidden grid-cols-[1.6fr_0.7fr_0.8fr_0.6fr_0.8fr_auto] gap-4 border-b border-border px-6 py-4 text-xs tracking-wide text-muted-foreground uppercase lg:grid",
           isRTL && "font-[family-name:var(--font-vazirmatn)]",
         )}
       >
@@ -75,7 +75,7 @@ export function AdminUsersTable({ users, copy, locale }: AdminUsersTableProps) {
           return (
             <li
               key={user.user_id}
-              className="grid grid-cols-1 gap-3 border-b border-white/5 px-6 py-5 last:border-b-0 lg:grid-cols-[1.6fr_0.7fr_0.8fr_0.6fr_0.8fr_auto] lg:items-center lg:gap-4"
+              className="grid grid-cols-1 gap-3 border-b border-border px-6 py-5 last:border-b-0 lg:grid-cols-[1.6fr_0.7fr_0.8fr_0.6fr_0.8fr_auto] lg:items-center lg:gap-4"
             >
               <div className="min-w-0">
                 <p
@@ -183,7 +183,7 @@ function TerminateButton({
         <button
           type="button"
           onClick={() => set_confirming(false)}
-          className="rounded-full border border-white/10 px-2.5 py-1.5 text-xs text-muted-foreground hover:text-foreground"
+          className="rounded-full border border-border px-2.5 py-1.5 text-xs text-muted-foreground hover:text-foreground"
         >
           ✕
         </button>

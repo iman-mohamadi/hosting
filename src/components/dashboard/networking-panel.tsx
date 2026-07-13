@@ -170,7 +170,7 @@ export function NetworkingPanel({
               return (
                 <div
                   key={item.floating_ip_id}
-                  className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/10 px-4 py-4"
+                  className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border px-4 py-4"
                 >
                   <div>
                     <p className="font-mono text-sm text-foreground">
@@ -196,7 +196,7 @@ export function NetworkingPanel({
                         handle_attach_ip(item.floating_ip_id, event.target.value)
                       }
                       disabled={is_pending}
-                      className="h-10 rounded-xl border border-white/10 bg-white/[0.03] px-3 text-sm text-foreground outline-none"
+                      className="h-10 rounded-xl border border-border bg-muted px-3 text-sm text-foreground outline-none"
                     >
                       <option value="">{copy.unattached}</option>
                       {instance_options.map((option) => (
@@ -210,7 +210,7 @@ export function NetworkingPanel({
                       disabled={is_pending}
                       onClick={() => handle_delete_ip(item.floating_ip_id)}
                       aria-label={copy.delete}
-                      className="flex size-9 items-center justify-center rounded-full border border-white/10 text-muted-foreground transition-colors hover:border-destructive/30 hover:text-destructive disabled:opacity-50"
+                      className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-destructive/30 hover:text-destructive disabled:opacity-50"
                     >
                       <Trash className="size-4" />
                     </button>
@@ -267,7 +267,7 @@ export function NetworkingPanel({
               return (
                 <div
                   key={item.volume_id}
-                  className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/10 px-4 py-4"
+                  className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border px-4 py-4"
                 >
                   <div>
                     <p className="text-sm font-medium text-foreground">
@@ -284,7 +284,7 @@ export function NetworkingPanel({
                         handle_attach_volume(item.volume_id, event.target.value)
                       }
                       disabled={is_pending}
-                      className="h-10 rounded-xl border border-white/10 bg-white/[0.03] px-3 text-sm text-foreground outline-none"
+                      className="h-10 rounded-xl border border-border bg-muted px-3 text-sm text-foreground outline-none"
                     >
                       <option value="">{copy.select_instance}</option>
                       {instance_options.map((option) => (
@@ -298,7 +298,7 @@ export function NetworkingPanel({
                       disabled={is_pending}
                       onClick={() => handle_delete_volume(item.volume_id)}
                       aria-label={copy.delete}
-                      className="flex size-9 items-center justify-center rounded-full border border-white/10 text-muted-foreground transition-colors hover:border-destructive/30 hover:text-destructive disabled:opacity-50"
+                      className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-destructive/30 hover:text-destructive disabled:opacity-50"
                     >
                       <Trash className="size-4" />
                     </button>

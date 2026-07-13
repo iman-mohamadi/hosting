@@ -55,7 +55,7 @@ export function BackupsTab({
   }
 
   return (
-    <div className="rounded-2xl border border-white/10 p-6">
+    <div className="rounded-2xl border border-border p-6">
       <h3
         className={cn(
           "text-sm font-medium text-foreground",
@@ -88,7 +88,7 @@ export function BackupsTab({
               set_frequency(event.target.value as BackupFrequency)
             }
             disabled={is_pending}
-            className="mt-2 w-full rounded-xl border border-white/10 bg-transparent px-4 py-3 text-foreground"
+            className="mt-2 w-full rounded-xl border border-border bg-transparent px-4 py-3 text-foreground"
           >
             <option value="daily">{copy.frequency_daily}</option>
             <option value="weekly">{copy.frequency_weekly}</option>
@@ -106,7 +106,7 @@ export function BackupsTab({
               set_retention_days(Number(event.target.value) || 7)
             }
             disabled={is_pending}
-            className="mt-2 w-full rounded-xl border border-white/10 bg-transparent px-4 py-3 text-foreground"
+            className="mt-2 w-full rounded-xl border border-border bg-transparent px-4 py-3 text-foreground"
           />
         </label>
 

@@ -121,10 +121,10 @@ export function SnapshotsTab({
       {snapshots.length === 0 ? (
         <EmptyState label={copy.empty} isRTL={isRTL} />
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-white/10">
+        <div className="overflow-hidden rounded-2xl border border-border">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/10 bg-white/[0.02] text-start text-xs text-muted-foreground">
+              <tr className="border-b border-border bg-muted text-start text-xs text-muted-foreground">
                 <th className="px-5 py-3 font-medium">{copy.label_placeholder}</th>
                 <th className="px-5 py-3 font-medium">{copy.size}</th>
                 <th className="px-5 py-3 font-medium">{copy.taken}</th>
@@ -137,7 +137,7 @@ export function SnapshotsTab({
                 return (
                   <tr
                     key={snapshot.snapshot_id}
-                    className="border-b border-white/5 last:border-0"
+                    className="border-b border-border last:border-0"
                   >
                     <td className="px-5 py-4 font-mono text-foreground">
                       {snapshot.label}
@@ -174,7 +174,7 @@ export function SnapshotsTab({
                           disabled={busy}
                           onClick={() => handle_delete(snapshot.snapshot_id)}
                           aria-label={copy.delete}
-                          className="flex size-9 items-center justify-center rounded-full border border-white/10 text-muted-foreground transition-colors hover:border-destructive/30 hover:text-destructive disabled:opacity-50"
+                          className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-destructive/30 hover:text-destructive disabled:opacity-50"
                         >
                           <Trash className="size-4" />
                         </button>

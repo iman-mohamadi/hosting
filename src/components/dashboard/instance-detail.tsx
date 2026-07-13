@@ -208,7 +208,7 @@ export function InstanceDetail({
                   "inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors disabled:opacity-40",
                   control.tone === "acid"
                     ? "border-acid/40 bg-acid/10 text-acid hover:bg-acid/20"
-                    : "border-white/10 text-foreground hover:border-white/25 hover:bg-white/[0.04]",
+                    : "border-border text-foreground hover:border-primary/25 hover:bg-secondary",
                   isRTL && "font-[family-name:var(--font-vazirmatn)]",
                 )}
               >

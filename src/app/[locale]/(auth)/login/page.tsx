@@ -1,8 +1,10 @@
+import { Suspense } from "react"
+import { notFound } from "next/navigation"
+
 import { get_auth_page_copy } from "@/actions"
 import { AuthCard } from "@/components/auth/auth-card"
 import { LoginForm } from "@/components/auth/login-form"
 import { isValidLocale, type Locale } from "@/i18n/config"
-import { notFound } from "next/navigation"
 
 interface LoginPageProps {
   params: Promise<{ locale: string }>
@@ -24,7 +26,9 @@ export default async function LoginPage({ params }: LoginPageProps) {
       title={copy.login_title}
       subtitle={copy.login_subtitle}
     >
-      <LoginForm copy={copy} locale={locale} />
+      <Suspense fallback={null}>
+        <LoginForm copy={copy} locale={locale} />
+      </Suspense>
     </AuthCard>
   )
 }

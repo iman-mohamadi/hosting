@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useState, useTransition } from "react"
 
 import { login_user } from "@/actions"
@@ -22,6 +22,7 @@ interface LoginFormProps {
 
 export function LoginForm({ copy, locale }: LoginFormProps) {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { show_toast } = useToast()
   const set_user = use_auth_store((state) => state.set_user)
 
@@ -42,9 +43,15 @@ export function LoginForm({ copy, locale }: LoginFormProps) {
           title: copy.login_success,
           message: result.user.full_name,
         })
+        const next = searchParams.get("next")
+        const safe_next =
+          next && next.startsWith("/") && !next.startsWith("//") ? next : null
         const destination =
-          result.user.role === "admin" ? "/admin" : "/dashboard"
-        router.push(localizePathname(destination, locale))
+          safe_next ??
+          (result.user.role === "admin" ? "/admin" : "/dashboard")
+        router.push(
+          safe_next ? safe_next : localizePathname(destination, locale),
+        )
         router.refresh()
         return
       }

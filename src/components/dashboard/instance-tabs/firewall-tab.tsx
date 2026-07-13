@@ -113,7 +113,7 @@ export function FirewallTab({
                 set_protocol(event.target.value as FirewallProtocol)
               }
               disabled={is_pending}
-              className="h-12 w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 text-sm text-foreground outline-none focus:border-acid/40"
+              className="h-12 w-full rounded-xl border border-border bg-muted px-4 text-sm text-foreground outline-none focus:border-acid/40"
             >
               {PROTOCOLS.map((item) => (
                 <option key={item} value={item}>
@@ -153,10 +153,10 @@ export function FirewallTab({
       {rules.length === 0 ? (
         <EmptyState label={copy.empty} isRTL={isRTL} />
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-white/10">
+        <div className="overflow-hidden rounded-2xl border border-border">
           <div
             className={cn(
-              "border-b border-white/10 bg-white/[0.02] px-5 py-3 text-xs font-medium tracking-wide text-muted-foreground",
+              "border-b border-border bg-muted px-5 py-3 text-xs font-medium tracking-wide text-muted-foreground",
               isRTL && "font-[family-name:var(--font-vazirmatn)]",
             )}
           >
@@ -164,7 +164,7 @@ export function FirewallTab({
           </div>
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/10 text-start text-xs text-muted-foreground">
+              <tr className="border-b border-border text-start text-xs text-muted-foreground">
                 <th className="px-5 py-3 font-medium">{copy.label}</th>
                 <th className="px-5 py-3 font-medium">{copy.protocol}</th>
                 <th className="px-5 py-3 font-medium">{copy.port_range}</th>
@@ -176,7 +176,7 @@ export function FirewallTab({
               {rules.map((rule) => (
                 <tr
                   key={rule.rule_id}
-                  className="border-b border-white/5 last:border-0"
+                  className="border-b border-border last:border-0"
                 >
                   <td className="px-5 py-4 text-foreground">{rule.label}</td>
                   <td className="px-5 py-4 font-mono uppercase text-muted-foreground">
@@ -194,7 +194,7 @@ export function FirewallTab({
                       disabled={is_pending}
                       onClick={() => handle_delete(rule.rule_id)}
                       aria-label={copy.delete}
-                      className="inline-flex size-9 items-center justify-center rounded-full border border-white/10 text-muted-foreground transition-colors hover:border-destructive/30 hover:text-destructive disabled:opacity-50"
+                      className="inline-flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-destructive/30 hover:text-destructive disabled:opacity-50"
                     >
                       <Trash className="size-4" />
                     </button>

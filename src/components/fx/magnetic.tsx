@@ -1,49 +1,18 @@
-"use client"
-
-import { useRef, type ReactNode } from "react"
-import { motion, useMotionValue, useSpring } from "framer-motion"
+import type { ReactNode } from "react"
 
 interface MagneticProps {
   children: ReactNode
+  /** Retained for API compatibility; no longer applies a pointer-follow effect. */
   strength?: number
   className?: string
 }
 
 /**
- * Wraps content so it drifts toward the pointer, then springs back on leave.
- * Used for buttons, nav links, and the logo to give interactions physical weight.
+ * Static wrapper. The old pointer-follow "magnetic" effect was removed in favour
+ * of calm, Apple-style interactions; hover states now live on the elements
+ * themselves. Kept as a thin passthrough so call sites stay unchanged.
  */
-export function Magnetic({ children, strength = 0.35, className }: MagneticProps) {
-  const ref = useRef<HTMLDivElement>(null)
-  const x = useMotionValue(0)
-  const y = useMotionValue(0)
-  const sx = useSpring(x, { stiffness: 220, damping: 18, mass: 0.4 })
-  const sy = useSpring(y, { stiffness: 220, damping: 18, mass: 0.4 })
-
-  function onMove(e: React.PointerEvent<HTMLDivElement>) {
-    const el = ref.current
-    if (!el) return
-    const rect = el.getBoundingClientRect()
-    const relX = e.clientX - (rect.left + rect.width / 2)
-    const relY = e.clientY - (rect.top + rect.height / 2)
-    x.set(relX * strength)
-    y.set(relY * strength)
-  }
-
-  function onLeave() {
-    x.set(0)
-    y.set(0)
-  }
-
-  return (
-    <motion.div
-      ref={ref}
-      onPointerMove={onMove}
-      onPointerLeave={onLeave}
-      style={{ x: sx, y: sy }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  )
+export function Magnetic({ children, className }: MagneticProps) {
+  if (!className) return <>{children}</>
+  return <span className={className}>{children}</span>
 }

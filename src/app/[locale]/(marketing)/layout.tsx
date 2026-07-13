@@ -4,9 +4,6 @@ import { Footer } from "@/components/layout/footer"
 import { Header } from "@/components/layout/header"
 import { CookieConsent } from "@/components/layout/cookie-consent"
 import { SmoothScrollProvider } from "@/components/providers/smooth-scroll-provider"
-import { CustomCursor } from "@/components/fx/custom-cursor"
-import { Grain } from "@/components/fx/grain"
-import { Preloader } from "@/components/fx/preloader"
 import { ScrollProgress } from "@/components/fx/scroll-progress"
 import {
   getDirection,
@@ -35,18 +32,15 @@ export default async function MarketingLayout({
 
   return (
     <SmoothScrollProvider>
-      <Preloader label={locale === "fa" ? "هاستینگ" : "Hosting"} isRTL={locale === "fa"} />
-      <Grain />
-      <CustomCursor />
       <ScrollProgress />
       <div
         id="top"
         dir={direction}
         className={cn(
-          "relative flex min-h-svh flex-col",
+          "relative flex min-h-svh flex-col bg-background text-foreground",
           locale === "fa"
             ? "font-[family-name:var(--font-vazirmatn)]"
-            : "font-[family-name:var(--font-inter)]",
+            : "font-[family-name:var(--font-geist)]",
         )}
       >
         <Header locale={locale} />

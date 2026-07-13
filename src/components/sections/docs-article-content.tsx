@@ -33,7 +33,7 @@ export function DocsArticleContent({
         locale={locale}
       />
 
-      <section className="border-t border-white/10 px-6 py-16 lg:px-8 lg:py-24">
+      <section className="border-t border-border px-6 py-16 lg:px-8 lg:py-24">
         <div className="mx-auto max-w-3xl">
           <Reveal>
             <Link

@@ -9,7 +9,7 @@ import {
   type ContactPageCopy,
   type ContactPayload,
 } from "@/actions"
-import { MagneticButton } from "@/components/fx/magnetic-button"
+import { ShimmerButton } from "@/components/animate-ui/shimmer-button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
@@ -27,11 +27,49 @@ const empty_payload: ContactPayload = {
   message_body: "",
 }
 
+const fieldClass =
+  "rounded-none border-0 border-b border-border bg-transparent px-0 shadow-none backdrop-blur-none focus:border-primary focus:ring-0 focus:ring-offset-0"
+
+function FieldShell({
+  id,
+  label,
+  active,
+  children,
+}: {
+  id: string
+  label: string
+  active: boolean
+  children: React.ReactNode
+}) {
+  return (
+    <div className="relative space-y-2">
+      <label
+        htmlFor={id}
+        className={cn(
+          "text-xs font-medium tracking-wide uppercase transition-colors duration-300",
+          active ? "text-primary" : "text-muted-foreground",
+        )}
+      >
+        {label}
+      </label>
+      {children}
+      <motion.span
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-px origin-center bg-primary"
+        initial={false}
+        animate={{ scaleX: active ? 1 : 0, opacity: active ? 1 : 0 }}
+        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+      />
+    </div>
+  )
+}
+
 export function ContactForm({ copy, locale }: ContactFormProps) {
   const [form_state, set_form_state] = useState<ContactPayload>(empty_payload)
   const [is_success, set_is_success] = useState(false)
   const [error_message, set_error_message] = useState<string | null>(null)
   const [is_pending, start_transition] = useTransition()
+  const [focused, set_focused] = useState<string | null>(null)
 
   function update_field(field: keyof ContactPayload, value: string) {
     set_form_state((prev) => ({ ...prev, [field]: value }))
@@ -65,7 +103,7 @@ export function ContactForm({ copy, locale }: ContactFormProps) {
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className={cn(
-              "rounded-2xl border border-primary/20 bg-primary/5 p-10 backdrop-blur-md",
+              "rounded-2xl border border-primary/20 bg-primary/5 p-10",
               "ltr:text-left rtl:text-right",
             )}
             role="status"
@@ -88,7 +126,9 @@ export function ContactForm({ copy, locale }: ContactFormProps) {
                   onClick={() => set_is_success(false)}
                   className="mt-4 text-xs font-medium tracking-wide text-primary uppercase transition-opacity hover:opacity-70"
                 >
-                  {locale === "fa" ? "درخواست دیگری بفرستید" : "Send another request"}
+                  {locale === "fa"
+                    ? "درخواست دیگری بفرستید"
+                    : "Send another request"}
                 </button>
               </div>
             </div>
@@ -101,23 +141,21 @@ export function ContactForm({ copy, locale }: ContactFormProps) {
             exit={{ opacity: 0 }}
             onSubmit={handle_submit}
             className={cn(
-              "rounded-3xl border border-white/10 glass p-8 md:p-10",
+              "border border-border bg-card/40 p-8 backdrop-blur-md md:p-10",
               "ltr:text-left rtl:text-right",
             )}
           >
-            <h2 className="mb-8 font-mono text-xs tracking-[0.25em] text-acid uppercase">
+            <h2 className="mb-10 font-mono text-xs tracking-[0.25em] text-primary uppercase">
               {copy.form_title}
             </h2>
 
-            <div className="space-y-6">
-              <div className="grid gap-6 md:grid-cols-2">
-                <div className="space-y-2">
-                  <label
-                    htmlFor="sender_name"
-                    className="text-xs font-medium tracking-wide text-muted-foreground uppercase"
-                  >
-                    {copy.sender_name_label}
-                  </label>
+            <div className="space-y-8">
+              <div className="grid gap-8 md:grid-cols-2">
+                <FieldShell
+                  id="sender_name"
+                  label={copy.sender_name_label}
+                  active={focused === "sender_name"}
+                >
                   <Input
                     id="sender_name"
                     name="sender_name"
@@ -125,20 +163,21 @@ export function ContactForm({ copy, locale }: ContactFormProps) {
                     onChange={(event) =>
                       update_field("sender_name", event.target.value)
                     }
+                    onFocus={() => set_focused("sender_name")}
+                    onBlur={() => set_focused(null)}
                     placeholder={copy.sender_name_placeholder}
                     required
                     disabled={is_pending}
                     autoComplete="name"
+                    className={fieldClass}
                   />
-                </div>
+                </FieldShell>
 
-                <div className="space-y-2">
-                  <label
-                    htmlFor="sender_email"
-                    className="text-xs font-medium tracking-wide text-muted-foreground uppercase"
-                  >
-                    {copy.sender_email_label}
-                  </label>
+                <FieldShell
+                  id="sender_email"
+                  label={copy.sender_email_label}
+                  active={focused === "sender_email"}
+                >
                   <Input
                     id="sender_email"
                     name="sender_email"
@@ -147,23 +186,23 @@ export function ContactForm({ copy, locale }: ContactFormProps) {
                     onChange={(event) =>
                       update_field("sender_email", event.target.value)
                     }
+                    onFocus={() => set_focused("sender_email")}
+                    onBlur={() => set_focused(null)}
                     placeholder={copy.sender_email_placeholder}
                     required
                     disabled={is_pending}
                     autoComplete="email"
                     dir="ltr"
-                    className="ltr:text-left rtl:text-left"
+                    className={cn(fieldClass, "ltr:text-left rtl:text-left")}
                   />
-                </div>
+                </FieldShell>
               </div>
 
-              <div className="space-y-2">
-                <label
-                  htmlFor="form_subject"
-                  className="text-xs font-medium tracking-wide text-muted-foreground uppercase"
-                >
-                  {copy.form_subject_label}
-                </label>
+              <FieldShell
+                id="form_subject"
+                label={copy.form_subject_label}
+                active={focused === "form_subject"}
+              >
                 <Input
                   id="form_subject"
                   name="form_subject"
@@ -171,19 +210,20 @@ export function ContactForm({ copy, locale }: ContactFormProps) {
                   onChange={(event) =>
                     update_field("form_subject", event.target.value)
                   }
+                  onFocus={() => set_focused("form_subject")}
+                  onBlur={() => set_focused(null)}
                   placeholder={copy.form_subject_placeholder}
                   required
                   disabled={is_pending}
+                  className={fieldClass}
                 />
-              </div>
+              </FieldShell>
 
-              <div className="space-y-2">
-                <label
-                  htmlFor="message_body"
-                  className="text-xs font-medium tracking-wide text-muted-foreground uppercase"
-                >
-                  {copy.message_body_label}
-                </label>
+              <FieldShell
+                id="message_body"
+                label={copy.message_body_label}
+                active={focused === "message_body"}
+              >
                 <Textarea
                   id="message_body"
                   name="message_body"
@@ -191,11 +231,17 @@ export function ContactForm({ copy, locale }: ContactFormProps) {
                   onChange={(event) =>
                     update_field("message_body", event.target.value)
                   }
+                  onFocus={() => set_focused("message_body")}
+                  onBlur={() => set_focused(null)}
                   placeholder={copy.message_body_placeholder}
                   required
                   disabled={is_pending}
+                  className={cn(
+                    fieldClass,
+                    "min-h-28 resize-none rounded-none",
+                  )}
                 />
-              </div>
+              </FieldShell>
 
               {error_message && (
                 <p className="text-sm text-destructive" role="alert">
@@ -203,14 +249,9 @@ export function ContactForm({ copy, locale }: ContactFormProps) {
                 </p>
               )}
 
-              <MagneticButton
-                type="submit"
-                disabled={is_pending}
-                isRTL={locale === "fa"}
-                withArrow={!is_pending}
-              >
+              <ShimmerButton type="submit" disabled={is_pending}>
                 {is_pending ? copy.submitting_label : copy.submit_label}
-              </MagneticButton>
+              </ShimmerButton>
             </div>
           </motion.form>
         )}

@@ -3,11 +3,14 @@ import type { MetadataRoute } from "next"
 import { locales } from "@/i18n/config"
 import { localizePathname } from "@/i18n/routing"
 
-const SITE_URL = "https://hosting.io"
+import { BRAND } from "@/lib/brand"
+
+const SITE_URL = BRAND.site_url
 
 const PUBLIC_PATHS = [
   "/",
   "/pricing",
+  "/configure",
   "/about",
   "/contact",
   "/terms",
