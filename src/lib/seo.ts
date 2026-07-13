@@ -16,6 +16,10 @@ type PageKey =
   | "checkout"
   | "faq"
   | "sla"
+  | "cloud-host"
+  | "vps"
+  | "domain"
+  | "cart"
 
 interface PageMeta {
   title: string
@@ -149,6 +153,78 @@ const PAGE_META: Record<PageKey, Record<Locale, PageMeta>> = {
       description: `هدف دسترس‌پذیری ${BRAND.uptime_target_pct.toLocaleString("fa-IR")}٪، اعتبار سرویس و استثناهای زیرساخت پارس‌کلود.`,
     },
   },
+  "cloud-host": {
+    en: {
+      title: "Cloud Hosting",
+      description:
+        "Cloud web hosting on NVMe with free SSL, daily backups, and Iran or Europe locations. Plans from Starter to Store.",
+    },
+    fa: {
+      title: "هاست ابری",
+      description:
+        "هاست ابری روی NVMe با SSL رایگان، پشتیبان‌گیری روزانه و موقعیت ایران یا اروپا. از پلن استارتر تا فروشگاهی.",
+    },
+  },
+  vps: {
+    en: {
+      title: "Virtual Server (VPS)",
+      description:
+        "Linux, Windows, and MikroTik VPS in Iran and abroad. Guaranteed vCPU, NVMe storage, and instant provisioning.",
+    },
+    fa: {
+      title: "سرور مجازی (VPS)",
+      description:
+        "سرور مجازی لینوکس، ویندوز و میکروتیک در ایران و خارج. پردازنده تضمین‌شده، ذخیره‌سازی NVMe و تحویل آنی.",
+    },
+  },
+  domain: {
+    en: {
+      title: "Register a Domain",
+      description:
+        "Search and register .ir, .com, .net, and more. Instant activation, free DNS management, and easy transfer.",
+    },
+    fa: {
+      title: "ثبت دامنه",
+      description:
+        "جستجو و ثبت دامنه‌های ir.، com.، net. و بیشتر. فعال‌سازی آنی، مدیریت رایگان DNS و انتقال آسان.",
+    },
+  },
+  cart: {
+    en: {
+      title: "Cart",
+      description: "Review your selected services and continue to secure checkout.",
+    },
+    fa: {
+      title: "سبد خرید",
+      description: "سرویس‌های انتخابی خود را بررسی کنید و به تسویه امن ادامه دهید.",
+    },
+  },
+}
+
+/** Build metadata from inline localized copy (for data-driven product pages). */
+export function build_meta(
+  title: Record<Locale, string>,
+  description: Record<Locale, string>,
+  locale: Locale,
+  path: string,
+): Metadata {
+  const canonical = localizePathname(path, locale)
+  return {
+    title: title[locale],
+    description: description[locale],
+    alternates: {
+      canonical,
+      languages: {
+        fa: localizePathname(path, defaultLocale),
+        en: localizePathname(path, "en"),
+      },
+    },
+    openGraph: {
+      title: `${title[locale]} · ${locale === "fa" ? BRAND.name_fa : BRAND.name_en}`,
+      description: description[locale],
+      url: canonical,
+    },
+  }
 }
 
 export function build_page_metadata(

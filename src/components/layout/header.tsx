@@ -5,8 +5,10 @@ import { useEffect, useState } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { List, X } from "@phosphor-icons/react"
 
+import { CartButton } from "@/components/layout/cart-button"
 import { LanguageSwitcher } from "@/components/layout/language-switcher"
 import { Logo } from "@/components/layout/logo"
+import { ProductsMenu } from "@/components/layout/products-menu"
 import { Magnetic } from "@/components/fx/magnetic"
 import { MagneticButton } from "@/components/fx/magnetic-button"
 import { cn } from "@/lib/utils"
@@ -22,20 +24,18 @@ interface NavItem {
 
 const navItemsByLocale: Record<Locale, NavItem[]> = {
   fa: [
+    { label: "هاست", href: "/host/cloud-host" },
+    { label: "سرور", href: "/vps" },
+    { label: "دامنه", href: "/domain" },
     { label: "پلن‌ها", href: "/pricing" },
-    { label: "پیکربندی", href: "/configure" },
     { label: "مستندات", href: "/docs" },
-    { label: "وضعیت", href: "/status" },
-    { label: "درباره", href: "/about" },
-    { label: "تماس", href: "/contact" },
   ],
   en: [
+    { label: "Hosting", href: "/host/cloud-host" },
+    { label: "Servers", href: "/vps" },
+    { label: "Domains", href: "/domain" },
     { label: "Plans", href: "/pricing" },
-    { label: "Configure", href: "/configure" },
     { label: "Docs", href: "/docs" },
-    { label: "Status", href: "/status" },
-    { label: "About", href: "/about" },
-    { label: "Contact", href: "/contact" },
   ],
 }
 
@@ -108,6 +108,7 @@ export function Header({ locale }: HeaderProps) {
             className="hidden items-center gap-1 lg:flex"
             aria-label={locale === "fa" ? "ناوبری اصلی" : "Main navigation"}
           >
+            <ProductsMenu locale={locale} />
             {navItems.map((item) => (
               <Magnetic key={item.href} strength={0.2}>
                 <Link
@@ -131,6 +132,7 @@ export function Header({ locale }: HeaderProps) {
             >
               {account_label}
             </Link>
+            <CartButton locale={locale} />
             <LanguageSwitcher locale={locale} />
             <div className="hidden sm:block">
               <MagneticButton
@@ -209,13 +211,22 @@ export function Header({ locale }: HeaderProps) {
               </nav>
 
               <div className="flex items-center justify-between py-8">
-                <Link
-                  href={account_target}
-                  onClick={() => setOpen(false)}
-                  className="text-sm text-muted-foreground"
-                >
-                  {account_label}
-                </Link>
+                <div className="flex items-center gap-4">
+                  <Link
+                    href={account_target}
+                    onClick={() => setOpen(false)}
+                    className="text-sm text-muted-foreground"
+                  >
+                    {account_label}
+                  </Link>
+                  <Link
+                    href={localizePathname("/cart", locale)}
+                    onClick={() => setOpen(false)}
+                    className="text-sm text-muted-foreground"
+                  >
+                    {locale === "fa" ? "سبد خرید" : "Cart"}
+                  </Link>
+                </div>
                 <MagneticButton
                   href={localizePathname("/configure", locale)}
                   variant="brand"
