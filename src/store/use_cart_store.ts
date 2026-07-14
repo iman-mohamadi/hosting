@@ -4,7 +4,7 @@ import { persist, createJSONStorage } from "zustand/middleware"
 import type { BillingPeriodId, Localized, LocationId, VpsOsId } from "@/lib/catalog"
 import { get_billing_period } from "@/lib/catalog"
 
-export type CartItemKind = "hosting" | "vps" | "server" | "domain"
+export type CartItemKind = "hosting" | "vps" | "server" | "domain" | "service"
 
 export interface CartItem {
   /** Stable identity for a configured line (kind + plan + options). */
@@ -17,13 +17,32 @@ export interface CartItem {
   location?: LocationId
   os?: VpsOsId
   period: BillingPeriodId
-  /** Per-month price in Toman, before the period discount. */
+  /**
+   * Per-month price in Toman, before the period discount — for period-billed
+   * items (hosting/vps/server). For fixed-term items, this is the full term
+   * price and `fixed_term` is set instead.
+   */
   monthly_price: number
+  /**
+   * When set, the line is billed at a fixed term (domain, SSL, monthly service)
+   * rather than the selectable period. `monthly_price` holds the full term price
+   * and no period discount is applied. The label is shown in place of the
+   * period selector.
+   */
+  fixed_term?: Localized
   quantity: number
 }
 
-/** Total for a single line, with the period discount applied. */
+/** Whether a line has a fixed billing term (no selectable period). */
+export function is_fixed_term(item: CartItem): boolean {
+  return item.kind === "domain" || item.kind === "service"
+}
+
+/** Total for a single line. Fixed-term lines use the full price as-is. */
 export function cart_item_total(item: CartItem): number {
+  if (is_fixed_term(item)) {
+    return Math.round(item.monthly_price) * item.quantity
+  }
   const period = get_billing_period(item.period)
   const gross = item.monthly_price * period.months
   const net = gross * (1 - period.discount_pct / 100)

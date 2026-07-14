@@ -1,14 +1,15 @@
 import { notFound } from "next/navigation"
 
 import { get_hero_data } from "@/actions"
-import { HomeCorePillars } from "@/components/sections/home/home-core-pillars"
-import { HomeFaqTeaser } from "@/components/sections/home/home-faq-teaser"
+import { HomeCapabilities } from "@/components/sections/home/home-capabilities"
 import { HomeFinalCta } from "@/components/sections/home/home-final-cta"
 import { HomeHero } from "@/components/sections/home/home-hero"
-import { HomePricingTeaser } from "@/components/sections/home/home-pricing-teaser"
-import { HomeProblem } from "@/components/sections/home/home-problem"
-import { HomeProductReveal } from "@/components/sections/home/home-product-reveal"
+import { HomeLocations } from "@/components/sections/home/home-locations"
+import { HomeProductShowcase } from "@/components/sections/home/home-product-showcase"
+import { HomeSupport } from "@/components/sections/home/home-support"
+import { HomeToolbox } from "@/components/sections/home/home-toolbox"
 import { HomeTrust } from "@/components/sections/home/home-trust"
+import { HomeWhy } from "@/components/sections/home/home-why"
 import { isValidLocale, type Locale } from "@/i18n/config"
 
 interface HomePageProps {
@@ -28,12 +29,15 @@ export default async function HomePage({ params }: HomePageProps) {
   return (
     <>
       <HomeHero data={heroData} locale={locale} />
-      <HomeProblem locale={locale} />
-      <HomeProductReveal locale={locale} />
-      <HomeCorePillars locale={locale} />
+      <div id="challenge">
+        <HomeProductShowcase locale={locale} />
+      </div>
+      <HomeToolbox locale={locale} />
+      <HomeCapabilities locale={locale} />
+      <HomeLocations locale={locale} />
+      <HomeWhy locale={locale} />
+      <HomeSupport locale={locale} />
       <HomeTrust locale={locale} />
-      <HomePricingTeaser locale={locale} />
-      <HomeFaqTeaser locale={locale} />
       <HomeFinalCta locale={locale} />
     </>
   )

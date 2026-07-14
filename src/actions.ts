@@ -293,20 +293,20 @@ export interface SlaPageContent {
 
 const heroDataByLocale: Record<string, HeroData> = {
   fa: {
-    main_title: "سرور مجازی ایرانی\nبرای پروژه‌های واقعی",
+    main_title: "زیرساخت ابری،\nبه سادگی",
     sub_description:
-      "KVM روی NVMe، دیتاسنتر تهران و اصفهان، صورتحساب تومانی و پشتیبانی فارسی. استقرار در چند دقیقه پس از تأیید پرداخت.",
-    call_to_action: "پیکربندی کنید",
-    call_to_action_href: "/configure",
-    badge_text: "NVMe · پشتیبانی فارسی",
+      "از یک استارتاپ کوچک تا سازمانی بزرگ، پشتیبان شما هستیم؛ سرور، هاست، دامنه و خدمات ابری روی بستری سریع و پایدار با صورتحساب تومانی.",
+    call_to_action: "شروع کنید",
+    call_to_action_href: "/host/cloud-host",
+    badge_text: "فناوری ابری ایران",
   },
   en: {
-    main_title: "Iranian VPS hosting\nfor real workloads",
+    main_title: "Cloud infrastructure,\nmade simple",
     sub_description:
-      "KVM on NVMe, Tehran and Isfahan datacenters, Toman billing, and Persian support. Deploy within minutes after payment confirmation.",
-    call_to_action: "Configure now",
-    call_to_action_href: "/configure",
-    badge_text: "NVMe · Persian support",
+      "From a small startup to a large enterprise, we've got you covered — servers, hosting, domains, and cloud services on a fast, stable platform with Toman billing.",
+    call_to_action: "Get started",
+    call_to_action_href: "/host/cloud-host",
+    badge_text: "Iranian cloud technology",
   },
 }
 

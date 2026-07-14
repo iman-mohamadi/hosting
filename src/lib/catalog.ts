@@ -535,6 +535,239 @@ export const DEDICATED_PLANS: ServerPlan[] = [
 ]
 
 /* -------------------------------------------------------------------------- */
+/* Services — SSL, CDN, storage, private cloud, PaaS                          */
+/* -------------------------------------------------------------------------- */
+
+export type ServiceType = "ssl" | "cdn" | "storage" | "private-cloud" | "paas"
+
+export interface ServicePlan {
+  plan_id: string
+  name: Localized
+  tagline: Localized
+  /** Full price for one billing term, in Toman. */
+  price: number
+  term: "monthly" | "annual"
+  bullets: Localized[]
+  is_recommended?: boolean
+}
+
+export function service_term_label(term: "monthly" | "annual"): Localized {
+  return term === "annual"
+    ? { fa: "/ سال", en: "/ yr" }
+    : { fa: "/ ماه", en: "/ mo" }
+}
+
+export const SERVICE_PLANS: Record<ServiceType, ServicePlan[]> = {
+  ssl: [
+    {
+      plan_id: "ssl-dv",
+      name: { fa: "SSL دامنه (DV)", en: "Domain SSL (DV)" },
+      tagline: { fa: "اعتبارسنجی دامنه، مناسب اکثر وب‌سایت‌ها", en: "Domain validation for most sites" },
+      price: 350_000,
+      term: "annual",
+      bullets: [
+        { fa: "رمزنگاری ۲۵۶ بیتی", en: "256-bit encryption" },
+        { fa: "صدور طی چند دقیقه", en: "Issued in minutes" },
+        { fa: "پشتیبانی از یک دامنه", en: "Single domain" },
+      ],
+    },
+    {
+      plan_id: "ssl-wildcard",
+      name: { fa: "SSL وایلدکارت", en: "Wildcard SSL" },
+      tagline: { fa: "پوشش دامنه و همه ساب‌دامنه‌ها", en: "Covers a domain and all subdomains" },
+      price: 1_850_000,
+      term: "annual",
+      bullets: [
+        { fa: "پوشش نامحدود ساب‌دامنه", en: "Unlimited subdomains" },
+        { fa: "رمزنگاری ۲۵۶ بیتی", en: "256-bit encryption" },
+        { fa: "گارانتی و مهر اعتماد", en: "Warranty & trust seal" },
+      ],
+      is_recommended: true,
+    },
+    {
+      plan_id: "ssl-ov",
+      name: { fa: "SSL سازمانی (OV)", en: "Organization SSL (OV)" },
+      tagline: { fa: "احراز هویت سازمان برای اعتماد بیشتر", en: "Organization validation for more trust" },
+      price: 2_900_000,
+      term: "annual",
+      bullets: [
+        { fa: "احراز هویت سازمان", en: "Organization vetting" },
+        { fa: "مناسب سایت‌های تجاری", en: "For business sites" },
+        { fa: "گارانتی بالاتر", en: "Higher warranty" },
+      ],
+    },
+    {
+      plan_id: "ssl-ev",
+      name: { fa: "SSL توسعه‌یافته (EV)", en: "Extended SSL (EV)" },
+      tagline: { fa: "بالاترین سطح اعتماد برای بانک و فروشگاه", en: "Top trust for banks and stores" },
+      price: 6_500_000,
+      term: "annual",
+      bullets: [
+        { fa: "بالاترین سطح احراز هویت", en: "Highest validation level" },
+        { fa: "مناسب پرداخت و بانکداری", en: "For payments & banking" },
+        { fa: "بیشترین اعتبار گارانتی", en: "Maximum warranty" },
+      ],
+    },
+  ],
+  cdn: [
+    {
+      plan_id: "cdn-starter",
+      name: { fa: "CDN پایه", en: "CDN Starter" },
+      tagline: { fa: "شتاب‌دهی سایت‌های کوچک و شخصی", en: "Acceleration for small sites" },
+      price: 480_000,
+      term: "monthly",
+      bullets: [
+        { fa: "۱۰۰ گیگابایت ترافیک ماهانه", en: "100 GB monthly traffic" },
+        { fa: "کش لبه و فشرده‌سازی", en: "Edge cache & compression" },
+        { fa: "SSL رایگان", en: "Free SSL" },
+      ],
+    },
+    {
+      plan_id: "cdn-business",
+      name: { fa: "CDN کسب‌وکار", en: "CDN Business" },
+      tagline: { fa: "برای سایت‌های پرمخاطب و فروشگاه", en: "For busy sites and stores" },
+      price: 1_200_000,
+      term: "monthly",
+      bullets: [
+        { fa: "۵۰۰ گیگابایت ترافیک ماهانه", en: "500 GB monthly traffic" },
+        { fa: "محافظت DDoS لایه ۷", en: "Layer-7 DDoS protection" },
+        { fa: "بهینه‌سازی تصاویر", en: "Image optimization" },
+      ],
+      is_recommended: true,
+    },
+    {
+      plan_id: "cdn-pro",
+      name: { fa: "CDN حرفه‌ای", en: "CDN Pro" },
+      tagline: { fa: "پهنای باند بالا برای رسانه و استریم", en: "High bandwidth for media & streaming" },
+      price: 3_900_000,
+      term: "monthly",
+      bullets: [
+        { fa: "۲ ترابایت ترافیک ماهانه", en: "2 TB monthly traffic" },
+        { fa: "قوانین کش سفارشی", en: "Custom cache rules" },
+        { fa: "گزارش و آنالیز پیشرفته", en: "Advanced analytics" },
+      ],
+    },
+  ],
+  storage: [
+    {
+      plan_id: "st-100",
+      name: { fa: "فضای ابری ۱۰۰", en: "Storage 100" },
+      tagline: { fa: "ذخیره‌سازی شیء سازگار با S3", en: "S3-compatible object storage" },
+      price: 190_000,
+      term: "monthly",
+      bullets: [
+        { fa: "۱۰۰ گیگابایت فضا", en: "100 GB space" },
+        { fa: "سازگار با S3 API", en: "S3-compatible API" },
+        { fa: "ترافیک خروجی منصفانه", en: "Fair egress traffic" },
+      ],
+    },
+    {
+      plan_id: "st-500",
+      name: { fa: "فضای ابری ۵۰۰", en: "Storage 500" },
+      tagline: { fa: "برای بک‌آپ و فایل‌های پروژه", en: "For backups and project files" },
+      price: 750_000,
+      term: "monthly",
+      bullets: [
+        { fa: "۵۰۰ گیگابایت فضا", en: "500 GB space" },
+        { fa: "لینک اشتراک و دسترسی خصوصی", en: "Share links & private access" },
+        { fa: "نسخه‌بندی فایل", en: "File versioning" },
+      ],
+      is_recommended: true,
+    },
+    {
+      plan_id: "st-2000",
+      name: { fa: "فضای ابری ۲ ترابایت", en: "Storage 2 TB" },
+      tagline: { fa: "ظرفیت بالا برای آرشیو و رسانه", en: "High capacity for archives & media" },
+      price: 2_600_000,
+      term: "monthly",
+      bullets: [
+        { fa: "۲ ترابایت فضا", en: "2 TB space" },
+        { fa: "کلید دسترسی چندگانه", en: "Multiple access keys" },
+        { fa: "سازگار با CDN", en: "CDN-ready" },
+      ],
+    },
+  ],
+  "private-cloud": [
+    {
+      plan_id: "pc-start",
+      name: { fa: "ابر خصوصی شروع", en: "Private Cloud Start" },
+      tagline: { fa: "استخر منابع اختصاصی برای چند ماشین", en: "Dedicated resource pool for several VMs" },
+      price: 12_000_000,
+      term: "monthly",
+      bullets: [
+        { fa: "۸ هسته · ۳۲ گیگابایت رم", en: "8 vCPU · 32 GB RAM" },
+        { fa: "۵۰۰ گیگابایت فضای NVMe", en: "500 GB NVMe" },
+        { fa: "پنل مدیریت ماشین‌ها", en: "VM management panel" },
+      ],
+    },
+    {
+      plan_id: "pc-grow",
+      name: { fa: "ابر خصوصی رشد", en: "Private Cloud Growth" },
+      tagline: { fa: "برای تیم‌ها و بارهای کاری متعدد", en: "For teams and multiple workloads" },
+      price: 22_000_000,
+      term: "monthly",
+      bullets: [
+        { fa: "۱۶ هسته · ۶۴ گیگابایت رم", en: "16 vCPU · 64 GB RAM" },
+        { fa: "۱ ترابایت فضای NVMe", en: "1 TB NVMe" },
+        { fa: "شبکه خصوصی و فایروال", en: "Private network & firewall" },
+      ],
+      is_recommended: true,
+    },
+    {
+      plan_id: "pc-org",
+      name: { fa: "ابر خصوصی سازمانی", en: "Private Cloud Enterprise" },
+      tagline: { fa: "زیرساخت اختصاصی در مقیاس سازمان", en: "Dedicated infrastructure at org scale" },
+      price: 38_000_000,
+      term: "monthly",
+      bullets: [
+        { fa: "۳۲ هسته · ۱۲۸ گیگابایت رم", en: "32 vCPU · 128 GB RAM" },
+        { fa: "۲ ترابایت فضای NVMe", en: "2 TB NVMe" },
+        { fa: "SLA اختصاصی و پشتیبانی ویژه", en: "Dedicated SLA & premium support" },
+      ],
+    },
+  ],
+  paas: [
+    {
+      plan_id: "paas-hobby",
+      name: { fa: "PaaS شخصی", en: "PaaS Hobby" },
+      tagline: { fa: "اجرای اپلیکیشن بدون دردسر سرور", en: "Run apps without server hassle" },
+      price: 350_000,
+      term: "monthly",
+      bullets: [
+        { fa: "۱ اپلیکیشن · ۱ گیگابایت رم", en: "1 app · 1 GB RAM" },
+        { fa: "استقرار از Git", en: "Deploy from Git" },
+        { fa: "SSL و دامنه خودکار", en: "Automatic SSL & domain" },
+      ],
+    },
+    {
+      plan_id: "paas-team",
+      name: { fa: "PaaS تیمی", en: "PaaS Team" },
+      tagline: { fa: "برای تیم‌های توسعه و چند اپلیکیشن", en: "For dev teams and multiple apps" },
+      price: 1_100_000,
+      term: "monthly",
+      bullets: [
+        { fa: "۵ اپلیکیشن · ۴ گیگابایت رم", en: "5 apps · 4 GB RAM" },
+        { fa: "دیتابیس مدیریت‌شده", en: "Managed databases" },
+        { fa: "مقیاس‌پذیری خودکار", en: "Auto-scaling" },
+      ],
+      is_recommended: true,
+    },
+    {
+      plan_id: "paas-business",
+      name: { fa: "PaaS سازمانی", en: "PaaS Business" },
+      tagline: { fa: "منابع بالا برای اپلیکیشن‌های تولیدی", en: "High resources for production apps" },
+      price: 3_200_000,
+      term: "monthly",
+      bullets: [
+        { fa: "اپلیکیشن نامحدود · ۱۲ گیگابایت رم", en: "Unlimited apps · 12 GB RAM" },
+        { fa: "خط لوله CI/CD", en: "CI/CD pipeline" },
+        { fa: "پشتیبانی اولویت‌دار", en: "Priority support" },
+      ],
+    },
+  ],
+}
+
+/* -------------------------------------------------------------------------- */
 /* Domain TLDs                                                                 */
 /* -------------------------------------------------------------------------- */
 

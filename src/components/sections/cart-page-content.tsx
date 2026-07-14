@@ -18,7 +18,7 @@ import {
   pick,
   type BillingPeriodId,
 } from "@/lib/catalog"
-import { cart_item_total, use_cart_store } from "@/store/use_cart_store"
+import { cart_item_total, is_fixed_term, use_cart_store } from "@/store/use_cart_store"
 import { use_auth_store } from "@/stores/auth-store"
 import { cn } from "@/lib/utils"
 import { CART_COPY } from "@/app/[locale]/(marketing)/cart/copy"
@@ -219,8 +219,8 @@ export function CartPageContent({ locale }: { locale: Locale }) {
                       </div>
 
                       <div className="mt-4 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-4">
-                        {/* Period selector (hosting/vps only) */}
-                        {item.kind !== "domain" ? (
+                        {/* Period selector (period-billed items only) */}
+                        {!is_fixed_term(item) ? (
                           <select
                             value={item.period}
                             onChange={(e) => set_period(item.key, e.target.value as BillingPeriodId)}
@@ -235,7 +235,9 @@ export function CartPageContent({ locale }: { locale: Locale }) {
                             ))}
                           </select>
                         ) : (
-                          <span className="text-sm text-muted-foreground">{c.oneYear}</span>
+                          <span className="text-sm text-muted-foreground">
+                            {item.fixed_term ? pick(item.fixed_term, locale) : c.oneYear}
+                          </span>
                         )}
 
                         <div className="flex items-center gap-4">
@@ -254,7 +256,7 @@ export function CartPageContent({ locale }: { locale: Locale }) {
                           </span>
                         </div>
                       </div>
-                      {item.kind !== "domain" && (
+                      {!is_fixed_term(item) && (
                         <p className="mt-2 text-xs text-muted-foreground">
                           {format_toman(item.monthly_price, locale)} × {period.months}{" "}
                           {c.months}

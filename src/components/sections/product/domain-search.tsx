@@ -66,9 +66,10 @@ export function DomainSearch({
       kind: "domain",
       title: { fa: `دامنه ${sld}.${tld.tld}`, en: `${sld}.${tld.tld} domain` },
       subtitle: { fa: "ثبت یک‌ساله", en: "1-year registration" },
-      period: "annual",
-      // Domains are billed yearly; store as a per-month slice with no extra discount.
-      monthly_price: Math.round(tld.register / 12),
+      fixed_term: { fa: "ثبت یک‌ساله", en: "1 year" },
+      period: "monthly",
+      // Domains are billed yearly at the full registration price (fixed term).
+      monthly_price: tld.register,
       quantity: 1,
     }
     add_item(item)
